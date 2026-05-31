@@ -15,7 +15,11 @@ const permissions = {
     mode: "absolute",
 }
 
-const defaultitem = { name: "Nový" };
+// Default IDs from system data - these reference existing records in the database
+const DEFAULT_PLAN_ID = "28c25266-daa4-4579-a32a-7a4394ee463d"  // from acplans
+const DEFAULT_TYPE_ID = "a00a0322-b095-11ed-9bd8-0242ac110002"  // from acclassificationtypes (name: "Z")
+
+const createDefaultItem = () => ({ id: crypto.randomUUID(), name: "Nový" });
 
 /**
  * Wrapper nad `BaseCreateLink` (alias importu `CreateLink` z Base/Mutations/Create),
@@ -87,18 +91,24 @@ export const CreateButton = ({
     mutationAsyncAction=MutationAsyncAction,
     CreateDialog: CreateDialog_=CreateDialog,
     DefaultContent:defaultContent=DefaultContent,
-    readItemURI=ReadItemURI, 
+    readItemURI=ReadItemURI,
     rbacitem,
-    item=defaultitem,
+    item,
+    parentItem,
     ...props
 }) => {
+    const finalItem = item ?? {
+        ...createDefaultItem(),
+        planId: parentItem?.planId ?? DEFAULT_PLAN_ID,
+        typeId: parentItem?.typeId ?? DEFAULT_TYPE_ID
+    }
     return <BaseCreateButton 
         {...props}
         DefaultContent={defaultContent} 
         CreateDialog={CreateDialog_}
         readItemURI={readItemURI}
         rbacitem={rbacitem}
-        item={item}
+        item={finalItem}
         mutationAsyncAction={mutationAsyncAction}
         {...permissions}
     />
@@ -144,15 +154,16 @@ export const CreateDialog = ({
     // mutationAsyncAction=MutationAsyncAction,
     DefaultContent:defaultContent=DefaultContent,
     readItemURI=ReadItemURI, 
-    item=defaultitem,
+    item,
     ...props
 }) => {
+    const finalItem = item ?? createDefaultItem()
     return <BaseCreateDialog 
         {...props} 
         title={title}
         DefaultContent={defaultContent} 
         readItemURI={readItemURI}
-        item={item}
+        item={finalItem}
         // mutationAsyncAction={mutationAsyncAction}
     />
 };

@@ -5,6 +5,7 @@ import { createAsyncGraphQLAction2 } from "../../../../dynamic/src/Core/createAs
 
 const InsertMutationStr = `
 mutation examInsert(
+	$id: UUID!,
 	$name: String,
 	$nameEn: String,
 	$description: String,
@@ -13,8 +14,7 @@ mutation examInsert(
 	$maxScore: Int,
 	$typeId: UUID,
 	$parentId: UUID,
-	$planId: UUID,
-	$id: UUID
+	$planId: UUID
 ) {
 	examInsert(
 		exam: {
@@ -32,6 +32,7 @@ mutation examInsert(
   ) {
 		__typename
 		... on ExamGQLModel { ...Large }
+		... on ExamGQLModelInsertError { __typename msg }
   }
 }
 `
