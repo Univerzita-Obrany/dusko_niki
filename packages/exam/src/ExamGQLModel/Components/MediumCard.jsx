@@ -32,6 +32,7 @@ export const MediumCard = ({ item, children }) => {
     return (
         <CardCapsule title={<><PersonFill /> <Link item={item} /></>}>
             {children}
+            test
             <MediumContent item={item}>
             </MediumContent>
         </CardCapsule>
