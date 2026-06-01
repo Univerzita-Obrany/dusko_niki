@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react"
+import { useLocation } from "react-router"
 import { useDispatch } from "react-redux"
 import { CardCapsule } from "./CardCapsule"
 import { InsertAsyncAction, DeleteAsyncAction } from "../Queries"
@@ -178,7 +179,7 @@ const AddPartForm = ({ parentItem, partType, onCancel, onSuccess }) => {
     )
 }
 
-const PartsTable = ({ parts, parentItem, onPartDeleted }) => {
+const PartsTable = ({ parts, parentItem, onPartDeleted, isEditing }) => {
     if (!parts || parts.length === 0) {
         return <p className="text-muted">Zatím nejsou přidány žádné části.</p>
     }
@@ -190,7 +191,7 @@ const PartsTable = ({ parts, parentItem, onPartDeleted }) => {
                     <th>Název</th>
                     <th>Max bodů</th>
                     <th>Min bodů</th>
-                    <th style={{ width: "60px" }}></th>
+                    {isEditing && <th style={{ width: "60px" }}></th>}
                 </tr>
             </thead>
             <tbody>
@@ -199,13 +200,15 @@ const PartsTable = ({ parts, parentItem, onPartDeleted }) => {
                         <td>{part.name}</td>
                         <td>{part.maxScore ?? "-"}</td>
                         <td>{part.minScore ?? "-"}</td>
-                        <td>
-                            <DeletePartButton
-                                part={part}
-                                parentItem={parentItem}
-                                onDeleted={onPartDeleted}
-                            />
-                        </td>
+                        {isEditing && (
+                            <td>
+                                <DeletePartButton
+                                    part={part}
+                                    parentItem={parentItem}
+                                    onDeleted={onPartDeleted}
+                                />
+                            </td>
+                        )}
                     </tr>
                 ))}
             </tbody>
@@ -216,6 +219,8 @@ const PartsTable = ({ parts, parentItem, onPartDeleted }) => {
 export const ExamParts = ({ item }) => {
     const [localParts, setLocalParts] = useState(item?.parts || [])
     const [activeForm, setActiveForm] = useState(null)
+    const { pathname } = useLocation()
+    const isEditing = pathname.includes("/edit/")
 
     const handlePartDeleted = useCallback((deletedPartId) => {
         setLocalParts(prev => prev.filter(p => p.id !== deletedPartId))
@@ -223,31 +228,33 @@ export const ExamParts = ({ item }) => {
 
     return (
         <CardCapsule item={item} title="Části zkoušky (parts)">
-            <div className="mb-3">
-                <button
-                    className="btn btn-outline-primary btn-sm me-2"
-                    onClick={() => setActiveForm("zapocet")}
-                    disabled={activeForm !== null}
-                >
-                    + Přidat Zápočet
-                </button>
-                <button
-                    className="btn btn-outline-primary btn-sm me-2"
-                    onClick={() => setActiveForm("test")}
-                    disabled={activeForm !== null}
-                >
-                    + Přidat Test
-                </button>
-                <button
-                    className="btn btn-outline-primary btn-sm"
-                    onClick={() => setActiveForm("zkouska")}
-                    disabled={activeForm !== null}
-                >
-                    + Přidat Zkoušku
-                </button>
-            </div>
+            {isEditing && (
+                <div className="mb-3 d-flex align-items-center gap-2 flex-wrap">
+                    <button
+                        className="btn btn-outline-primary btn-sm"
+                        onClick={() => setActiveForm("zapocet")}
+                        disabled={activeForm !== null}
+                    >
+                        + Přidat Zápočet
+                    </button>
+                    <button
+                        className="btn btn-outline-primary btn-sm"
+                        onClick={() => setActiveForm("test")}
+                        disabled={activeForm !== null}
+                    >
+                        + Přidat Test
+                    </button>
+                    <button
+                        className="btn btn-outline-primary btn-sm"
+                        onClick={() => setActiveForm("zkouska")}
+                        disabled={activeForm !== null}
+                    >
+                        + Přidat Zkoušku
+                    </button>
+                </div>
+            )}
 
-            {activeForm && (
+            {isEditing && activeForm && (
                 <AddPartForm
                     parentItem={item}
                     partType={activeForm}
@@ -259,6 +266,7 @@ export const ExamParts = ({ item }) => {
                 parts={localParts}
                 parentItem={item}
                 onPartDeleted={handlePartDeleted}
+                isEditing={isEditing}
             />
         </CardCapsule>
     )
