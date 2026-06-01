@@ -1,0 +1,179 @@
+# Fix: Exam Parts Deletion in packages/exam
+
+## Problem
+Deletion of exam parts was not working properly. Multiple issues were identified and fixed.
+
+## Files Modified
+
+### 1. packages/exam/src/ExamGQLModel/Queries/DeleteAsyncAction.jsx
+
+**Issues:**
+- The default middleware (`addItemsFromGraphQLResult`) was throwing an error whenever the response `__typename` ended with "Error"
+- For delete operations, the response is always `ExamGQLModelDeleteError` - even for successful deletions (where `failed: false`)
+- The original mutation used `LargeFragment` which includes nested `parts{...Link}`, causing potential issues
+
+**Fix:**
+- Added custom `deleteMiddleware` that checks the `failed` field instead of relying on `__typename`
+- Only throws an error when `failed: true`
+- Dispatches `ItemActions.item_delete` to remove the deleted item from the Redux store
+- Simplified the GraphQL mutation with a minimal `DeleteEntityFragment` (only `id`, `lastchange`, `name`)
+
+**Final code:**
+```javascript
+import { createQueryStrLazy } from "@hrbolek/uoisfrontend-gql-shared";
+import { createAsyncGraphQLAction2 } from "../../../../dynamic/src/Core/createAsyncGraphQLAction2";
+import { ItemActions } from "../../../../dynamic/src/Store/ItemSlice";
+
+const DeleteMutationStr = `
+mutation examDelete($id: UUID!, $lastchange: DateTime!) {
+  examDelete(exam: {id: $id, lastchange: $lastchange}) {
+    ...ExamGQLModelDeleteError
+  }
+}
+
+fragment ExamGQLModelDeleteError on ExamGQLModelDeleteError {
+  __typename
+  Entity {
+    ...DeleteEntityFragment
+  }
+  msg
+  failed
+}
+
+fragment DeleteEntityFragment on ExamGQLModel {
+  __typename
+  id
+  lastchange
+  name
+}
+`
+
+const deleteMiddleware = (result) => async (dispatch, getState, next) => {
+    const dataRoot = result && typeof result === "object" && "data" in result && result.data != null
+        ? result.data
+        : result;
+
+    const deleteResult = dataRoot?.examDelete;
+
+    if (deleteResult) {
+        if (deleteResult.failed) {
+            const err = new Error(deleteResult.msg || "Delete operation failed");
+            err.errors = deleteResult;
+            throw err;
+        }
+
+        if (deleteResult.Entity?.id) {
+            dispatch(ItemActions.item_delete({ id: deleteResult.Entity.id }));
+        }
+    }
+
+    return next(result);
+};
+
+const DeleteMutation = createQueryStrLazy(`${DeleteMutationStr}`)
+export const DeleteAsyncAction = createAsyncGraphQLAction2(DeleteMutation, deleteMiddleware)
+```
+
+### 2. packages/exam/src/ExamGQLModel/Components/ExamParts.jsx
+
+**Issues:**
+- Used `window.location.reload()` after deletion - crude approach causing full page refresh
+- Didn't update the parent item's `parts` array in Redux
+- When creating parts, `planId` was being set which created a foreign key relationship to `plans` table, preventing deletion
+
+**Fixes:**
+- Removed `window.location.reload()` from delete flow
+- Added local state (`localParts`) for immediate UI updates after deletion
+- Added `onDeleted` callback to update local state
+- Added Redux dispatch to update parent item's `parts` array after deletion
+- Removed `planId` from new part creation (parts should only have `parentId`, not their own `planId`)
+- Removed unused `DEFAULT_PLAN_ID` constant
+- Added `useDispatch` from react-redux
+- Added `ItemActions` import from dynamic/src/Store/ItemSlice
+
+**Key changes in DeletePartButton:**
+```javascript
+const DeletePartButton = ({ part, parentItem, onDeleted }) => {
+    const [loading, setLoading] = useState(false)
+    const { run } = useAsyncThunkAction(DeleteAsyncAction, {}, { deferred: true })
+    const dispatch = useDispatch()
+
+    const handleDelete = useCallback(async () => {
+        if (!confirm(`Opravdu chcete smazat "${part.name}"?`)) {
+            return
+        }
+
+        setLoading(true)
+        try {
+            await run({
+                id: part.id,
+                lastchange: part.lastchange
+            })
+
+            // Update parent's parts array in Redux
+            if (parentItem?.id) {
+                const updatedParts = (parentItem.parts || []).filter(p => p.id !== part.id)
+                dispatch(ItemActions.item_update({
+                    id: parentItem.id,
+                    parts: updatedParts
+                }))
+            }
+
+            // Update local state
+            if (onDeleted) {
+                onDeleted(part.id)
+            }
+        } catch (error) {
+            console.error("Failed to delete exam part:", error)
+            alert("Nepodařilo se smazat část zkoušky: " + error.message)
+        } finally {
+            setLoading(false)
+        }
+    }, [part, parentItem, run, dispatch, onDeleted])
+    // ...
+}
+```
+
+**Key changes in ExamParts:**
+```javascript
+export const ExamParts = ({ item }) => {
+    const [localParts, setLocalParts] = useState(item?.parts || [])
+    const [activeForm, setActiveForm] = useState(null)
+
+    const handlePartDeleted = useCallback((deletedPartId) => {
+        setLocalParts(prev => prev.filter(p => p.id !== deletedPartId))
+    }, [])
+
+    return (
+        // ... uses localParts instead of item?.parts
+        // ... passes parentItem and onPartDeleted to PartsTable
+    )
+}
+```
+
+**Key changes in AddPartForm (removed planId):**
+```javascript
+const newPart = {
+    id: crypto.randomUUID(),
+    name: partConfig.name,
+    nameEn: partConfig.nameEn,
+    minScore: 0,
+    maxScore: parseInt(maxScore, 10) || 100,
+    parentId: parentItem?.id,
+    typeId: parentItem?.typeId ?? DEFAULT_TYPE_ID,
+    // planId removed - was causing foreign key constraint issues
+}
+```
+
+## Root Cause of Foreign Key Error
+Parts created with `planId` had a relationship to the `plans` table (`plans_exam_id_fkey`). When trying to delete such parts, the database threw:
+```
+ForeignKeyViolationError: update or delete on table "acclassificationplans" violates foreign key constraint "plans_exam_id_fkey" on table "plans"
+```
+
+Parts should only have `parentId` (linking to parent exam), not their own `planId`.
+
+## Notes
+- Old parts created with `planId` will still have the foreign key constraint - they need database cleanup
+- New parts created after this fix will not have the issue
+- The `window.location.reload()` in AddPartForm was kept as-is (only delete was fixed per requirements)

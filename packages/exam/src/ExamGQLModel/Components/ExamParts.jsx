@@ -1,15 +1,17 @@
 import { useState, useCallback } from "react"
+import { useDispatch } from "react-redux"
 import { CardCapsule } from "./CardCapsule"
 import { InsertAsyncAction, DeleteAsyncAction } from "../Queries"
 import { useAsyncThunkAction } from "../../../../dynamic/src/Hooks"
+import { ItemActions } from "../../../../dynamic/src/Store/ItemSlice"
 
 // Default IDs from system data
-const DEFAULT_PLAN_ID = "28c25266-daa4-4579-a32a-7a4394ee463d"
 const DEFAULT_TYPE_ID = "a00a0322-b095-11ed-9bd8-0242ac110002"
 
-const DeletePartButton = ({ part }) => {
+const DeletePartButton = ({ part, parentItem, onDeleted }) => {
     const [loading, setLoading] = useState(false)
     const { run } = useAsyncThunkAction(DeleteAsyncAction, {}, { deferred: true })
+    const dispatch = useDispatch()
 
     const handleDelete = useCallback(async () => {
         if (!confirm(`Opravdu chcete smazat "${part.name}"?`)) {
@@ -22,14 +24,25 @@ const DeletePartButton = ({ part }) => {
                 id: part.id,
                 lastchange: part.lastchange
             })
-            window.location.reload()
+
+            if (parentItem?.id) {
+                const updatedParts = (parentItem.parts || []).filter(p => p.id !== part.id)
+                dispatch(ItemActions.item_update({
+                    id: parentItem.id,
+                    parts: updatedParts
+                }))
+            }
+
+            if (onDeleted) {
+                onDeleted(part.id)
+            }
         } catch (error) {
             console.error("Failed to delete exam part:", error)
             alert("Nepodařilo se smazat část zkoušky: " + error.message)
         } finally {
             setLoading(false)
         }
-    }, [part, run])
+    }, [part, parentItem, run, dispatch, onDeleted])
 
     return (
         <button
@@ -77,7 +90,6 @@ const AddPartForm = ({ parentItem, partType, onCancel, onSuccess }) => {
                 minScore: 0,
                 maxScore: parseInt(maxScore, 10) || 100,
                 parentId: parentItem?.id,
-                planId: parentItem?.planId ?? DEFAULT_PLAN_ID,
                 typeId: parentItem?.typeId ?? DEFAULT_TYPE_ID,
             }
 
@@ -166,7 +178,7 @@ const AddPartForm = ({ parentItem, partType, onCancel, onSuccess }) => {
     )
 }
 
-const PartsTable = ({ parts }) => {
+const PartsTable = ({ parts, parentItem, onPartDeleted }) => {
     if (!parts || parts.length === 0) {
         return <p className="text-muted">Zatím nejsou přidány žádné části.</p>
     }
@@ -188,7 +200,11 @@ const PartsTable = ({ parts }) => {
                         <td>{part.maxScore ?? "-"}</td>
                         <td>{part.minScore ?? "-"}</td>
                         <td>
-                            <DeletePartButton part={part} />
+                            <DeletePartButton
+                                part={part}
+                                parentItem={parentItem}
+                                onDeleted={onPartDeleted}
+                            />
                         </td>
                     </tr>
                 ))}
@@ -198,8 +214,12 @@ const PartsTable = ({ parts }) => {
 }
 
 export const ExamParts = ({ item }) => {
-    const parts = item?.parts || []
+    const [localParts, setLocalParts] = useState(item?.parts || [])
     const [activeForm, setActiveForm] = useState(null)
+
+    const handlePartDeleted = useCallback((deletedPartId) => {
+        setLocalParts(prev => prev.filter(p => p.id !== deletedPartId))
+    }, [])
 
     return (
         <CardCapsule item={item} title="Části zkoušky (parts)">
@@ -235,7 +255,11 @@ export const ExamParts = ({ item }) => {
                 />
             )}
 
-            <PartsTable parts={parts} />
+            <PartsTable
+                parts={localParts}
+                parentItem={item}
+                onPartDeleted={handlePartDeleted}
+            />
         </CardCapsule>
     )
 }
