@@ -122,11 +122,11 @@ export const MediumContent = ({ item, children}) => {
                     {item.descriptionEn}
                 </Attribute>
             )}
-            {item?.minScore && (
+
                 <Attribute label="Minimální počet bodů">
                     {item.minScore}
                 </Attribute>
-            )}
+
             {item?.maxScore && (
                 <Attribute label="Maximální počet bodů">
                     {item.maxScore}
