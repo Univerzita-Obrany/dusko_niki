@@ -133,17 +133,17 @@ export const MediumContent = ({ item, children}) => {
                 </Attribute>
             )}
             
+            {item?.plan && (
                 <Attribute label="Plán">
-                    {typeof item.plan === "object" ? (item.plan.name || item.plan.id) : item.plan}
+                    {item.plan.name || item.plan.id}
                 </Attribute>
+            )}
             
-            {item?.parent && (
-                <Attribute label="Nadřazený">
-                    {item.parent?.name ? (
-                        <Link item={item.parent} />
-                    ) : (
-                        item.parent?.id || JSON.stringify(item.parent)
-                    )}
+            {item?.parent?.id && (
+                <Attribute label="Nadřazený exam">
+                    <Link item={item.parent}>
+                        ← {item.parent.name || item.parent.id}
+                    </Link>
                 </Attribute>
             )}
             {item?.parts && (

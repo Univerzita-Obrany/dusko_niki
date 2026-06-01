@@ -1,16 +1,39 @@
 import { useState, useCallback, useEffect } from "react"
+import { useLocation } from "react-router"
 import { CardCapsule } from "./CardCapsule"
 import { Link } from "./Link"
-import { InsertAsyncAction, DeleteAsyncAction } from "../Queries"
+import { InsertAsyncAction, DeleteAsyncAction, UpdateAsyncAction } from "../Queries"
 import { useAsyncThunkAction } from "../../../../dynamic/src/Hooks"
+import { createQueryStrLazy } from "@hrbolek/uoisfrontend-gql-shared"
+import { createAsyncGraphQLAction2 } from "../../../../dynamic/src/Core/createAsyncGraphQLAction2"
 
-// Default IDs from system data
-const DEFAULT_PLAN_ID = "28c25266-daa4-4579-a32a-7a4394ee463d"
 const DEFAULT_TYPE_ID = "a00a0322-b095-11ed-9bd8-0242ac110002"
+const DEFAULT_PLAN_ID = "28c25266-daa4-4579-a32a-7a4394ee463d"
+
+const unlinkPlanMiddleware = (result) => async (dispatch, getState, next) => {
+    const dataRoot = result?.data ?? result
+    const updateResult = dataRoot?.result ?? dataRoot?.studyPlanUpdate
+    if (updateResult?.failed) {
+        const err = new Error(updateResult.msg || "Plan unlink failed")
+        err.errors = updateResult
+        throw err
+    }
+    return next(result)
+}
+
+const UnlinkPlanAction = createAsyncGraphQLAction2(createQueryStrLazy(`
+mutation UnlinkStudyPlan($id: UUID!, $lastchange: DateTime!) {
+  result: studyPlanUpdate(studyPlan: {id: $id, lastchange: $lastchange, examId: null}) {
+    ... on StudyPlanGQLModelUpdateError { failed msg }
+    ... on StudyPlanGQLModel { id lastchange }
+  }
+}
+`), unlinkPlanMiddleware)
 
 const DeletePartButton = ({ part }) => {
     const [loading, setLoading] = useState(false)
-    const { run } = useAsyncThunkAction(DeleteAsyncAction, {}, { deferred: true })
+    const { run: deleteExam } = useAsyncThunkAction(DeleteAsyncAction, {}, { deferred: true })
+    const { run: unlinkPlan } = useAsyncThunkAction(UnlinkPlanAction, {}, { deferred: true })
 
     const handleDelete = useCallback(async () => {
         if (!confirm(`Opravdu chcete smazat "${part.name}"?`)) {
@@ -19,7 +42,10 @@ const DeletePartButton = ({ part }) => {
 
         setLoading(true)
         try {
-            await run({
+            if (part.plan?.id && part.plan?.lastchange) {
+                await unlinkPlan({ id: part.plan.id, lastchange: part.plan.lastchange })
+            }
+            await deleteExam({
                 id: part.id,
                 lastchange: part.lastchange
             })
@@ -30,7 +56,7 @@ const DeletePartButton = ({ part }) => {
         } finally {
             setLoading(false)
         }
-    }, [part, run])
+    }, [part, deleteExam, unlinkPlan])
 
     return (
         <button
@@ -92,8 +118,8 @@ const AddPartForm = ({ parentItem, partType, onCancel, onSuccess }) => {
                 minScore: parseInt(minScore, 10) || 0,
                 maxScore: parseInt(maxScore, 10) || 100,
                 parentId: parentItem?.id,
-                planId: parentItem?.planId ?? DEFAULT_PLAN_ID,
                 typeId: parentItem?.typeId ?? DEFAULT_TYPE_ID,
+                planId: DEFAULT_PLAN_ID,
             }
 
             const result = await run(newPart)
@@ -105,8 +131,11 @@ const AddPartForm = ({ parentItem, partType, onCancel, onSuccess }) => {
 
             window.location.reload()
         } catch (error) {
-            console.error("Failed to create exam part:", error)
-            alert("Nepodařilo se vytvořit část zkoušky: " + error.message)
+            const details = error.errors
+                ? JSON.stringify(error.errors, null, 2)
+                : error.message
+            console.error("Failed to create exam part:", error, error.errors)
+            alert("Nepodařilo se vytvořit část zkoušky:\n" + details)
         } finally {
             setLoading(false)
         }
@@ -262,13 +291,14 @@ const InlineEditCell = ({ part, field, type = "text", editable = false }) => {
     const [editing, setEditing] = useState(false)
     const [value, setValue] = useState(part[field] ?? (type === "number" ? 0 : ""))
     const [loading, setLoading] = useState(false)
-    const { run } = useAsyncThunkAction(InsertAsyncAction, {}, { deferred: true })
+    const { run } = useAsyncThunkAction(UpdateAsyncAction, {}, { deferred: true })
 
     const handleSave = useCallback(async () => {
         setLoading(true)
         try {
             await run({
-                ...part,
+                id: part.id,
+                lastchange: part.lastchange,
                 [field]: type === "number" ? (parseInt(value, 10) || 0) : value,
             })
             setEditing(false)
@@ -316,10 +346,12 @@ const InlineEditCell = ({ part, field, type = "text", editable = false }) => {
     )
 }
 
-export const ExamParts = ({ item, showActions = false }) => {
+export const ExamParts = ({ item }) => {
     const parts = item?.parts || []
     const [activeForm, setActiveForm] = useState(null)
     const [showOtherOptions, setShowOtherOptions] = useState(false)
+    const { pathname } = useLocation()
+    const showActions = pathname.includes("/edit/")
 
     return (
         <CardCapsule item={item} title="Části zkoušky (parts)">

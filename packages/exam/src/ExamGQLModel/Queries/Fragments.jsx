@@ -14,9 +14,18 @@ fragment Link on ExamGQLModel {
   description
   descriptionEn
   typeId
+  parentId
+  parent {
+    id
+    name
+  }
   planId
+  plan {
+    id
+    lastchange
+  }
   minScore
-  maxScore 
+  maxScore
 }
 `
 
