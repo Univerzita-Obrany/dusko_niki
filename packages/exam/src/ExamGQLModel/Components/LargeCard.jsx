@@ -31,7 +31,7 @@ import { ExamParts } from "./ExamParts"
  *   <p>Additional content for the middle column.</p>
  * </TemplateLargeCard>
  */
-export const LargeCard = ({ item, children, CardCapsule=CardCapsule_, MediumContent=MediumContent_, showPartActions = false }) => {
+export const LargeCard = ({ item, children, CardCapsule=CardCapsule_, MediumContent=MediumContent_ }) => {
     // console.log("LargeCard.item", item)
     return (
         <CardCapsule item={item} >
@@ -43,7 +43,7 @@ export const LargeCard = ({ item, children, CardCapsule=CardCapsule_, MediumCont
                     <InteractiveMutations item={item} />
                 </LeftColumn>
                 <MiddleColumn>
-                    <ExamParts item={item} showActions={showPartActions} />
+                    <ExamParts item={item} />
                     {children}
                 </MiddleColumn>
             </Row>
