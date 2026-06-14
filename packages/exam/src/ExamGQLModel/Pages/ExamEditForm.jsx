@@ -41,7 +41,12 @@ export const ExamEditForm = ({ children }) => {
 
     const minScore = Number(draft?.minScore) || 0;
     const maxScore = Number(draft?.maxScore) || 0;
+    const partsMinScore = (draft?.parts || []).reduce(
+        (sum, part) => sum + (Number(part?.minScore) || 0),
+        0
+    );
     const isScoreValid = minScore <= maxScore;
+    const isMinScoreValidForParts = minScore >= partsMinScore;
 
     const onChange = useCallback((e) => {
 
@@ -121,6 +126,8 @@ export const ExamEditForm = ({ children }) => {
 
     if (!isScoreValid) return;
 
+    if (!isMinScoreValidForParts) return;
+
     const timeout = setTimeout(() => {
         onSave();
     }, 700);
@@ -140,6 +147,12 @@ export const ExamEditForm = ({ children }) => {
             {!isScoreValid && (
                 <div className="alert alert-warning">
                     Minimální počet bodů musí být menší nebo roven maximálnímu počtu bodů
+                </div>
+            )}
+
+            {!isMinScoreValidForParts && (
+                <div className="alert alert-warning">
+                    Minimální počet bodů musí být alespoň {partsMinScore}, aby pokryl všechny subparts.
                 </div>
             )}
 
