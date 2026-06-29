@@ -6,8 +6,7 @@ import { Table } from "../Components/Table"
 import { Filter } from "../Components/Filter"
 import { FilterButton, ResetFilterButton } from "../../../../_template/src/Base/FormControls/Filter"
 import { useSearchParams } from "react-router"
-import { useCallback, useEffect, useRef } from "react"
-import { useMemo } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { AsyncStateIndicator } from "../../../../_template/src/Base/Helpers/AsyncStateIndicator"
 import { Collapsible } from "../../../../_template/src/Base/FormControls/Collapsible"
 
@@ -23,11 +22,26 @@ function safeParseWhere(sp, paramName = "where") {
     }
 }
 
-//
+const COLUMN_TO_DB_FIELD = {
+    name: "name",
+    nameEn: "name_en",
+    minScore: "min_score",
+    maxScore: "max_score",
+    changed: "lastchange",
+}
+
+const computeOrderby = (sortConfig) => {
+    if (!sortConfig.column || !sortConfig.direction) return undefined
+    const field = COLUMN_TO_DB_FIELD[sortConfig.column]
+    if (!field) return undefined
+    return sortConfig.direction === "desc" ? `-${field}` : field
+}
+
 const filterParameterName = "gr_where"
 export const PageVector = ({ children, queryAsyncAction = ReadPageAsyncAction }) => {
 
     const [sp] = useSearchParams();
+    const [sortConfig, setSortConfig] = useState({ column: null, direction: null })
 
     const whereFromUrl = useMemo(() => safeParseWhere(sp, filterParameterName), [sp.toString()]);
 
@@ -35,52 +49,22 @@ export const PageVector = ({ children, queryAsyncAction = ReadPageAsyncAction })
         {
             asyncAction: queryAsyncAction,
             actionParams: { skip: 0, limit: 25, where: whereFromUrl },
-            // reset: whereFromUrl
         }
     )
 
-    // Track current sort for loadAllAndSort
-    const currentSortRef = useRef(null)
-
     useEffect(() => {
-        const params = { skip: 0, limit: 25, where: whereFromUrl }
+        const orderby = computeOrderby(sortConfig)
+        const params = { skip: 0, limit: 25, where: whereFromUrl, ...(orderby && { orderby }) }
         restart(params)
-    }, [whereFromUrl]);
+    }, [whereFromUrl, sortConfig]);
 
-    // Handle sort change - restart with new orderby
-    const handleSort = useCallback((field, direction) => {
-        currentSortRef.current = { field, direction }
-        const orderby = direction === "desc" ? `-${field}` : field
-        const params = { skip: 0, limit: 25, where: whereFromUrl, orderby }
-        restart(params)
-    }, [whereFromUrl, restart])
-
-    // Load all items for sorting - keeps loading until hasMore is false
-    const loadAllAndSort = useCallback(async (field, direction) => {
-        currentSortRef.current = { field, direction }
-        const orderby = direction === "desc" ? `-${field}` : field
-
-        // First restart with high limit to load everything
-        const params = { skip: 0, limit: 1000, where: whereFromUrl, orderby }
-        await restart(params)
-
-        // Continue loading if there's more
-        let iterations = 0
-        const maxIterations = 50 // Safety limit
-
-        // Small delay to let state update
-        await new Promise(r => setTimeout(r, 100))
-
-        // Keep loading until no more data
-        while (iterations < maxIterations) {
-            iterations++
-            const result = await loadMore()
-            if (!result) break
-            // Small delay between loads
-            await new Promise(r => setTimeout(r, 50))
-        }
-    }, [whereFromUrl, restart, loadMore])
-
+    const handleSort = useCallback((column) => {
+        setSortConfig(prev => {
+            if (prev.column !== column) return { column, direction: "asc" }
+            if (prev.direction === "asc") return { column, direction: "desc" }
+            return { column: null, direction: null }
+        })
+    }, [])
 
     return (
         <PageBase>
@@ -105,18 +89,12 @@ export const PageVector = ({ children, queryAsyncAction = ReadPageAsyncAction })
                 </Filter>
             </Collapsible>
 
-            <Table
-                data={items}
-                onSort={handleSort}
-                loadAllAndSort={loadAllAndSort}
-                hasMore={hasMore}
-            />
+            <Table data={items} sortConfig={sortConfig} onSort={handleSort} />
 
-            <AsyncStateIndicator error={error}  loading={loading} text="Nahrávám další..." />
+            <AsyncStateIndicator error={error} loading={loading} text="Nahrávám další..." />
 
             {hasMore && <div ref={sentinelRef} style={{ height: 80, backgroundColor: "lightgray" }} />}
             {hasMore && <button className="btn btn-success form-control" onClick={() => loadMore()}>Více</button>}
         </PageBase>
     )
 }
-
