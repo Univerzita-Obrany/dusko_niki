@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: ExamGQLModel/Components/Link.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: ExamGQLModel/Components/Link.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { URIRoot } from "../../uriroot";
+import { registerLink } from "../../../../_template/src/Base/Components/Link";
+import { ProxyLink } from "../../../../_template/src/Base/Components/ProxyLink";
+
+const modelURI = `${URIRoot}/ExamGQLModel`
+export const ListURI = `${modelURI}/list/`;
+export const CreateURI = `${modelURI}/create/`;
+export const ReadURI = `${modelURI}/view/`;
+export const UpdateURI = `${modelURI}/edit/`;
+export const DeleteURI = `${modelURI}/delete/`;
+
+export const LinkURI = ReadURI;
+export const VectorItemsURI = ListURI;
+
+const idParam = ":id"
+export const ReadItemURI = `${LinkURI}${idParam}`;
+export const UpdateItemURI = `${UpdateURI}${idParam}`;
+export const DeleteItemURI = `${DeleteURI}${idParam}`;
+
+/**
+ * A React component that renders a `ProxyLink` to an "template" entity's view page.
+ *
+ * The target URL is dynamically constructed using the `template` object's `id`, and the link displays
+ * the `template` object's `name` as its clickable content.
+ *
+ * @function TemplateLink
+ * @param {Object} props - The properties for the `TemplateLink` component.
+ * @param {Object} props.template - The object representing the "template" entity.
+ * @param {string|number} props.template.id - The unique identifier for the "template" entity. Used to construct the target URL.
+ * @param {string} props.template.name - The display name for the "template" entity. Used as the link text.
+ *
+ * @returns {JSX.Element} A `ProxyLink` component linking to the specified "template" entity's view page.
+ *
+ * @example
+ * // Example usage with a sample template entity:
+ * const templateEntity = { id: 123, name: "Example Template Entity" };
+ * 
+ * &lt;TemplateLink template={templateEntity} />
+ * // Renders: &lt;ProxyLink to="/template/template/view/123">Example Template Entity&lt;/ProxyLink>
+ *
+ * @remarks
+ * - This component utilizes `ProxyLink` to ensure consistent link behavior, including parameter preservation and conditional reloads.
+ * - The URL format `/template/template/view/:id` must be supported by the application routing.
+ *
+ * @see ProxyLink - The base component used for rendering the link.
+ */
+export const Link = ({ item, LinkURI: LinkURI_ = LinkURI, action="view", children, ...props}) => {
+    const targetURI = LinkURI_.replace('view', action);
+    return &lt;ProxyLink to={targetURI + item?.id} {...props}>{children || item?.fullname || item?.name || item?.id || "Nevim"}&lt;/ProxyLink>
+    // return &lt;BaseUI.Link item={item} />
+    // return &lt;a>{children || item?.fullname || item?.name || item?.id || "Nevim"}&lt;/a>
+}
+
+registerLink('ExamGQLModel', Link)</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#CardCapsule">CardCapsule</a></li><li><a href="global.html#Children">Children</a></li><li><a href="global.html#CreateBody">CreateBody</a></li><li><a href="global.html#CreateButton">CreateButton</a></li><li><a href="global.html#CreateDialog">CreateDialog</a></li><li><a href="global.html#CreateLink">CreateLink</a></li><li><a href="global.html#DeleteBody">DeleteBody</a></li><li><a href="global.html#DeleteButton">DeleteButton</a></li><li><a href="global.html#DeleteDialog">DeleteDialog</a></li><li><a href="global.html#DeleteLink">DeleteLink</a></li><li><a href="global.html#ExamGQLModelRouterSegments">ExamGQLModelRouterSegments</a></li><li><a href="global.html#LargeCard">LargeCard</a></li><li><a href="global.html#LiveEdit_">LiveEdit_</a></li><li><a href="global.html#MediumCard">MediumCard</a></li><li><a href="global.html#MediumEditableContent">MediumEditableContent</a></li><li><a href="global.html#MyNavDropdown">MyNavDropdown</a></li><li><a href="global.html#PageItemBase">PageItemBase</a></li><li><a href="global.html#PageReadItemRolesOn">PageReadItemRolesOn</a></li><li><a href="global.html#ReadAsyncAction">ReadAsyncAction</a></li><li><a href="global.html#TemplateLink">TemplateLink</a></li><li><a href="global.html#TemplateScalarAttribute">TemplateScalarAttribute</a></li><li><a href="global.html#TemplateScalarAttributeLazy">TemplateScalarAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute">TemplateVectorsAttribute</a></li><li><a href="global.html#TemplateVectorsAttributeInfinite">TemplateVectorsAttributeInfinite</a></li><li><a href="global.html#TemplateVectorsAttributeLazy">TemplateVectorsAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute_old">TemplateVectorsAttribute_old</a></li><li><a href="global.html#VectorsVisualiser">VectorsVisualiser</a></li><li><a href="global.html#followUpTemplateVectorItemDelete">followUpTemplateVectorItemDelete</a></li><li><a href="global.html#followUpTemplateVectorItemInsert">followUpTemplateVectorItemInsert</a></li><li><a href="global.html#followUpTemplateVectorItemUpdate">followUpTemplateVectorItemUpdate</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Jul 20 2026 13:46:51 GMT+0200 (středoevropský letní čas)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

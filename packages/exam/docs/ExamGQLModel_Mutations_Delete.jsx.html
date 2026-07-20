@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: ExamGQLModel/Mutations/Delete.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: ExamGQLModel/Mutations/Delete.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { DeleteItemURI, ListURI, MediumContent, VectorItemsURI } from "../Components";
+import { DeleteAsyncAction } from "../Queries";
+import { 
+    DeleteBody as BaseDeleteBody, 
+    DeleteButton as BaseDeleteButton, 
+    DeleteDialog as BaseDeleteDialog, 
+    DeleteLink as BaseDeleteLink
+} from "../../../../_template/src/Base/Mutations/Delete";
+
+const DefaultContent = MediumContent
+const MutationAsyncAction = DeleteAsyncAction
+
+const permissions = {
+    oneOfRoles: ["administrátor"],
+    mode: "absolute",
+}
+
+/**
+ * Link na delete route pro konkrétní entitu.
+ *
+ * Wrapper nad `BaseDeleteLink`. Nastavuje výchozí `uriPattern` pro delete route a aplikuje RBAC
+ * přes `permissions`. Ostatní props přeposílá do Base komponenty.
+ *
+ * @param {Object} params
+ * @param {string} [params.uriPattern=DeleteItemURI]
+ *   URI pattern pro delete route (typicky obsahuje `:id` nebo odpovídá routování aplikace).
+ * @param {Object} params.props
+ *   Další props přeposílané do `BaseDeleteLink` (např. `children`, `className`,
+ *   `preserveSearch`, `preserveHash`, atd.).
+ *
+ * @returns {JSX.Element}
+ */
+export const DeleteLink = ({ 
+    uriPattern=DeleteItemURI,
+    ...props
+ }) => {
+    return (
+        &lt;BaseDeleteLink 
+            {...props} 
+            uriPattern={uriPattern} 
+            {...permissions}
+        />
+    )
+};
+
+/**
+ * Tlačítko pro smazání entity (obvykle otevře confirm dialog a spustí delete mutaci).
+ *
+ * Wrapper nad `BaseDeleteButton`. Dodává výchozí `DefaultContent`, `mutationAsyncAction`
+ * a `vectorItemsURI` (kam se naviguje po úspěšném smazání, pokud není použit `onOk`).
+ *
+ * Chování navigace / callback:
+ * - Pokud je definované `onOk`, použije se pro “feedback”, že mazání proběhlo (tj. uživatel si
+ *   rozhodne, co dál).
+ * - Pokud `onOk` definované není, Base implementace typicky naviguje na `vectorItemsURI`.
+ *
+ * @param {Object} params
+ * @param {Function} [params.mutationAsyncAction=MutationAsyncAction]
+ *   Async action (thunk) pro delete operaci (např. DeleteAsyncAction).
+ *
+ * @param {React.ComponentType&lt;Object>} [params.DefaultContent=MediumContent]
+ *   Komponenta pro zobrazení mazáné entity v confirm dialogu (read-only).
+ *
+ * @param {string} [params.vectorItemsURI=ListURI]
+ *   URI pro návrat po úspěšném smazání (typicky list stránka / kolekce).
+ *
+ * @param {Function} [params.onOk]
+ *   Callback po úspěšném smazání. Pokud není zadán, Base implementace typicky použije navigaci na `vectorItemsURI`.
+ *
+ * @param {Object}} params.props
+ *   Další props přeposílané do `BaseDeleteButton` (např. `children`, `title`, `className`,
+ *   `rbacitem`, `item`, `disabled`, atd. – podle Base/General implementace).
+ *
+ * @returns {JSX.Element}
+ */
+export const DeleteButton = ({
+    mutationAsyncAction=MutationAsyncAction,
+    DefaultContent:DefaultContent_=DefaultContent,
+    Dialog=DeleteDialog,
+    vectorItemsURI=ListURI,
+    onOk,
+    ...props 
+}) => {
+    return (
+        &lt;BaseDeleteButton 
+            {...props} 
+            DefaultContent={DefaultContent_} 
+            Dialog={Dialog}
+            mutationAsyncAction={mutationAsyncAction}
+            vectorItemsURI={vectorItemsURI}
+            onOk={onOk}
+            {...permissions}
+        />
+    )
+}
+
+/**
+ * Confirm dialog pro smazání entity.
+ *
+ * Wrapper nad `BaseDeleteDialog`. Dodává výchozí `DefaultContent` (read-only zobrazení entity),
+ * `mutationAsyncAction` a `vectorItemsURI` pro návrat po úspěchu (dle Base/General implementace).
+ *
+ * @param {Object} params
+ * @param {Function} [params.mutationAsyncAction=MutationAsyncAction]
+ *   Async action (thunk) pro delete operaci (např. DeleteAsyncAction).
+ *
+ * @param {React.ComponentType&lt;Object>} [params.DefaultContent=MediumContent]
+ *   Komponenta pro zobrazení mazáné entity (read-only).
+ *
+ * @param {string} [params.vectorItemsURI=ListURI]
+ *   URI pro návrat po úspěšném smazání (typicky list stránka / kolekce).
+ *
+ * @param {Object}} params.props
+ *   Další props přeposílané do `BaseDeleteDialog` (např. `title`, `oklabel`, `cancellabel`,
+ *   `item`, `onOk`, `onCancel`, atd.).
+ *
+ * @returns {JSX.Element}
+ */
+export const DeleteDialog = ({
+    mutationAsyncAction=MutationAsyncAction,
+    DefaultContent:DefaultContent_=DefaultContent,
+    vectorItemsURI=ListURI,
+    ...props 
+}) => {
+    return (
+        &lt;BaseDeleteDialog 
+            {...props} 
+            DefaultContent={DefaultContent_} 
+            mutationAsyncAction={mutationAsyncAction}
+            vectorItemsURI={vectorItemsURI}
+            {...permissions}
+        />
+    )
+}
+
+/**
+ * “Page-level” delete workflow (mazání na celé stránce / v těle stránky).
+ *
+ * Wrapper nad `BaseDeleteBody`. Dodává výchozí `DefaultContent`, `mutationAsyncAction`
+ * a `vectorItemsURI` a aplikuje RBAC přes `permissions`.
+ *
+ * @param {Object} params
+ * @param {Function} [params.mutationAsyncAction=MutationAsyncAction]
+ *   Async action (thunk) pro delete operaci (např. DeleteAsyncAction).
+ *
+ * @param {React.ComponentType&lt;Object>} [params.DefaultContent=MediumContent]
+ *   Komponenta pro zobrazení mazáné entity (read-only).
+ *
+ * @param {string} [params.vectorItemsURI=ListURI]
+ *   URI pro návrat po úspěšném smazání (typicky list stránka / kolekce).
+ *
+ * @param {Object}} params.props
+ *   Další props přeposílané do `BaseDeleteBody` (např. `title`, `oklabel`, `cancellabel`,
+ *   `item`, `onOk`, `onCancel`, atd.).
+ *
+ * @returns {JSX.Element}
+ */
+export const DeleteBody = ({ 
+    mutationAsyncAction=MutationAsyncAction,
+    DefaultContent:DefaultContent_=DefaultContent,
+    vectorItemsURI=ListURI,
+    ...props
+}) => {
+    return (
+        &lt;BaseDeleteBody 
+            {...props} 
+            DefaultContent={DefaultContent_} 
+            mutationAsyncAction={mutationAsyncAction}
+            vectorItemsURI={vectorItemsURI}
+            {...permissions}
+        />
+    )
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#CardCapsule">CardCapsule</a></li><li><a href="global.html#Children">Children</a></li><li><a href="global.html#CreateBody">CreateBody</a></li><li><a href="global.html#CreateButton">CreateButton</a></li><li><a href="global.html#CreateDialog">CreateDialog</a></li><li><a href="global.html#CreateLink">CreateLink</a></li><li><a href="global.html#DeleteBody">DeleteBody</a></li><li><a href="global.html#DeleteButton">DeleteButton</a></li><li><a href="global.html#DeleteDialog">DeleteDialog</a></li><li><a href="global.html#DeleteLink">DeleteLink</a></li><li><a href="global.html#ExamGQLModelRouterSegments">ExamGQLModelRouterSegments</a></li><li><a href="global.html#LargeCard">LargeCard</a></li><li><a href="global.html#LiveEdit_">LiveEdit_</a></li><li><a href="global.html#MediumCard">MediumCard</a></li><li><a href="global.html#MediumEditableContent">MediumEditableContent</a></li><li><a href="global.html#MyNavDropdown">MyNavDropdown</a></li><li><a href="global.html#PageItemBase">PageItemBase</a></li><li><a href="global.html#PageReadItemRolesOn">PageReadItemRolesOn</a></li><li><a href="global.html#ReadAsyncAction">ReadAsyncAction</a></li><li><a href="global.html#TemplateLink">TemplateLink</a></li><li><a href="global.html#TemplateScalarAttribute">TemplateScalarAttribute</a></li><li><a href="global.html#TemplateScalarAttributeLazy">TemplateScalarAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute">TemplateVectorsAttribute</a></li><li><a href="global.html#TemplateVectorsAttributeInfinite">TemplateVectorsAttributeInfinite</a></li><li><a href="global.html#TemplateVectorsAttributeLazy">TemplateVectorsAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute_old">TemplateVectorsAttribute_old</a></li><li><a href="global.html#VectorsVisualiser">VectorsVisualiser</a></li><li><a href="global.html#followUpTemplateVectorItemDelete">followUpTemplateVectorItemDelete</a></li><li><a href="global.html#followUpTemplateVectorItemInsert">followUpTemplateVectorItemInsert</a></li><li><a href="global.html#followUpTemplateVectorItemUpdate">followUpTemplateVectorItemUpdate</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Jul 20 2026 13:46:51 GMT+0200 (středoevropský letní čas)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

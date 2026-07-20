@@ -1,0 +1,3654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Global</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Global</h1>
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2></h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="CardCapsule"><span class="type-signature">(constant) </span>CardCapsule<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>A specialized card component that displays an <code>TemplateLink</code> as its title and encapsulates additional content.</p>
+<p>This component extends the <code>CardCapsule</code> component by using a combination of a <code>PersonFill</code> icon and
+an <code>TemplateLink</code> component in the card's header. The <code>children</code> prop is used to render any content
+inside the card body. It is designed for use with entities represented by the <code>template</code> object.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Components_CardCapsule.jsx.html">ExamGQLModel/Components/CardCapsule.jsx</a>, <a href="ExamGQLModel_Components_CardCapsule.jsx.html#line32">line 32</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// Example usage:import { TemplateCardCapsule } from './TemplateCardCapsule';import { Button } from 'react-bootstrap';const templateEntity = { id: 123, name: "Example Entity" };&lt;TemplateCardCapsule template={templateEntity}>  &lt;Button variant="primary">Click Me&lt;/Button>&lt;/TemplateCardCapsule></code></pre>
+
+
+
+        
+            
+<h4 class="name" id="Children"><span class="type-signature">(constant) </span>Children<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>TemplateChildren Component</p>
+<p>A utility React component that wraps its children with the <code>ChildWrapper</code> component,
+passing down an <code>template</code> entity along with other props to all child elements.
+This component is useful for injecting a common <code>template</code> entity into multiple children
+while preserving their existing functionality.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Components_Children.jsx.html">ExamGQLModel/Components/Children.jsx</a>, <a href="ExamGQLModel_Components_Children.jsx.html#line30">line 30</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// Example usage:const templateEntity = { id: 1, message: "No data available" };&lt;TemplateChildren template={templateEntity}>    &lt;CustomMessage />    &lt;CustomIcon />&lt;/TemplateChildren>// Result: Both &lt;CustomMessage /> and &lt;CustomIcon /> receive the 'template' prop with the specified entity.</code></pre>
+
+
+
+        
+            
+<h4 class="name" id="CreateBody"><span class="type-signature">(constant) </span>CreateBody<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Wrapper nad <code>BaseCreateBody</code> (alias importu <code>CreateBody</code> z Base/Mutations/Create),
+který je odvozený z obecných <code>General*</code> komponent.</p>
+<p><code>CreateBody</code> typicky reprezentuje “page-level” create workflow (ne jen tlačítko + modal):</p>
+<ul>
+<li>vykreslí create formulář pomocí <code>DefaultContent</code></li>
+<li>zajistí uložení přes <code>mutationAsyncAction</code> (dle Base/General implementace)</li>
+<li>po úspěchu může navigovat na detail vytvořené entity přes <code>readItemURI</code> (pokud Base/General takto funguje)</li>
+</ul>
+<p>Wrapper pouze nastavuje defaulty a přeposílá props do <code>BaseCreateBody</code>.</p>
+<p>Vizualizuje <DefaultContent />, sbira zmeny a umoznuje volani backendu pro ulozeni dat</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Mutations_Create.jsx.html">ExamGQLModel/Mutations/Create.jsx</a>, <a href="ExamGQLModel_Mutations_Create.jsx.html#line200">line 200</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="CreateButton"><span class="type-signature">(constant) </span>CreateButton<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Wrapper nad <code>BaseCreateButton</code> (alias importu <code>CreateButton</code> z Base/Mutations/Create),
+který je odvozený z obecných <code>General*</code> komponent.</p>
+<p>Účel wrapperu:</p>
+<ul>
+<li>nastaví výchozí oprávnění (RBAC) přes <code>permissions</code> (<code>oneOfRoles</code>, <code>mode</code>)</li>
+<li>nastaví výchozí mutaci pro vytvoření entity (<code>mutationAsyncAction</code>)</li>
+<li>umožní vyměnit dialog a obsah formuláře (<code>CreateDialog</code>, <code>DefaultContent</code>)</li>
+<li>určí kam se má po úspěšném vytvoření navigovat (<code>readItemURI</code>)</li>
+<li>předá výchozí <code>item</code> pro nový záznam</li>
+</ul>
+<p>Zobrazí tlačítko a po jeho stisku otevře dialog, při volbě OK dochází k odeslání mutace na backend</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Mutations_Create.jsx.html">ExamGQLModel/Mutations/Create.jsx</a>, <a href="ExamGQLModel_Mutations_Create.jsx.html#line90">line 90</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="CreateDialog"><span class="type-signature">(constant) </span>CreateDialog<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Wrapper nad <code>BaseCreateDialog</code> (alias importu <code>CreateDialog</code> z Base/Mutations/Create),
+který je odvozený z obecných <code>General*</code> komponent.</p>
+<p>Účel wrapperu:</p>
+<ul>
+<li>nastaví výchozí title, obsah formuláře a výchozí draft (<code>item</code>)</li>
+<li>předá <code>readItemURI</code> pro případnou navigaci po vytvoření (dle implementace Base/General)</li>
+<li>umožní přepsat <code>mutationAsyncAction</code> (pokud BaseCreateDialog mutaci používá)</li>
+</ul>
+<p>Mutaci provadi až tlačítko (<code>BaseCreateButton</code>) Dialog jen zobrazuje a zabezpecuje sber dat
+a dialog je jen “formulář”.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Mutations_Create.jsx.html">ExamGQLModel/Mutations/Create.jsx</a>, <a href="ExamGQLModel_Mutations_Create.jsx.html#line152">line 152</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="CreateLink"><span class="type-signature">(constant) </span>CreateLink<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Wrapper nad <code>BaseCreateLink</code> (alias importu <code>CreateLink</code> z Base/Mutations/Create),
+který je odvozený z obecných <code>General*</code> komponent.</p>
+<p>Účel wrapperu:</p>
+<ul>
+<li>nastaví výchozí <code>uriPattern</code> pro create route</li>
+<li>aplikuje výchozí RBAC nastavení přes <code>permissions</code> (např. <code>oneOfRoles</code>, <code>mode</code>)</li>
+<li>všechny ostatní props pouze přeposílá do Base komponenty</li>
+</ul>
+<p>Vizuálně vyrenderuje link pro kliknutí</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Mutations_Create.jsx.html">ExamGQLModel/Mutations/Create.jsx</a>, <a href="ExamGQLModel_Mutations_Create.jsx.html#line45">line 45</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="DeleteBody"><span class="type-signature">(constant) </span>DeleteBody<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>“Page-level” delete workflow (mazání na celé stránce / v těle stránky).</p>
+<p>Wrapper nad <code>BaseDeleteBody</code>. Dodává výchozí <code>DefaultContent</code>, <code>mutationAsyncAction</code>
+a <code>vectorItemsURI</code> a aplikuje RBAC přes <code>permissions</code>.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Mutations_Delete.jsx.html">ExamGQLModel/Mutations/Delete.jsx</a>, <a href="ExamGQLModel_Mutations_Delete.jsx.html#line158">line 158</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="DeleteButton"><span class="type-signature">(constant) </span>DeleteButton<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Tlačítko pro smazání entity (obvykle otevře confirm dialog a spustí delete mutaci).</p>
+<p>Wrapper nad <code>BaseDeleteButton</code>. Dodává výchozí <code>DefaultContent</code>, <code>mutationAsyncAction</code>
+a <code>vectorItemsURI</code> (kam se naviguje po úspěšném smazání, pokud není použit <code>onOk</code>).</p>
+<p>Chování navigace / callback:</p>
+<ul>
+<li>Pokud je definované <code>onOk</code>, použije se pro “feedback”, že mazání proběhlo (tj. uživatel si
+rozhodne, co dál).</li>
+<li>Pokud <code>onOk</code> definované není, Base implementace typicky naviguje na <code>vectorItemsURI</code>.</li>
+</ul>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Mutations_Delete.jsx.html">ExamGQLModel/Mutations/Delete.jsx</a>, <a href="ExamGQLModel_Mutations_Delete.jsx.html#line76">line 76</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="DeleteDialog"><span class="type-signature">(constant) </span>DeleteDialog<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Confirm dialog pro smazání entity.</p>
+<p>Wrapper nad <code>BaseDeleteDialog</code>. Dodává výchozí <code>DefaultContent</code> (read-only zobrazení entity),
+<code>mutationAsyncAction</code> a <code>vectorItemsURI</code> pro návrat po úspěchu (dle Base/General implementace).</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Mutations_Delete.jsx.html">ExamGQLModel/Mutations/Delete.jsx</a>, <a href="ExamGQLModel_Mutations_Delete.jsx.html#line119">line 119</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="DeleteLink"><span class="type-signature">(constant) </span>DeleteLink<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Link na delete route pro konkrétní entitu.</p>
+<p>Wrapper nad <code>BaseDeleteLink</code>. Nastavuje výchozí <code>uriPattern</code> pro delete route a aplikuje RBAC
+přes <code>permissions</code>. Ostatní props přeposílá do Base komponenty.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Mutations_Delete.jsx.html">ExamGQLModel/Mutations/Delete.jsx</a>, <a href="ExamGQLModel_Mutations_Delete.jsx.html#line33">line 33</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="ExamGQLModelRouterSegments"><span class="type-signature">(constant) </span>ExamGQLModelRouterSegments<span class="type-signature"> :Array.&lt;{path: string, element: JSX.Element}></span></h4>
+
+
+
+
+<div class="description">
+    <p>Definice segmentů rout pro Template stránky.</p>
+<p>Každý objekt v tomto poli popisuje jednu trasu (route) v aplikaci:</p>
+<ul>
+<li><code>path</code>: Stringová URL s parametrem <code>:id</code>, která identifikuje konkrétní instanci template entity.</li>
+<li><code>element</code>: React komponenta, která se má renderovat při shodě s cestou.</li>
+</ul>
+<p>Pokud komponenta stránky podporuje children jako render funkci,
+všechny children předané přes router budou dostávat objekt:</p>
+<ul>
+<li><code>template</code> — načtená entita podle <code>:id</code></li>
+<li><code>onChange</code> — callback pro změnu hodnoty pole</li>
+<li><code>onBlur</code> — callback pro blur event (například při opuštění pole)</li>
+</ul>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Array.&lt;{path: string, element: JSX.Element}></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Pages_RouterSegment.jsx.html">ExamGQLModel/Pages/RouterSegment.jsx</a>, <a href="ExamGQLModel_Pages_RouterSegment.jsx.html#line39">line 39</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// Tato route reaguje na URL jako "/template/123"{  path: "/template/:id",  element: &lt;TemplatePage />}// Editační route: "/template/edit/123"{  path: "/template/edit/:id",  element: &lt;TemplateEditPage />}</code></pre>
+
+
+
+        
+            
+<h4 class="name" id="LargeCard"><span class="type-signature">(constant) </span>LargeCard<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>A large card component for displaying detailed content and layout for an template entity.</p>
+<p>This component wraps an <code>TemplateCardCapsule</code> with a flexible layout that includes multiple
+columns. It uses a <code>Row</code> layout with a <code>LeftColumn</code> for displaying an <code>TemplateMediumCard</code>
+and a <code>MiddleColumn</code> for rendering additional children.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Components_LargeCard.jsx.html">ExamGQLModel/Components/LargeCard.jsx</a>, <a href="ExamGQLModel_Components_LargeCard.jsx.html#line34">line 34</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// Example usage:const templateEntity = { id: 123, name: "Sample Entity" };&lt;TemplateLargeCard template={templateEntity}>  &lt;p>Additional content for the middle column.&lt;/p>&lt;/TemplateLargeCard></code></pre>
+
+
+
+        
+            
+<h4 class="name" id="LiveEdit_"><span class="type-signature">(constant) </span>LiveEdit_<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>TemplateLiveEdit Component</p>
+<p>Interaktivní React komponenta pro live editaci entity <code>template</code> s podporou optimistického fetchování a debounce delaye.</p>
+<ul>
+<li>Používá <code>useAsyncAction</code> k načítání a update entit (např. GraphQL mutation).</li>
+<li>Pokud se hodnota pole změní, spustí se update po krátkém zpoždění (<code>delayer</code>) — uživatelské změny nejsou ihned posílány, ale až po pauze.</li>
+<li>Zobrazuje loading a error stav pomocí komponent <code>LoadingSpinner</code> a <code>ErrorHandler</code>.</li>
+<li>Předává editované hodnoty do komponenty <code>TemplateMediumEditableContent</code>, která zajišťuje zobrazení a editaci jednotlivých polí šablony (<code>template</code>).</li>
+</ul>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Components_LiveEdit.jsx.html">ExamGQLModel/Components/LiveEdit.jsx</a>, <a href="ExamGQLModel_Components_LiveEdit.jsx.html#line39">line 39</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+    <h5>Examples</h5>
+    
+    <pre class="prettyprint"><code>// Standardní použití&lt;TemplateLiveEdit template={templateEntity} /></code></pre>
+
+    <pre class="prettyprint"><code>// S vlastním asyncAction a doplňkovým obsahem&lt;TemplateLiveEdit template={templateEntity} asyncAction={myUpdateAction}>  &lt;div>Extra obsah nebo poznámka&lt;/div>&lt;/TemplateLiveEdit></code></pre>
+
+
+
+        
+            
+<h4 class="name" id="MediumCard"><span class="type-signature">(constant) </span>MediumCard<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>A card component that displays detailed content for an template entity.</p>
+<p>This component combines <code>TemplateCardCapsule</code> and <code>TemplateMediumContent</code> to create a card layout
+with a title and medium-level content. The title includes a <code>PersonFill</code> icon and a link to
+the template entity's details, while the body displays serialized details of the entity along
+with any additional children passed to the component.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Components_MediumCard.jsx.html">ExamGQLModel/Components/MediumCard.jsx</a>, <a href="ExamGQLModel_Components_MediumCard.jsx.html#line31">line 31</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// Example usage:const templateEntity = { id: 123, name: "Sample Entity" };&lt;TemplateMediumCard template={templateEntity}>  &lt;p>Additional details or actions for the entity.&lt;/p>&lt;/TemplateMediumCard></code></pre>
+
+
+
+        
+            
+<h4 class="name" id="MediumEditableContent"><span class="type-signature">(constant) </span>MediumEditableContent<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>A component that displays medium-level content for an template entity.</p>
+<p>This component renders a label &quot;TemplateMediumContent&quot; followed by a serialized representation of the <code>template</code> object
+and any additional child content. It is designed to handle and display information about an template entity object.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Components_MediumEditableContent.jsx.html">ExamGQLModel/Components/MediumEditableContent.jsx</a>, <a href="ExamGQLModel_Components_MediumEditableContent.jsx.html#line29">line 29</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// Example usage:const templateEntity = { id: 123, name: "Sample Entity" };&lt;TemplateMediumContent template={templateEntity}>  &lt;p>Additional information about the entity.&lt;/p>&lt;/TemplateMediumContent></code></pre>
+
+
+
+        
+            
+<h4 class="name" id="MyNavDropdown"><span class="type-signature">(constant) </span>MyNavDropdown<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Renders the navigation bar for an Template page.</p>
+<p>This component uses a custom hook, <code>useHash()</code>, to determine the current hash
+and highlights the active segment. It displays a navigation bar (using MyNavbar)
+with several segments (e.g. &quot;history&quot;, &quot;roles&quot;, &quot;graph&quot;), each rendered as a
+TitleNavButton. The segments are hardcoded in this component and only rendered
+if an <code>item</code> object is provided.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Pages_PageNavbar.jsx.html">ExamGQLModel/Pages/PageNavbar.jsx</a>, <a href="ExamGQLModel_Pages_PageNavbar.jsx.html#line114">line 114</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// Example usage:const item = { id: 123, ... };&lt;PageNavbar item="{item}" onSearchChange="{handleSearchChange}"/></code></pre>
+
+
+
+        
+            
+<h4 class="name" id="PageItemBase"><span class="type-signature">(constant) </span>PageItemBase<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Base wrapper pro stránky pracující s jedním entity itemem podle <code>:id</code> z routy.</p>
+<p>Komponenta:</p>
+<ul>
+<li>načte <code>id</code> z URL přes <code>useParams()</code></li>
+<li>sestaví minimální <code>item</code> objekt <code>{ id }</code></li>
+<li>poskytne jej přes <code>AsyncActionProvider</code>, který zajistí načtení entity pomocí <code>queryAsyncAction</code></li>
+<li>vloží do stránky navbar přes <code>PlaceChild Component={PageNavbar}</code></li>
+<li>vyrenderuje <code>children</code> uvnitř provideru (tj. až v kontextu načtené entity)</li>
+</ul>
+<p>Typické použití je jako obálka routy typu <code>/.../:id</code>, kde vnořené komponenty
+(detail, editace, akce) používají kontext z <code>AsyncActionProvider</code>.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Pages_PageBase.jsx.html">ExamGQLModel/Pages/PageBase.jsx</a>, <a href="ExamGQLModel_Pages_PageBase.jsx.html#line30">line 30</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="PageReadItemRolesOn"><span class="type-signature">(constant) </span>PageReadItemRolesOn<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Základní obálka pro „read“ stránku entity podle <code>:id</code> z routy.</p>
+<p>Využívá <code>PageItemBase</code>, který zajistí:</p>
+<ul>
+<li>získání <code>id</code> z URL (<code>useParams</code>)</li>
+<li>načtení entity přes <code>AsyncActionProvider</code> pomocí <code>queryAsyncAction</code></li>
+<li>vložení navigace (<code>PageNavbar</code>)</li>
+</ul>
+<p>Uvnitř provideru vykreslí <code>ReadWithComponent</code>, který si vezme načtený <code>item</code>
+z <code>useGQLEntityContext()</code> a zobrazí ho v zadané komponentě (defaultně <code>LargeCard</code>).</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Pages_PageReadItemEx.jsx.html">ExamGQLModel/Pages/PageReadItemEx.jsx</a>, <a href="ExamGQLModel_Pages_PageReadItemEx.jsx.html#line28">line 28</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="ReadAsyncAction"><span class="type-signature">(constant) </span>ReadAsyncAction<span class="type-signature"> :function</span></h4>
+
+
+
+
+<div class="description">
+    <p>An async action for executing a GraphQL query to read  entities.</p>
+<p>This action is created using <code>createAsyncGraphQLAction</code> with a predefined <code>QueryRead</code> query.
+It can be dispatched with query variables to fetch data related to  entities from the GraphQL API.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">function</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Queries_ReadAsyncAction.jsx.html">ExamGQLModel/Queries/ReadAsyncAction.jsx</a>, <a href="ExamGQLModel_Queries_ReadAsyncAction.jsx.html#line44">line 44</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// Example usage:const queryVariables = { id: "12345" };dispatch(ReadAsyncAction(queryVariables))  .then((result) => {    console.log("Fetched data:", result);  })  .catch((error) => {    console.error("Error fetching data:", error);  });</code></pre>
+
+
+
+        
+            
+<h4 class="name" id="TemplateScalarAttribute"><span class="type-signature">(constant) </span>TemplateScalarAttribute<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>A component for displaying the <code>scalar</code> attribute of an template entity.</p>
+<p>This component checks if the <code>scalar</code> attribute exists on the <code>template</code> object. If <code>scalar</code> is undefined,
+the component returns <code>null</code> and renders nothing. Otherwise, it displays a placeholder message
+and a JSON representation of the <code>scalar</code> attribute.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Scalars_TemplateScalarAttribute.jsx.html">ExamGQLModel/Scalars/TemplateScalarAttribute.jsx</a>, <a href="ExamGQLModel_Scalars_TemplateScalarAttribute.jsx.html#line24">line 24</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// Example usage:const templateEntity = { scalar: { id: 1, name: "Sample Scalar" } };&lt;TemplateScalarAttribute template={templateEntity} /></code></pre>
+
+
+
+        
+            
+<h4 class="name" id="TemplateScalarAttributeLazy"><span class="type-signature">(constant) </span>TemplateScalarAttributeLazy<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>A lazy-loading component for displaying filtered <code>scalar</code> from a <code>template</code> entity.</p>
+<p>This component uses the <code>TemplateScalarAttributeAsyncAction</code> to asynchronously fetch
+the <code>template.scalar</code> data. It shows a loading spinner while fetching, handles errors,
+and filters the resulting list using a custom <code>filter</code> function (defaults to <code>Boolean</code> to remove falsy values).</p>
+<p>Each vector item is rendered as a <code>&lt;div&gt;</code> with its <code>id</code> as both the <code>key</code> and the <code>id</code> attribute,
+and displays a formatted JSON preview using <code>&lt;pre&gt;</code>.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Scalars_TemplateScalarAttribute.jsx.html">ExamGQLModel/Scalars/TemplateScalarAttribute.jsx</a>, <a href="ExamGQLModel_Scalars_TemplateScalarAttribute.jsx.html#line81">line 81</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+    <h5>Examples</h5>
+    
+    <pre class="prettyprint"><code>&lt;TemplateScalarAttributeLazy template={{ id: "abc123" }} /></code></pre>
+
+    <pre class="prettyprint"><code>&lt;TemplateScalarAttributeLazy  template={{ id: "abc123" }}  filter={(v) => v.status === "active"}/></code></pre>
+
+
+
+        
+            
+<h4 class="name" id="TemplateVectorsAttribute"><span class="type-signature">(constant) </span>TemplateVectorsAttribute<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Component to render the filtered <code>vectors</code> attribute of a template entity.</p>
+<p>Applies an optional filter function to the vectors array before rendering.
+Supports infinite scrolling to load more items lazily.</p>
+<p>The <code>Layout</code> prop is used as a wrapper component for each rendered item and
+is consistently applied in both static and infinite scroll rendering modes.
+If different layouts are desired for infinite vs static modes,
+consider conditionally passing different <code>Layout</code> props.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Vectors_TemplateVectorsAttribute.jsx.html">ExamGQLModel/Vectors/TemplateVectorsAttribute.jsx</a>, <a href="ExamGQLModel_Vectors_TemplateVectorsAttribute.jsx.html#line274">line 274</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>&lt;TemplateVectorsAttribute  template={template}  Visualiser={VectorMediumCard}  Layout={Col}  filter={(v) => v.active}  infinite={true}/></code></pre>
+
+
+
+        
+            
+<h4 class="name" id="TemplateVectorsAttributeInfinite"><span class="type-signature">(constant) </span>TemplateVectorsAttributeInfinite<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Infinite-scrolling component for the <code>vectors</code> attribute of a template entity.</p>
+<p>Uses the generic <code>InfiniteScroll</code> component to fetch, merge, and display the <code>vectors</code> array
+associated with the provided <code>template</code> object. It utilizes <code>VectorsVisualiser</code> for rendering,
+and handles pagination, lazy-loading, and merging of items as the user scrolls.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Vectors_TemplateVectorsAttribute.jsx.html">ExamGQLModel/Vectors/TemplateVectorsAttribute.jsx</a>, <a href="ExamGQLModel_Vectors_TemplateVectorsAttribute.jsx.html#line182">line 182</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>&lt;TemplateVectorsAttributeInfinite  template={{    vectors: [      { id: 1, name: "Vector 1" },      { id: 2, name: "Vector 2" }    ]  }}/></code></pre>
+
+
+
+        
+            
+<h4 class="name" id="TemplateVectorsAttributeLazy"><span class="type-signature">(constant) </span>TemplateVectorsAttributeLazy<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>A lazy-loading component for displaying filtered <code>vectors</code> from a <code>template</code> entity.</p>
+<p>This component uses the <code>TemplateVectorsAttributeAsyncAction</code> to asynchronously fetch
+the <code>template.vectors</code> data. It shows a loading spinner while fetching, handles errors,
+and filters the resulting list using a custom <code>filter</code> function (defaults to <code>Boolean</code> to remove falsy values).</p>
+<p>Each vector item is rendered as a <code>&lt;div&gt;</code> with its <code>id</code> as both the <code>key</code> and the <code>id</code> attribute,
+and displays a formatted JSON preview using <code>&lt;pre&gt;</code>.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Vectors_TemplateVectorsAttribute.jsx.html">ExamGQLModel/Vectors/TemplateVectorsAttribute.jsx</a>, <a href="ExamGQLModel_Vectors_TemplateVectorsAttribute.jsx.html#line223">line 223</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+    <h5>Examples</h5>
+    
+    <pre class="prettyprint"><code>&lt;TemplateVectorsAttributeLazy template={{ id: "abc123" }} /></code></pre>
+
+    <pre class="prettyprint"><code>&lt;TemplateVectorsAttributeLazy  template={{ id: "abc123" }}  filter={(v) => v.status === "active"}/></code></pre>
+
+
+
+        
+            
+<h4 class="name" id="TemplateVectorsAttribute_old"><span class="type-signature">(constant) </span>TemplateVectorsAttribute_old<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>A component for displaying the <code>vectors</code> attribute of a template entity.</p>
+<p>This component checks if the <code>vectors</code> attribute exists on the <code>template</code> object. If <code>vectors</code> is undefined,
+the component returns <code>null</code> and renders nothing. Otherwise, it maps over the (optionally filtered) <code>vectors</code> array
+and displays a placeholder message and a JSON representation for each item.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Vectors_TemplateVectorsAttribute.jsx.html">ExamGQLModel/Vectors/TemplateVectorsAttribute.jsx</a>, <a href="ExamGQLModel_Vectors_TemplateVectorsAttribute.jsx.html#line117">line 117</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+    <h5>Examples</h5>
+    
+    <pre class="prettyprint"><code>// Basic usage:const templateEntity = {   vectors: [    { id: 1, name: "Vector Item 1" },     { id: 2, name: "Vector Item 2" }  ] };&lt;TemplateVectorsAttribute template={templateEntity} /></code></pre>
+
+    <pre class="prettyprint"><code>// With a custom filter:&lt;TemplateVectorsAttribute   template={templateEntity}  filter={vector => vector.name.includes("1")}/></code></pre>
+
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="TemplateLink"><span class="type-signature"></span>TemplateLink<span class="signature">(props)</span><span class="type-signature"> &rarr; {JSX.Element}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>A React component that renders a <code>ProxyLink</code> to an &quot;template&quot; entity's view page.</p>
+<p>The target URL is dynamically constructed using the <code>template</code> object's <code>id</code>, and the link displays
+the <code>template</code> object's <code>name</code> as its clickable content.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>props</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The properties for the <code>TemplateLink</code> component.</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>template</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The object representing the &quot;template&quot; entity.</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The unique identifier for the &quot;template&quot; entity. Used to construct the target URL.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The display name for the &quot;template&quot; entity. Used as the link text.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Components_Link.jsx.html">ExamGQLModel/Components/Link.jsx</a>, <a href="ExamGQLModel_Components_Link.jsx.html#line20">line 20</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>ProxyLink - The base component used for rendering the link.</li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>A <code>ProxyLink</code> component linking to the specified &quot;template&quot; entity's view page.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">JSX.Element</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// Example usage with a sample template entity:const templateEntity = { id: 123, name: "Example Template Entity" };&lt;TemplateLink template={templateEntity} />// Renders: &lt;ProxyLink to="/template/template/view/123">Example Template Entity&lt;/ProxyLink></code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="VectorsVisualiser"><span class="type-signature"></span>VectorsVisualiser<span class="signature">(props, &hellip;props<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {JSX.Element|null}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Visualiser component for displaying a list of vector items using <code>TemplateVectorsAttribute</code>.</p>
+<p>Wraps the <code>TemplateVectorsAttribute</code> component, passing the given <code>items</code> as the <code>vectors</code> attribute
+on a synthetic <code>template</code> object. All other props are forwarded.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>props</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Component props.</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>items</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;Object></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The array of vector items to be visualized.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>props</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">any</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                    &lt;repeatable><br>
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Additional props forwarded to <code>TemplateVectorsAttribute</code> (e.g., <code>filter</code>).</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Vectors_TemplateVectorsAttribute.jsx.html">ExamGQLModel/Vectors/TemplateVectorsAttribute.jsx</a>, <a href="ExamGQLModel_Vectors_TemplateVectorsAttribute.jsx.html#line153">line 153</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Rendered list of vectors or <code>null</code> if none are provided.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">JSX.Element</span>
+|
+
+<span class="param-type">null</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>&lt;VectorsVisualiser  items={[    { id: 1, name: "Vector 1" },    { id: 2, name: "Vector 2" }  ]}  filter={v => v.name.includes("1")}/></code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="followUpTemplateVectorItemDelete"><span class="type-signature"></span>followUpTemplateVectorItemDelete<span class="signature">(template, vectorItem, dispatch)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Removes a VectorGQLModel item from a template’s vectors array by its <code>id</code> and dispatches an update.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>template</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The current template object containing a <code>vectors</code> array.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>vectorItem</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The item to delete; must have <code>__typename === &quot;VectorGQLModel&quot;</code> and an <code>id</code> field.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>dispatch</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Redux dispatch function (or similar) to call the update action.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Vectors_TemplateVectorsAttribute.jsx.html">ExamGQLModel/Vectors/TemplateVectorsAttribute.jsx</a>, <a href="ExamGQLModel_Vectors_TemplateVectorsAttribute.jsx.html#line50">line 50</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="followUpTemplateVectorItemInsert"><span class="type-signature"></span>followUpTemplateVectorItemInsert<span class="signature">(template, vectorItem, dispatch)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Inserts a VectorGQLModel item into a template’s vectors array and dispatches an update.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>template</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The current template object containing a <code>vectors</code> array.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>vectorItem</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The item to insert; must have <code>__typename === &quot;VectorGQLModel&quot;</code>.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>dispatch</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Redux dispatch function (or similar) to call the update action.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Vectors_TemplateVectorsAttribute.jsx.html">ExamGQLModel/Vectors/TemplateVectorsAttribute.jsx</a>, <a href="ExamGQLModel_Vectors_TemplateVectorsAttribute.jsx.html#line14">line 14</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="followUpTemplateVectorItemUpdate"><span class="type-signature"></span>followUpTemplateVectorItemUpdate<span class="signature">(template, vectorItem, dispatch)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Replaces an existing VectorGQLModel item in a template’s vectors array and dispatches an update.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>template</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The current template object containing a <code>vectors</code> array.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>vectorItem</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The updated item; must have <code>__typename === &quot;VectorGQLModel&quot;</code> and an <code>id</code> field matching an existing item.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>dispatch</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Redux dispatch function (or similar) to call the update action.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Vectors_TemplateVectorsAttribute.jsx.html">ExamGQLModel/Vectors/TemplateVectorsAttribute.jsx</a>, <a href="ExamGQLModel_Vectors_TemplateVectorsAttribute.jsx.html#line31">line 31</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Type Definitions</h3>
+
+        
+                
+<h4 class="name" id="UriPatch">UriPatch</h4>
+
+
+
+
+<div class="description">
+    <p>Vytvoří &quot;stringovatelný&quot; objekt reprezentující kanonickou aplikací definovanou URI cestu
+ve tvaru:</p>
+<ul>
+<li>bez <code>:id</code>: <code>/{app}/{model}/{action}</code></li>
+<li>s <code>:id</code>:   <code>/{app}/{model}/{action}/{:id}</code></li>
+</ul>
+<p>Objekt je určený pro postupné skládání a odvozování cest napříč aplikací:</p>
+<ul>
+<li>sdílení společného základu (např. <code>app</code> nebo <code>app+model</code>)</li>
+<li>tvorbu odvozenin přes <code>.change(...)</code> bez mutace původního objektu</li>
+<li>pohodlné použití v routeru, linkách a šablonách díky &quot;stringovatelnosti&quot;</li>
+</ul>
+<h3>Stringovatelnost</h3>
+<p>Vrácený objekt se chová jako string:</p>
+<ul>
+<li><code>String(obj)</code> vrátí finální cestu</li>
+<li>template literal: <code>`${obj}`</code> vrátí finální cestu</li>
+<li><code>obj.path</code> obsahuje totéž explicitně</li>
+</ul>
+<h3>Odvozování bez mutace (immutable styl)</h3>
+<p>Metoda <code>.change(patch)</code> vrací NOVÝ URI objekt s aplikovanými změnami.
+Původní objekt zůstává nedotčen, takže je bezpečné ho sdílet napříč moduly.</p>
+<h3>Zkratky</h3>
+<p>Kromě <code>.change(...)</code> poskytuje i zkratky:</p>
+<ul>
+<li><code>.app(&quot;...&quot;)</code></li>
+<li><code>.model(&quot;...&quot;)</code></li>
+<li><code>.action(&quot;...&quot;)</code></li>
+<li><code>.id(true|false)</code> (alias pro <code>withId</code>)</li>
+<li><code>.idParam(&quot;:id&quot;)</code> (změna názvu parametru id)</li>
+</ul>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>path</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Finální cesta (např. <code>&quot;/app/group/view&quot;</code> nebo <code>&quot;/app/group/view/:id&quot;</code>).</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>segments</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Normalizované segmenty, ze kterých byla cesta složena.
+Pozn.: pokud <code>segments</code> budeš ručně měnit, <code>path</code> se tím nezmění (je spočítaný).
+Doporučení: segmenty používej jen pro čtení.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>toString</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Vrací <code>path</code>. Umožňuje použití v template literal a při <code>String(obj)</code>.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>valueOf</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Vrací <code>path</code>. Doplňková string/primitive konverze.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>Symbol.toPrimitive</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Vrací <code>path</code> pro implicitní konverzi (např. <code>`${obj}`</code>).</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>change</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Vytvoří nový <code>UriBuilder</code> s aplikovaným patchem (libovolná část URI může být změněna).</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>app</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Zkratka pro <code>change({ app })</code>.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>model</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Zkratka pro <code>change({ model })</code>.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>action</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Zkratka pro <code>change({ action })</code>.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Zkratka pro <code>change({ withId: on })</code>. Default <code>true</code>.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>idParam</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Zkratka pro <code>change({ idParam: p })</code>. Default <code>&quot;:id&quot;</code>.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>app</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>model</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>action</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>withId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>idParam</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="uriroot.js.html">uriroot.js</a>, <a href="uriroot.js.html#line16">line 16</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+    <h5>Examples</h5>
+    
+    <pre class="prettyprint"><code>// Základ pro konkrétní model:const GroupView = uri({ app: "app", model: "group", action: "view" });String(GroupView)        // "/app/group/view"String(GroupView.id())   // "/app/group/view/:id"</code></pre>
+
+    <pre class="prettyprint"><code>// Odvozené akce nad stejným modelem:const Group = uri({ app: "app", model: "group", action: "view" });const GroupEdit = Group.action("edit").id(true);const GroupDelete = Group.action("delete").id(true);String(GroupEdit)   // "/app/group/edit/:id"String(GroupDelete) // "/app/group/delete/:id"</code></pre>
+
+    <pre class="prettyprint"><code>// Přepnutí id parametru:const UserView = uri({ app: "app", model: "user", action: "view" }).id(true).idParam(":userId");String(UserView) // "/app/user/view/:userId"</code></pre>
+
+
+
+            
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#CardCapsule">CardCapsule</a></li><li><a href="global.html#Children">Children</a></li><li><a href="global.html#CreateBody">CreateBody</a></li><li><a href="global.html#CreateButton">CreateButton</a></li><li><a href="global.html#CreateDialog">CreateDialog</a></li><li><a href="global.html#CreateLink">CreateLink</a></li><li><a href="global.html#DeleteBody">DeleteBody</a></li><li><a href="global.html#DeleteButton">DeleteButton</a></li><li><a href="global.html#DeleteDialog">DeleteDialog</a></li><li><a href="global.html#DeleteLink">DeleteLink</a></li><li><a href="global.html#ExamGQLModelRouterSegments">ExamGQLModelRouterSegments</a></li><li><a href="global.html#LargeCard">LargeCard</a></li><li><a href="global.html#LiveEdit_">LiveEdit_</a></li><li><a href="global.html#MediumCard">MediumCard</a></li><li><a href="global.html#MediumEditableContent">MediumEditableContent</a></li><li><a href="global.html#MyNavDropdown">MyNavDropdown</a></li><li><a href="global.html#PageItemBase">PageItemBase</a></li><li><a href="global.html#PageReadItemRolesOn">PageReadItemRolesOn</a></li><li><a href="global.html#ReadAsyncAction">ReadAsyncAction</a></li><li><a href="global.html#TemplateLink">TemplateLink</a></li><li><a href="global.html#TemplateScalarAttribute">TemplateScalarAttribute</a></li><li><a href="global.html#TemplateScalarAttributeLazy">TemplateScalarAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute">TemplateVectorsAttribute</a></li><li><a href="global.html#TemplateVectorsAttributeInfinite">TemplateVectorsAttributeInfinite</a></li><li><a href="global.html#TemplateVectorsAttributeLazy">TemplateVectorsAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute_old">TemplateVectorsAttribute_old</a></li><li><a href="global.html#VectorsVisualiser">VectorsVisualiser</a></li><li><a href="global.html#followUpTemplateVectorItemDelete">followUpTemplateVectorItemDelete</a></li><li><a href="global.html#followUpTemplateVectorItemInsert">followUpTemplateVectorItemInsert</a></li><li><a href="global.html#followUpTemplateVectorItemUpdate">followUpTemplateVectorItemUpdate</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Jul 20 2026 13:46:51 GMT+0200 (středoevropský letní čas)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

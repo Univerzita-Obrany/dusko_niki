@@ -18,13 +18,13 @@ import { LargeCard } from "../Components"
  *
  * @component
  * @param {object} props
- * @param {import("react").ReactNode} props.children
+ * @param {ReactNode} children 
  *   Obsah stránky, který se má vyrenderovat uvnitř `AsyncActionProvider`.
  * @param {Function} [props.queryAsyncAction=ReadAsyncAction]
  *   Async action (např. thunk) použitá pro načtení entity z GraphQL endpointu.
  *   Dostane `item` s `id` (a případně další parametry podle implementace provideru).
  *
- * @returns {import("react").JSX.Element}
+ * @returns {JSX.Element}
  *   Provider s navigací (`PageNavbar`) a obsahem stránky (`children`).
  */
 export const PageItemBase = ({ 

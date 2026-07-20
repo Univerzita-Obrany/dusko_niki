@@ -15,7 +15,8 @@
     "listtree": "node scripts/listTree.js",
     "create:filter": "node scripts/generatefilterform.js",
     "build:apps": "npm workspaces foreach --include=apps/* npm run build",
-    "publish:packages": "npm workspaces foreach --include=packages/* npm publish --access public"
+    "publish:packages": "npm workspaces foreach --include=packages/* npm publish --access public",
+    "docs:exam": "npm run docs --workspace=packages/exam"
   },
   "keywords": [],
   "author": "",

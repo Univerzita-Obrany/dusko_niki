@@ -15,7 +15,8 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "dev": "vite",
         "build": "vite build",
-        "prepublishOnly": "npm run build"
+        "prepublishOnly": "npm run build",
+        "docs": "jsdoc -c jsdoc.config.json"
     },
     "author": "",
     "license": "ISC",

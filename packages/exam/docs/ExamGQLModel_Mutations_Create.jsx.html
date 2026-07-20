@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: ExamGQLModel/Mutations/Create.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: ExamGQLModel/Mutations/Create.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { CreateURI, MediumEditableContent, ReadItemURI } from "../Components"
+import { InsertAsyncAction } from "../Queries"
+import { 
+    CreateBody as BaseCreateBody, 
+    CreateButton as BaseCreateButton, 
+    CreateDialog as BaseCreateDialog, 
+    CreateLink  as BaseCreateLink
+} from "../../../../_template/src/Base/Mutations/Create"
+
+const DefaultContent = (props) => &lt;MediumEditableContent {...props} />
+const MutationAsyncAction = InsertAsyncAction
+
+const permissions = {
+    oneOfRoles: [],
+    mode: "absolute",
+}
+
+// Default IDs from system data - these reference existing records in the database
+const DEFAULT_PLAN_ID = "28c25266-daa4-4579-a32a-7a4394ee463d"  // from acplans
+const DEFAULT_TYPE_ID = "a00a0322-b095-11ed-9bd8-0242ac110002"  // from acclassificationtypes (name: "Z")
+
+const createDefaultItem = () => ({ id: crypto.randomUUID(), name: "Nový" });
+
+/**
+ * Wrapper nad `BaseCreateLink` (alias importu `CreateLink` z Base/Mutations/Create),
+ * který je odvozený z obecných `General*` komponent.
+ *
+ * Účel wrapperu:
+ * - nastaví výchozí `uriPattern` pro create route
+ * - aplikuje výchozí RBAC nastavení přes `permissions` (např. `oneOfRoles`, `mode`)
+ * - všechny ostatní props pouze přeposílá do Base komponenty
+ * 
+ * Vizuálně vyrenderuje link pro kliknutí
+ *
+ * @param {Object} params
+ * @param {string} [params.uriPattern=CreateURI]
+ *   Cílová URI/pattern pro link na create stránku nebo create akci (dle routování aplikace).
+ *
+ * @param {Object} params.props
+ *   Další props přeposílané do `BaseCreateLink` (např. `children`, `className`,
+ *   `preserveSearch`, `preserveHash`, atd.).
+ *
+ * @returns {JSX.Element} Vykreslí `BaseCreateLink` s přednastaveným `uriPattern` a RBAC oprávněními.
+ */
+export const CreateLink = ({
+    uriPattern=CreateURI,
+    ...props
+}) => (
+    &lt;BaseCreateLink {...props} uriPattern={uriPattern} {...permissions} />
+);
+
+/**
+ * Wrapper nad `BaseCreateButton` (alias importu `CreateButton` z Base/Mutations/Create),
+ * který je odvozený z obecných `General*` komponent.
+ *
+ * Účel wrapperu:
+ * - nastaví výchozí oprávnění (RBAC) přes `permissions` (`oneOfRoles`, `mode`)
+ * - nastaví výchozí mutaci pro vytvoření entity (`mutationAsyncAction`)
+ * - umožní vyměnit dialog a obsah formuláře (`CreateDialog`, `DefaultContent`)
+ * - určí kam se má po úspěšném vytvoření navigovat (`readItemURI`)
+ * - předá výchozí `item` pro nový záznam
+ *
+ * Zobrazí tlačítko a po jeho stisku otevře dialog, při volbě OK dochází k odeslání mutace na backend
+ *
+ * @param {Object} params
+ * @param {Function} [params.mutationAsyncAction=MutationAsyncAction]
+ *   Async action (thunk) pro vytvoření entity (např. InsertAsyncAction). Používá ho Base/General logika.
+ *
+ * @param {React.ComponentType&lt;Object>} [params.CreateDialog=CreateDialog]
+ *   Komponenta dialogu použitá pro vytvoření (renderuje formulář a volá `onOk(draft)` / `onCancel()`).
+ *
+ * @param {React.ComponentType&lt;Object>} [params.DefaultContent=DefaultContent]
+ *   Komponenta, která vykreslí editable obsah formuláře (typicky MediumEditableContent).
+ *
+ * @param {string} [params.readItemURI=ReadItemURI]
+ *   URI pattern pro navigaci na detail nově vytvořené entity (obvykle obsahuje `:id`).
+ *
+ * @param {Object} [params.rbacitem]
+ *   RBAC item pro PermissionGate/Permission check (pokud se liší od entity, která se vytváří).
+ *
+ * @param {Object} [params.item=defaultitem]
+ *   Výchozí objekt (draft) pro nový záznam. Posílá se do dialogu jako `item`.
+ *
+ * @param {Object} params.props
+ *   Všechny další props jsou přeposlány přímo do `BaseCreateButton`
+ *   (typicky `children`, `className`, `disabled`, `title`, atd.).
+ *
+ * @returns {JSX.Element} Vykreslí `BaseCreateButton` s přednastavenými defaulty a RBAC oprávněními.
+ */
+export const CreateButton = ({
+    mutationAsyncAction=MutationAsyncAction,
+    CreateDialog: CreateDialog_=CreateDialog,
+    DefaultContent:defaultContent=DefaultContent,
+    readItemURI=ReadItemURI,
+    rbacitem,
+    item,
+    parentItem,
+    ...props
+}) => {
+    const finalItem = item ?? {
+        ...createDefaultItem(),
+        planId: parentItem?.planId ?? DEFAULT_PLAN_ID,
+        typeId: parentItem?.typeId ?? DEFAULT_TYPE_ID
+    }
+    return &lt;BaseCreateButton 
+        {...props}
+        DefaultContent={defaultContent} 
+        CreateDialog={CreateDialog_}
+        readItemURI={readItemURI}
+        rbacitem={rbacitem}
+        item={finalItem}
+        mutationAsyncAction={mutationAsyncAction}
+        {...permissions}
+    />
+}
+
+/**
+ * Wrapper nad `BaseCreateDialog` (alias importu `CreateDialog` z Base/Mutations/Create),
+ * který je odvozený z obecných `General*` komponent.
+ *
+ * Účel wrapperu:
+ * - nastaví výchozí title, obsah formuláře a výchozí draft (`item`)
+ * - předá `readItemURI` pro případnou navigaci po vytvoření (dle implementace Base/General)
+ * - umožní přepsat `mutationAsyncAction` (pokud BaseCreateDialog mutaci používá)
+ *
+ * Mutaci provadi až tlačítko (`BaseCreateButton`) Dialog jen zobrazuje a zabezpecuje sber dat
+ * a dialog je jen “formulář”. 
+ *
+ * @param {Object} params
+ * @param {string} [params.title="Nov(ý/é)"]
+ *   Titulek dialogu.
+ *
+ * @param {Function} [params.mutationAsyncAction=MutationAsyncAction]
+ *   Async action (thunk) pro vytvoření entity. Použije se pouze pokud ho `BaseCreateDialog` skutečně volá
+ *   (záleží na Base/General implementaci).
+ *
+ * @param {React.ComponentType&lt;Object>} [params.DefaultContent=DefaultContent]
+ *   Komponenta, která vykreslí editable obsah formuláře (typicky MediumEditableContent).
+ *
+ * @param {string} [params.readItemURI=ReadItemURI]
+ *   URI pattern pro navigaci na detail nově vytvořené entity (obvykle obsahuje `:id`).
+ *
+ * @param {Object} [params.item=defaultitem]
+ *   Výchozí objekt (draft) pro nový záznam. Posílá se do dialogu jako `item`.
+ *
+ * @param {Object} params.props
+ *   Všechny další props jsou přeposlány přímo do `BaseCreateDialog`
+ *   (typicky `oklabel`, `cancellabel`, `onOk`, `onCancel`, `className`, atd.).
+ *
+ * @returns {JSX.Element} Vykreslí `BaseCreateDialog` s přednastavenými defaulty.
+ */
+export const CreateDialog = ({
+    title = "Nov(ý/é)",
+    // mutationAsyncAction=MutationAsyncAction,
+    DefaultContent:defaultContent=DefaultContent,
+    readItemURI=ReadItemURI, 
+    item,
+    ...props
+}) => {
+    const finalItem = item ?? createDefaultItem()
+    return &lt;BaseCreateDialog 
+        {...props} 
+        title={title}
+        DefaultContent={defaultContent} 
+        readItemURI={readItemURI}
+        item={finalItem}
+        // mutationAsyncAction={mutationAsyncAction}
+    />
+};
+
+/**
+ * Wrapper nad `BaseCreateBody` (alias importu `CreateBody` z Base/Mutations/Create),
+ * který je odvozený z obecných `General*` komponent.
+ *
+ * `CreateBody` typicky reprezentuje “page-level” create workflow (ne jen tlačítko + modal):
+ * - vykreslí create formulář pomocí `DefaultContent`
+ * - zajistí uložení přes `mutationAsyncAction` (dle Base/General implementace)
+ * - po úspěchu může navigovat na detail vytvořené entity přes `readItemURI` (pokud Base/General takto funguje)
+ *
+ * Wrapper pouze nastavuje defaulty a přeposílá props do `BaseCreateBody`.
+ * 
+ * Vizualizuje &lt;DefaultContent />, sbira zmeny a umoznuje volani backendu pro ulozeni dat
+ *
+ * @param {Object} params
+ * @param {Function} [params.mutationAsyncAction=MutationAsyncAction]
+ *   Async action (thunk) pro vytvoření entity (např. InsertAsyncAction). Používá ho Base/General logika.
+ *
+ * @param {React.ComponentType&lt;Object>} [params.DefaultContent=DefaultContent]
+ *   Komponenta, která vykreslí editable obsah formuláře (typicky MediumEditableContent).
+ *
+ * @param {string} [params.readItemURI=ReadItemURI]
+ *   URI pattern pro navigaci na detail nově vytvořené entity (obvykle obsahuje `:id`).
+ *
+ * @param {Object} params.props
+ *   Všechny další props jsou přeposlány přímo do `BaseCreateBody`
+ *   (typicky `title`, `oklabel`, `cancellabel`, `onOk`, `onCancel`, `className`, atd.).
+ *
+ * @returns {JSX.Element} Vykreslí `BaseCreateBody` s přednastavenými defaulty.
+ */
+export const CreateBody = ({
+    mutationAsyncAction=MutationAsyncAction,
+    DefaultContent:defaultContent=DefaultContent,
+    readItemURI=ReadItemURI, 
+    ...props
+}) => {
+    return &lt;BaseCreateBody 
+        {...props} 
+        DefaultContent={defaultContent} 
+        readItemURI={readItemURI}
+        mutationAsyncAction={mutationAsyncAction}
+    />
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#CardCapsule">CardCapsule</a></li><li><a href="global.html#Children">Children</a></li><li><a href="global.html#CreateBody">CreateBody</a></li><li><a href="global.html#CreateButton">CreateButton</a></li><li><a href="global.html#CreateDialog">CreateDialog</a></li><li><a href="global.html#CreateLink">CreateLink</a></li><li><a href="global.html#DeleteBody">DeleteBody</a></li><li><a href="global.html#DeleteButton">DeleteButton</a></li><li><a href="global.html#DeleteDialog">DeleteDialog</a></li><li><a href="global.html#DeleteLink">DeleteLink</a></li><li><a href="global.html#ExamGQLModelRouterSegments">ExamGQLModelRouterSegments</a></li><li><a href="global.html#LargeCard">LargeCard</a></li><li><a href="global.html#LiveEdit_">LiveEdit_</a></li><li><a href="global.html#MediumCard">MediumCard</a></li><li><a href="global.html#MediumEditableContent">MediumEditableContent</a></li><li><a href="global.html#MyNavDropdown">MyNavDropdown</a></li><li><a href="global.html#PageItemBase">PageItemBase</a></li><li><a href="global.html#PageReadItemRolesOn">PageReadItemRolesOn</a></li><li><a href="global.html#ReadAsyncAction">ReadAsyncAction</a></li><li><a href="global.html#TemplateLink">TemplateLink</a></li><li><a href="global.html#TemplateScalarAttribute">TemplateScalarAttribute</a></li><li><a href="global.html#TemplateScalarAttributeLazy">TemplateScalarAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute">TemplateVectorsAttribute</a></li><li><a href="global.html#TemplateVectorsAttributeInfinite">TemplateVectorsAttributeInfinite</a></li><li><a href="global.html#TemplateVectorsAttributeLazy">TemplateVectorsAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute_old">TemplateVectorsAttribute_old</a></li><li><a href="global.html#VectorsVisualiser">VectorsVisualiser</a></li><li><a href="global.html#followUpTemplateVectorItemDelete">followUpTemplateVectorItemDelete</a></li><li><a href="global.html#followUpTemplateVectorItemInsert">followUpTemplateVectorItemInsert</a></li><li><a href="global.html#followUpTemplateVectorItemUpdate">followUpTemplateVectorItemUpdate</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Jul 20 2026 13:46:51 GMT+0200 (středoevropský letní čas)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

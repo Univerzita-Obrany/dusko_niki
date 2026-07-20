@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: ExamGQLModel/Scalars/TemplateScalarAttribute.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: ExamGQLModel/Scalars/TemplateScalarAttribute.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { createAsyncGraphQLAction, useAsyncAction } from "@hrbolek/uoisfrontend-gql-shared"
+import { ErrorHandler, LoadingSpinner } from "@hrbolek/uoisfrontend-shared"
+
+/**
+ * A component for displaying the `scalar` attribute of an template entity.
+ *
+ * This component checks if the `scalar` attribute exists on the `template` object. If `scalar` is undefined,
+ * the component returns `null` and renders nothing. Otherwise, it displays a placeholder message
+ * and a JSON representation of the `scalar` attribute.
+ *
+ * @component
+ * @param {Object} props - The props for the TemplateScalarAttribute component.
+ * @param {Object} props.template - The object representing the template entity.
+ * @param {*} [props.template.scalar] - The scalar attribute of the template entity to be displayed, if defined.
+ *
+ * @returns {JSX.Element|null} A JSX element displaying the `scalar` attribute or `null` if the attribute is undefined.
+ *
+ * @example
+ * // Example usage:
+ * const templateEntity = { scalar: { id: 1, name: "Sample Scalar" } };
+ *
+ * &lt;TemplateScalarAttribute template={templateEntity} />
+ */
+export const TemplateScalarAttribute = ({template}) => {
+    const {scalar} = template
+    if (typeof scalar === 'undefined') return null
+    return (
+        &lt;>
+            {/* &lt;ScalarMediumCard scalar={scalar} /> */}
+            {/* &lt;ScalarLink scalar={scalar} /> */}
+            Probably {'&lt;ScalarMediumCard scalar={scalar} />'} &lt;br />
+            &lt;pre>{JSON.stringify(scalar, null, 4)}&lt;/pre>
+        &lt;/>
+    )
+}
+
+const TemplateScalarAttributeQuery = `
+query TemplateQueryRead($id: UUID!) {
+    result: templateById(id: $id) {
+        __typename
+        id
+        scalar {
+            __typename
+            id
+        }
+    }
+}
+`
+
+const TemplateScalarAttributeAsyncAction = createAsyncGraphQLAction(
+    TemplateScalarAttributeQuery
+)
+
+/**
+ * A lazy-loading component for displaying filtered `scalar` from a `template` entity.
+ *
+ * This component uses the `TemplateScalarAttributeAsyncAction` to asynchronously fetch
+ * the `template.scalar` data. It shows a loading spinner while fetching, handles errors,
+ * and filters the resulting list using a custom `filter` function (defaults to `Boolean` to remove falsy values).
+ *
+ * Each vector item is rendered as a `&lt;div>` with its `id` as both the `key` and the `id` attribute,
+ * and displays a formatted JSON preview using `&lt;pre>`.
+ *
+ * @component
+ * @param {Object} props - The properties object.
+ * @param {Object} props.template - The template entity or identifying query variables used to fetch it.
+ * @param {Function} [props.filter=Boolean] - A filtering function applied to the `scalar` array before rendering.
+ *
+ * @returns {JSX.Element} A rendered list of filtered scalar or a loading/error placeholder.
+ *
+ * @example
+ * &lt;TemplateScalarAttributeLazy template={{ id: "abc123" }} />
+ *
+ * 
+ * @example
+ * &lt;TemplateScalarAttributeLazy
+ *   template={{ id: "abc123" }}
+ *   filter={(v) => v.status === "active"}
+ * />
+ */
+export const TemplateScalarAttributeLazy = ({template}) => {
+    const {loading, error, entity, fetch} = useAsyncAction(TemplateScalarAttributeAsyncAction, template)
+
+    if (loading) return &lt;LoadingSpinner />
+    if (error) return &lt;ErrorHandler errors={error} />
+
+    return &lt;TemplateScalarAttribute template={entity} />    
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#CardCapsule">CardCapsule</a></li><li><a href="global.html#Children">Children</a></li><li><a href="global.html#CreateBody">CreateBody</a></li><li><a href="global.html#CreateButton">CreateButton</a></li><li><a href="global.html#CreateDialog">CreateDialog</a></li><li><a href="global.html#CreateLink">CreateLink</a></li><li><a href="global.html#DeleteBody">DeleteBody</a></li><li><a href="global.html#DeleteButton">DeleteButton</a></li><li><a href="global.html#DeleteDialog">DeleteDialog</a></li><li><a href="global.html#DeleteLink">DeleteLink</a></li><li><a href="global.html#ExamGQLModelRouterSegments">ExamGQLModelRouterSegments</a></li><li><a href="global.html#LargeCard">LargeCard</a></li><li><a href="global.html#LiveEdit_">LiveEdit_</a></li><li><a href="global.html#MediumCard">MediumCard</a></li><li><a href="global.html#MediumEditableContent">MediumEditableContent</a></li><li><a href="global.html#MyNavDropdown">MyNavDropdown</a></li><li><a href="global.html#PageItemBase">PageItemBase</a></li><li><a href="global.html#PageReadItemRolesOn">PageReadItemRolesOn</a></li><li><a href="global.html#ReadAsyncAction">ReadAsyncAction</a></li><li><a href="global.html#TemplateLink">TemplateLink</a></li><li><a href="global.html#TemplateScalarAttribute">TemplateScalarAttribute</a></li><li><a href="global.html#TemplateScalarAttributeLazy">TemplateScalarAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute">TemplateVectorsAttribute</a></li><li><a href="global.html#TemplateVectorsAttributeInfinite">TemplateVectorsAttributeInfinite</a></li><li><a href="global.html#TemplateVectorsAttributeLazy">TemplateVectorsAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute_old">TemplateVectorsAttribute_old</a></li><li><a href="global.html#VectorsVisualiser">VectorsVisualiser</a></li><li><a href="global.html#followUpTemplateVectorItemDelete">followUpTemplateVectorItemDelete</a></li><li><a href="global.html#followUpTemplateVectorItemInsert">followUpTemplateVectorItemInsert</a></li><li><a href="global.html#followUpTemplateVectorItemUpdate">followUpTemplateVectorItemUpdate</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Jul 20 2026 13:46:51 GMT+0200 (středoevropský letní čas)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: ExamGQLModel/Components/LiveEdit.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: ExamGQLModel/Components/LiveEdit.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { useCallback } from "react";
+import { useMemo } from "react";
+
+import { UpdateAsyncAction } from "../Queries";
+import { CreateDelayer, ErrorHandler, LoadingSpinner } from "@hrbolek/uoisfrontend-shared";
+import { MediumEditableContent } from "./MediumEditableContent";
+import { ReadItemURI } from "./Link";
+import { useEditAction } from "../../../../dynamic/src/Hooks/useEditAction";
+
+/**
+ * TemplateLiveEdit Component
+ *
+ * Interaktivní React komponenta pro live editaci entity `template` s podporou optimistického fetchování a debounce delaye.
+ *
+ * - Používá `useAsyncAction` k načítání a update entit (např. GraphQL mutation).
+ * - Pokud se hodnota pole změní, spustí se update po krátkém zpoždění (`delayer`) — uživatelské změny nejsou ihned posílány, ale až po pauze.
+ * - Zobrazuje loading a error stav pomocí komponent `LoadingSpinner` a `ErrorHandler`.
+ * - Předává editované hodnoty do komponenty `TemplateMediumEditableContent`, která zajišťuje zobrazení a editaci jednotlivých polí šablony (`template`).
+ *
+ * @component
+ * @param {Object} props - Props objekt.
+ * @param {Object} props.template - Objekt reprezentující editovanou šablonu (template entity).
+ * @param {React.ReactNode} [props.children] - Libovolné children, které se vloží pod editační komponentu.
+ * @param {Function} [props.asyncAction=TemplateUpdateAsyncAction] - Asynchronní akce pro update (`useAsyncAction`), typicky GraphQL update mutation.
+ *
+ * @example
+ * // Standardní použití
+ * &lt;TemplateLiveEdit template={templateEntity} />
+ *
+ * @example
+ * // S vlastním asyncAction a doplňkovým obsahem
+ * &lt;TemplateLiveEdit template={templateEntity} asyncAction={myUpdateAction}>
+ *   &lt;div>Extra obsah nebo poznámka&lt;/div>
+ * &lt;/TemplateLiveEdit>
+ *
+ * @returns {JSX.Element}
+ *   Interaktivní komponenta pro live editaci šablony, včetně spinneru a error handleru.
+ */
+export const LiveEdit_ = ({ children, asyncAction=UpdateAsyncAction}) => {
+    const { onChange, onBlur, item } = useGQLEntityContext()
+    return (
+        &lt;AsyncActionProvider 
+            item={item} 
+            queryAsyncAction={asyncAction}
+            options={{deferred: true, network: true}}
+            onChange={onChange}
+            onBlur={onBlur}
+        >
+            &lt;LiveEditWrapper item={item}>
+                {children}
+                {/* &lt;hr />
+                &lt;pre>{JSON.stringify(item, null, 2)}&lt;/pre> */}
+            &lt;/LiveEditWrapper>
+        &lt;/AsyncActionProvider>
+    )
+}
+
+const LiveEditWrapper = ({ item, children }) => {
+    const { run , error, loading, entity, data, onChange, onBlur } = useGQLEntityContext()
+    
+    const handleEvent = useCallback((handler) => async (e) => {
+        const {id, value} = e?.target || {}
+        if (id === undefined || value === undefined) return 
+        if (item?.[id] === value) {
+            return;
+        }
+        const newItem = { ...item, [e.target.id]: e.target.value }
+        const newEvent = { target: { value: newItem } }
+        // console.log("LiveEditWrapper localOnChange start e", e, '=>', newEvent)
+        // const result = await delayer(()=>onChange(newEvent))
+        const result = await handler(newEvent)
+        // console.log("LiveEditWrapper localOnChange end e", e, '=>', newItem, '=>', result)
+        return result
+    }, [item])
+
+    const bindedOnChange = useMemo(() => handleEvent(onChange), [onChange, handleEvent])
+    const bindedOnBlur = useMemo(() => handleEvent(onBlur), [onBlur, handleEvent])
+
+    return (
+        &lt;MediumEditableContent item={item} onChange={bindedOnChange} onBlur={bindedOnBlur} >
+            {children}
+            {/* &lt;hr />
+            &lt;pre>{JSON.stringify(item, null, 2)}&lt;/pre> */}
+        &lt;/MediumEditableContent>
+    )
+}
+
+
+export const LiveEdit = ({ item, children, asyncMutationAction=UpdateAsyncAction }) => {
+    // const { run , error, loading, entity, data, onChange: contextOnChange, onBlur: contextOnBlur } = useGQLEntityContext()
+    const {
+        draft,
+        dirty,
+        loading: saving,
+        onChange, 
+        onBlur,
+        onCancel,
+        onConfirm,
+    } = useEditAction(asyncMutationAction, item, {
+        mode: "confirm", 
+        // onCommit: contextOnChange
+    })
+
+    const handleConfirm = useCallback(async () => {
+        const result = await onConfirm()
+        return result
+    }, [onConfirm])
+
+    return (
+        
+        &lt;MediumEditableContent item={item} draft={draft} onChange={onChange} onBlur={() => null} >
+            {saving &amp;&amp; &lt;LoadingSpinner/>}
+            {children}
+            &lt;hr />
+            &lt;button
+                className="btn btn-warning form-control"
+                onClick={onCancel}
+                disabled={!dirty || saving}
+            >
+                Zrušit změny
+            &lt;/button>
+            &lt;button
+                className="btn btn-primary form-control"
+                onClick={handleConfirm}
+                disabled={!dirty || saving}
+            >
+                Uložit změny
+            &lt;/button>
+        &lt;/MediumEditableContent>
+        
+    )
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#CardCapsule">CardCapsule</a></li><li><a href="global.html#Children">Children</a></li><li><a href="global.html#CreateBody">CreateBody</a></li><li><a href="global.html#CreateButton">CreateButton</a></li><li><a href="global.html#CreateDialog">CreateDialog</a></li><li><a href="global.html#CreateLink">CreateLink</a></li><li><a href="global.html#DeleteBody">DeleteBody</a></li><li><a href="global.html#DeleteButton">DeleteButton</a></li><li><a href="global.html#DeleteDialog">DeleteDialog</a></li><li><a href="global.html#DeleteLink">DeleteLink</a></li><li><a href="global.html#ExamGQLModelRouterSegments">ExamGQLModelRouterSegments</a></li><li><a href="global.html#LargeCard">LargeCard</a></li><li><a href="global.html#LiveEdit_">LiveEdit_</a></li><li><a href="global.html#MediumCard">MediumCard</a></li><li><a href="global.html#MediumEditableContent">MediumEditableContent</a></li><li><a href="global.html#MyNavDropdown">MyNavDropdown</a></li><li><a href="global.html#PageItemBase">PageItemBase</a></li><li><a href="global.html#PageReadItemRolesOn">PageReadItemRolesOn</a></li><li><a href="global.html#ReadAsyncAction">ReadAsyncAction</a></li><li><a href="global.html#TemplateLink">TemplateLink</a></li><li><a href="global.html#TemplateScalarAttribute">TemplateScalarAttribute</a></li><li><a href="global.html#TemplateScalarAttributeLazy">TemplateScalarAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute">TemplateVectorsAttribute</a></li><li><a href="global.html#TemplateVectorsAttributeInfinite">TemplateVectorsAttributeInfinite</a></li><li><a href="global.html#TemplateVectorsAttributeLazy">TemplateVectorsAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute_old">TemplateVectorsAttribute_old</a></li><li><a href="global.html#VectorsVisualiser">VectorsVisualiser</a></li><li><a href="global.html#followUpTemplateVectorItemDelete">followUpTemplateVectorItemDelete</a></li><li><a href="global.html#followUpTemplateVectorItemInsert">followUpTemplateVectorItemInsert</a></li><li><a href="global.html#followUpTemplateVectorItemUpdate">followUpTemplateVectorItemUpdate</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Jul 20 2026 13:46:51 GMT+0200 (středoevropský letní čas)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

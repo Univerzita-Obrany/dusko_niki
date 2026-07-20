@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: ExamGQLModel/Pages/PageNavbar.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: ExamGQLModel/Pages/PageNavbar.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import Nav from 'react-bootstrap/Nav'
+import { Link, LinkURI } from '../Components'
+import { ProxyLink } from '../../../../_template/src/Base/Components/ProxyLink';
+import { NavDropdown } from 'react-bootstrap';
+import { UpdateLink } from '../Mutations/Update';
+import { CreateButton } from '../Mutations/Create';
+
+/**
+ * Allow to use HashContainer for determination which component at page will be rendered.
+ * That must be manually inserted at TemplatePageContent, usually this should be done 
+ * as children of TemplateLargeCard.
+ * 
+ * ```jsx
+ * &lt;TemplateLargeCard>
+ *     &lt;HashContainer>
+ *         &lt;VectorA id="history"/>
+ *         &lt;VectorB id="roles"/>
+ *         &lt;VectorC id="graph"/>
+ *     &lt;/HashContainer>
+ * &lt;/TemplateLargeCard>
+ * ```
+ * 
+ * it is usefull to define globally active "areas" like science, administration, teaching, ...
+ */
+// const TemplatePageSegments = [
+//     { segment: 'education', label: 'Výuka' },
+//     { segment: 'reaserach', label: 'Tvůrčí činnost' },
+//     { segment: 'administration', label: 'Organizační činnost' },
+//     { segment: 'development', label: 'Rozvoj' },
+// ]
+
+/**
+ * A navigation button component that generates a URL based on the template's ID and a specific segment.
+ * The button uses a `ProxyLink` to navigate while preserving hash and query parameters.
+ *
+ * ### Features:
+ * - Dynamically constructs the URL with a hash fragment pointing to the specified segment.
+ * - Displays a label for the navigation link.
+ * - Integrates seamlessly with `ProxyLink` for enhanced navigation.
+ *
+ * @component
+ * @param {Object} props - The properties for the TitleNavButton component.
+ * @param {Object} props.item - The template object containing details about the template.
+ * @param {string|number} props.item.id - The unique identifier for the template.
+ * @param {string} props.segment - The segment to append as a hash fragment in the URL.
+ * @param {string} props.label - The text to display as the label for the navigation button.
+ *
+ * @returns {JSX.Element} A styled navigation button linking to the constructed URL.
+ *
+ * @example
+ * // Example 1: Basic usage with a template and segment
+ * const item = { id: 123 };
+ * const segment = "details";
+ * const label = "View Details";
+ *
+ * &lt;TitleNavButton item="{item}" label="{label}" segment="{segment}"/>
+ * // Resulting URL: `/ug/template/view/123#details`
+ *
+ * @example
+ * // Example 2: Different segment and label
+ * &lt;TitleNavButton 456 id: item="{{" label="Template Settings" segment="settings" }}/>
+ * // Resulting URL: `/ug/template/view/456#settings`
+ */
+// const TitleNavButton = ({ item, segment, label, ...props }) => {
+//     // const urlbase = (segment) => `/templates/template/${segment}/${template?.id}`;
+//     const urlbase = (segment) => `${LinkURI}${item?.id}#${segment}`;
+//     return (
+//         &lt;Nav.Link as="{"span"}" {...props}>
+//             {/* &lt;ProxyLink to="{urlbase(segment)}">{label}&lt;/ProxyLink> */}
+//         &lt;/Nav.Link>
+//     );
+// };
+
+/**
+ * Renders the navigation bar for an Template page.
+ *
+ * This component uses a custom hook, `useHash()`, to determine the current hash
+ * and highlights the active segment. It displays a navigation bar (using MyNavbar)
+ * with several segments (e.g. "history", "roles", "graph"), each rendered as a 
+ * TitleNavButton. The segments are hardcoded in this component and only rendered 
+ * if an `item` object is provided.
+ *
+ * @component
+ * @param {Object} props - The component properties.
+ * @param {Object} props.item - The template entity object that provides context for the page.
+ * @param {string|number} props.item.id - The unique identifier for the template.
+ * @param {ReactNode} [props.children] - Obsah stránky (vnořené komponenty).
+ * @param {Function} props.onSearchChange - Callback function to handle changes in the search input.
+ *
+ * @returns {JSX.Element} The rendered TemplatePageNavbar component.
+ *
+ * @example
+ * // Example usage:
+ * const item = { id: 123, ... };
+ * &lt;PageNavbar item="{item}" onSearchChange="{handleSearchChange}"/>
+ */
+// export const PageNavbar = ({ item, children, onSearchChange }) => {
+//     // const [currentHash, setHash] = useHash(); // Use the custom hook to manage hash
+//     const currentHash = "da"
+//     return (
+//         &lt;div className='screen-only'>
+//             &lt;MyNavbar onSearchChange="{onSearchChange}">
+//                 {item &amp;&amp; TemplatePageSegments.map(({ segment, label }) => (
+//                     &lt;Nav.Item key="{segment}">
+//                         &lt;TitleNavButton ""} "active" "page" // : ? aria-current="{segment" className="{segment" currentHash item="{item}" label="{label}" segment="{segment}" undefined}/>
+//                     &lt;/Nav.Item>
+//                 ))}
+//                 {children}
+//             &lt;/MyNavbar>
+//         &lt;/div>
+//     );
+// };
+
+export const MyNavDropdown = ({ item }) => {
+    const { __typename } = item || {}
+    const hasProperType = __typename === "TemplateGQLModel"
+    return (
+        &lt;NavDropdown title="Skupiny">
+            &lt;NavDropdown.Item as={ProxyLink} to={VectorItemsURI}>
+                Seznam všech 
+            &lt;/NavDropdown.Item>
+            
+            &lt;NavDropdown.Item as={Link} item={item} action="roles" disabled={!hasProperType}>
+                Role&lt;br/>&lt;Link item={item} />
+            &lt;/NavDropdown.Item>
+            &lt;NavDropdown.Item as={Link} item={item} action="subgroups" disabled={!hasProperType}>
+                Podskupiny&lt;br/>&lt;Link item={item} />
+            &lt;/NavDropdown.Item>
+            &lt;NavDropdown.Item as={Link} item={item} action="memberships" disabled={!hasProperType}>
+                Členové&lt;br/>&lt;Link item={item} />
+            &lt;/NavDropdown.Item>
+        
+        
+            &lt;NavDropdown.Divider />
+            
+            &lt;NavDropdown.Item 
+                as={UpdateLink} 
+                item={item}
+                disabled={!hasProperType} 
+            >
+                Upravit&lt;br/>&lt;Link item={item} />
+            &lt;/NavDropdown.Item>
+            &lt;NavDropdown.Item 
+                as={CreateButton} 
+                item={item} 
+                disabled={!hasProperType} 
+                item={{
+                    group: item,
+                    groupId: item?.groupId
+                }}
+            >
+                Nové&lt;br/>&lt;Link item={item} />
+            &lt;/NavDropdown.Item>
+            
+            &lt;NavDropdown.Divider />
+            &lt;NavDropdown.Item as={ProxyLink} to={`/generic/${item?.__typename}/__def/${item?.id}`} reloadDocument={false}>Definice&lt;/NavDropdown.Item >
+        &lt;/NavDropdown>
+    )
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#CardCapsule">CardCapsule</a></li><li><a href="global.html#Children">Children</a></li><li><a href="global.html#CreateBody">CreateBody</a></li><li><a href="global.html#CreateButton">CreateButton</a></li><li><a href="global.html#CreateDialog">CreateDialog</a></li><li><a href="global.html#CreateLink">CreateLink</a></li><li><a href="global.html#DeleteBody">DeleteBody</a></li><li><a href="global.html#DeleteButton">DeleteButton</a></li><li><a href="global.html#DeleteDialog">DeleteDialog</a></li><li><a href="global.html#DeleteLink">DeleteLink</a></li><li><a href="global.html#ExamGQLModelRouterSegments">ExamGQLModelRouterSegments</a></li><li><a href="global.html#LargeCard">LargeCard</a></li><li><a href="global.html#LiveEdit_">LiveEdit_</a></li><li><a href="global.html#MediumCard">MediumCard</a></li><li><a href="global.html#MediumEditableContent">MediumEditableContent</a></li><li><a href="global.html#MyNavDropdown">MyNavDropdown</a></li><li><a href="global.html#PageItemBase">PageItemBase</a></li><li><a href="global.html#PageReadItemRolesOn">PageReadItemRolesOn</a></li><li><a href="global.html#ReadAsyncAction">ReadAsyncAction</a></li><li><a href="global.html#TemplateLink">TemplateLink</a></li><li><a href="global.html#TemplateScalarAttribute">TemplateScalarAttribute</a></li><li><a href="global.html#TemplateScalarAttributeLazy">TemplateScalarAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute">TemplateVectorsAttribute</a></li><li><a href="global.html#TemplateVectorsAttributeInfinite">TemplateVectorsAttributeInfinite</a></li><li><a href="global.html#TemplateVectorsAttributeLazy">TemplateVectorsAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute_old">TemplateVectorsAttribute_old</a></li><li><a href="global.html#VectorsVisualiser">VectorsVisualiser</a></li><li><a href="global.html#followUpTemplateVectorItemDelete">followUpTemplateVectorItemDelete</a></li><li><a href="global.html#followUpTemplateVectorItemInsert">followUpTemplateVectorItemInsert</a></li><li><a href="global.html#followUpTemplateVectorItemUpdate">followUpTemplateVectorItemUpdate</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Jul 20 2026 13:46:51 GMT+0200 (středoevropský letní čas)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
