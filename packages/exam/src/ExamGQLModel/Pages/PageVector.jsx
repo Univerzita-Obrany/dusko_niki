@@ -9,6 +9,7 @@ import { useSearchParams } from "react-router"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { AsyncStateIndicator } from "../../../../_template/src/Base/Helpers/AsyncStateIndicator"
 import { Collapsible } from "../../../../_template/src/Base/FormControls/Collapsible"
+import { CreateButton } from "../Mutations/Create"
 
 
 function safeParseWhere(sp, paramName = "where") {
@@ -88,6 +89,10 @@ export const PageVector = ({ children, queryAsyncAction = ReadPageAsyncAction })
                     </ResetFilterButton>
                 </Filter>
             </Collapsible>
+
+        <div className="d-flex justify-content-center gap-5 mb-4 mt-4">
+                <CreateButton className="btn btn-outline-success" rbacitem={{}}>Přidat</CreateButton>
+            </div>
 
             <Table data={items} sortConfig={sortConfig} onSort={handleSort} />
 
