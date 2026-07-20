@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: ExamGQLModel/Mutations/Update.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: ExamGQLModel/Mutations/Update.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import {
+    UpdateButton as BaseUpdateButton,
+    UpdateDialog as BaseUpdateDialog,
+    UpdateLink as BaseUpdateLink
+} from "../../../../_template/src/Base/Mutations/Update";
+
+import {
+    MediumEditableContent,
+    ReadItemURI,
+    UpdateItemURI,
+} from "../Components";
+import {ExamEditForm} from "../Pages/ExamEditForm"
+
+import { UpdateAsyncAction } from "../Queries";
+import { CreateButton } from "./Create";
+import { useNavigate } from "react-router-dom";
+
+/**
+ * Výchozí obsah pro dialog úprav. Obaluje `MediumEditableContent` a
+ * připravuje data pro vytvoření nové "části", ačkoliv pro ni nevykresluje žádné ovládací prvky.
+ *
+ * @param {Object} props - Vlastnosti komponenty, očekává se, že obsahují objekt `item`.
+ * @param {Object} props.item - Položka entity, která se upravuje.
+ * @returns {JSX.Element}
+ */
+const DefaultContent = (props) => {
+
+    const item = props?.item || {};
+
+    const navigate = useNavigate();
+
+    const typeId =
+        item?.typeId || item?.type?.id || null;
+
+    const planId =
+        item?.planId || item?.plan?.id || null;
+
+    const canCreatePart =
+        Boolean(typeId &amp;&amp; planId);
+
+    const partDraft = {
+        name: item?.name
+            ? `${item.name} - part`
+            : "Nový part",
+        parentId: item?.id,
+        typeId,
+        planId,
+    };
+
+    return (
+        &lt;MediumEditableContent {...props}>
+
+
+        &lt;/MediumEditableContent>
+    );
+};
+
+const mutationAsyncAction = UpdateAsyncAction;
+
+const permissions = {
+    oneOfRoles: [],
+    mode: "absolute",
+};
+
+// ALTERNATIVE, CHECK GQLENDPOINT
+// const permissions = {
+//     oneOfRoles: ["administrátor", "personalista"],
+//     mode: "item",
+// }
+
+/**
+ * Wrapper nad `BaseUpdateLink`, který poskytuje výchozí vlastnosti pro úpravu entity zkoušky.
+ * Nastavuje výchozí URI vzor pro odkaz na úpravu a aplikuje předdefinovaná oprávnění.
+ *
+ * @param {Object} props - Vlastnosti komponenty.
+ * @param {string} [props.uriPattern=UpdateItemURI] - URI vzor pro odkaz.
+ * @param {Object} props.item - Položka, která se má upravit.
+ * @param {React.ReactNode} props.children - Obsah odkazu.
+ * @returns {JSX.Element} Komponenta `BaseUpdateLink` nakonfigurovaná pro zkoušky.
+ */
+export const UpdateLink = ({
+    uriPattern = UpdateItemURI,
+    ...props
+}) => {
+    return (
+        &lt;BaseUpdateLink
+            {...props}
+            uriPattern={uriPattern}
+            {...permissions}
+        />
+    );
+};
+
+/**
+ * Wrapper nad `BaseUpdateDialog` nakonfigurovaný pro úpravu entity zkoušky.
+ * Poskytuje výchozí obsah a mutační akci.
+ *
+ * @param {Object} props - Vlastnosti komponenty.
+ * @param {React.ComponentType} [props.DefaultContent=DefaultContent] - Komponenta pro vykreslení obsahu dialogu.
+ * @param {Function} [props.mutationAsyncAction=mutationAsyncAction] - Asynchronní akce pro provedení úpravy.
+ * @returns {JSX.Element} Komponenta `BaseUpdateDialog`.
+ */
+export const UpdateDialog = ({
+    DefaultContent: DefaultContent_ = DefaultContent,
+    mutationAsyncAction:
+        mutationAsyncAction_ = mutationAsyncAction,
+    ...props
+}) => {
+    return (
+        &lt;BaseUpdateDialog
+            {...props}
+            DefaultContent={DefaultContent_}
+            mutationAsyncAction={
+                mutationAsyncAction_
+            }
+            {...permissions}
+        />
+    );
+};
+
+/**
+ * Wrapper nad `BaseUpdateButton` pro zkoušky. Toto tlačítko otevírá dialog pro úpravu entity.
+ * Je předkonfigurováno s výchozími komponentami a akcemi pro proces úprav.
+ *
+ * @param {Object} props - Vlastnosti komponenty.
+ * @param {React.ComponentType} [props.DefaultContent=DefaultContent] - Obsah pro dialog úprav.
+ * @param {React.ComponentType} [props.Dialog=UpdateDialog] - Komponenta dialogu, která se má použít.
+ * @param {Function} [props.mutationAsyncAction=mutationAsyncAction] - Asynchronní akce pro úpravu.
+ * @param {string} [props.uriPattern=ReadItemURI] - URI pro navigaci po úspěšné úpravě.
+ * @returns {JSX.Element} Komponenta `BaseUpdateButton`.
+ */
+export const UpdateButton = ({
+    DefaultContent: DefaultContent_ = DefaultContent,
+    Dialog = UpdateDialog,
+    mutationAsyncAction:
+        mutationAsyncAction_ = mutationAsyncAction,
+    uriPattern = ReadItemURI,
+    ...props
+}) => {
+    return (
+        &lt;BaseUpdateButton
+            {...props}
+            DefaultContent={DefaultContent_}
+            Dialog={Dialog}
+            mutationAsyncAction={
+                mutationAsyncAction_
+            }
+            uriPattern={uriPattern}
+            {...permissions}
+        />
+    );
+};
+
+/**
+ * Komponenta, která slouží jako tělo stránky pro úpravy.
+ * Obaluje své potomky komponentou `ExamEditForm`, která poskytuje editační kontext a logiku.
+ *
+ * @param {Object} props - Vlastnosti komponenty.
+ * @param {React.ReactNode} props.children - Obsah, který se má vykreslit uvnitř formuláře.
+ * @returns {JSX.Element} `ExamEditForm` s potomky.
+ */
+export const UpdateBody = ({ children }) => {
+
+    return (
+        &lt;ExamEditForm>
+            {children}
+        &lt;/ExamEditForm>
+    );
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AddPartForm">AddPartForm</a></li><li><a href="global.html#CardCapsule">CardCapsule</a></li><li><a href="global.html#Children">Children</a></li><li><a href="global.html#ConfirmEdit">ConfirmEdit</a></li><li><a href="global.html#CreateBody">CreateBody</a></li><li><a href="global.html#CreateButton">CreateButton</a></li><li><a href="global.html#CreateDialog">CreateDialog</a></li><li><a href="global.html#CreateLink">CreateLink</a></li><li><a href="global.html#CreateURI">CreateURI</a></li><li><a href="global.html#DefaultContent">DefaultContent</a></li><li><a href="global.html#DeleteBody">DeleteBody</a></li><li><a href="global.html#DeleteButton">DeleteButton</a></li><li><a href="global.html#DeleteDialog">DeleteDialog</a></li><li><a href="global.html#DeleteItemURI">DeleteItemURI</a></li><li><a href="global.html#DeleteLink">DeleteLink</a></li><li><a href="global.html#DeletePartButton">DeletePartButton</a></li><li><a href="global.html#DeleteURI">DeleteURI</a></li><li><a href="global.html#ExamEditForm">ExamEditForm</a></li><li><a href="global.html#ExamGQLModelRouterSegments">ExamGQLModelRouterSegments</a></li><li><a href="global.html#ExamParts">ExamParts</a></li><li><a href="global.html#InlineEditCell">InlineEditCell</a></li><li><a href="global.html#InteractiveMutations">InteractiveMutations</a></li><li><a href="global.html#LargeCard">LargeCard</a></li><li><a href="global.html#Link">Link</a></li><li><a href="global.html#LinkURI">LinkURI</a></li><li><a href="global.html#ListURI">ListURI</a></li><li><a href="global.html#LiveEdit">LiveEdit</a></li><li><a href="global.html#LiveEditWrapper">LiveEditWrapper</a></li><li><a href="global.html#LiveEdit_">LiveEdit_</a></li><li><a href="global.html#MediumCard">MediumCard</a></li><li><a href="global.html#MediumEditableContent">MediumEditableContent</a></li><li><a href="global.html#MyNavDropdown">MyNavDropdown</a></li><li><a href="global.html#PageItemBase">PageItemBase</a></li><li><a href="global.html#PageLink">PageLink</a></li><li><a href="global.html#PageReadItemRolesOn">PageReadItemRolesOn</a></li><li><a href="global.html#PartsTable">PartsTable</a></li><li><a href="global.html#ReadAsyncAction">ReadAsyncAction</a></li><li><a href="global.html#ReadItemURI">ReadItemURI</a></li><li><a href="global.html#ReadURI">ReadURI</a></li><li><a href="global.html#TemplateScalarAttribute">TemplateScalarAttribute</a></li><li><a href="global.html#TemplateScalarAttributeLazy">TemplateScalarAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute">TemplateVectorsAttribute</a></li><li><a href="global.html#TemplateVectorsAttributeInfinite">TemplateVectorsAttributeInfinite</a></li><li><a href="global.html#TemplateVectorsAttributeLazy">TemplateVectorsAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute_old">TemplateVectorsAttribute_old</a></li><li><a href="global.html#UpdateBody">UpdateBody</a></li><li><a href="global.html#UpdateButton">UpdateButton</a></li><li><a href="global.html#UpdateDialog">UpdateDialog</a></li><li><a href="global.html#UpdateItemURI">UpdateItemURI</a></li><li><a href="global.html#UpdateLink">UpdateLink</a></li><li><a href="global.html#UpdateURI">UpdateURI</a></li><li><a href="global.html#VectorItemsURI">VectorItemsURI</a></li><li><a href="global.html#VectorsVisualiser">VectorsVisualiser</a></li><li><a href="global.html#followUpTemplateVectorItemDelete">followUpTemplateVectorItemDelete</a></li><li><a href="global.html#followUpTemplateVectorItemInsert">followUpTemplateVectorItemInsert</a></li><li><a href="global.html#followUpTemplateVectorItemUpdate">followUpTemplateVectorItemUpdate</a></li><li><a href="global.html#idParam">idParam</a></li><li><a href="global.html#modelURI">modelURI</a></li><li><a href="global.html#unlinkPlanMiddleware">unlinkPlanMiddleware</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Jul 20 2026 14:27:25 GMT+0200 (středoevropský letní čas)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

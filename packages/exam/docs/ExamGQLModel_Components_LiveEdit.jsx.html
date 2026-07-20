@@ -34,35 +34,19 @@ import { CreateDelayer, ErrorHandler, LoadingSpinner } from "@hrbolek/uoisfronte
 import { MediumEditableContent } from "./MediumEditableContent";
 import { ReadItemURI } from "./Link";
 import { useEditAction } from "../../../../dynamic/src/Hooks/useEditAction";
+import { useGQLEntityContext, AsyncActionProvider } from "../../../../_template/src/Base/Helpers/GQLEntityProvider";
 
 /**
- * TemplateLiveEdit Component
+ * @deprecated This component appears to be an older or alternative implementation for live editing.
+ * It uses `AsyncActionProvider` and `LiveEditWrapper` to handle data changes.
+ * Prefer using `ExamEditForm` for auto-saving or `ConfirmEdit` for manual saving.
  *
- * Interaktivní React komponenta pro live editaci entity `template` s podporou optimistického fetchování a debounce delaye.
+ * Interaktivní React komponenta pro live editaci entity zkoušky.
  *
- * - Používá `useAsyncAction` k načítání a update entit (např. GraphQL mutation).
- * - Pokud se hodnota pole změní, spustí se update po krátkém zpoždění (`delayer`) — uživatelské změny nejsou ihned posílány, ale až po pauze.
- * - Zobrazuje loading a error stav pomocí komponent `LoadingSpinner` a `ErrorHandler`.
- * - Předává editované hodnoty do komponenty `TemplateMediumEditableContent`, která zajišťuje zobrazení a editaci jednotlivých polí šablony (`template`).
- *
- * @component
- * @param {Object} props - Props objekt.
- * @param {Object} props.template - Objekt reprezentující editovanou šablonu (template entity).
- * @param {React.ReactNode} [props.children] - Libovolné children, které se vloží pod editační komponentu.
- * @param {Function} [props.asyncAction=TemplateUpdateAsyncAction] - Asynchronní akce pro update (`useAsyncAction`), typicky GraphQL update mutation.
- *
- * @example
- * // Standardní použití
- * &lt;TemplateLiveEdit template={templateEntity} />
- *
- * @example
- * // S vlastním asyncAction a doplňkovým obsahem
- * &lt;TemplateLiveEdit template={templateEntity} asyncAction={myUpdateAction}>
- *   &lt;div>Extra obsah nebo poznámka&lt;/div>
- * &lt;/TemplateLiveEdit>
- *
- * @returns {JSX.Element}
- *   Interaktivní komponenta pro live editaci šablony, včetně spinneru a error handleru.
+ * @param {Object} props - Vlastnosti komponenty.
+ * @param {React.ReactNode} props.children - Potomci, kteří se mají vykreslit uvnitř editačního kontextu.
+ * @param {Function} [props.asyncAction=UpdateAsyncAction] - Asynchronní akce pro provedení úpravy.
+ * @returns {JSX.Element} Komponenta poskytující kontext pro live editaci.
  */
 export const LiveEdit_ = ({ children, asyncAction=UpdateAsyncAction}) => {
     const { onChange, onBlur, item } = useGQLEntityContext()
@@ -83,6 +67,15 @@ export const LiveEdit_ = ({ children, asyncAction=UpdateAsyncAction}) => {
     )
 }
 
+/**
+ * Interní wrapper komponenta pro `LiveEdit_`.
+ * Získává editační funkce z `useGQLEntityContext` a propojuje je s `MediumEditableContent`.
+ *
+ * @param {Object} props - Vlastnosti komponenty.
+ * @param {Object} props.item - Entita, která se upravuje.
+ * @param {React.ReactNode} props.children - Potomci pro zobrazení v `MediumEditableContent`.
+ * @returns {JSX.Element}
+ */
 const LiveEditWrapper = ({ item, children }) => {
     const { run , error, loading, entity, data, onChange, onBlur } = useGQLEntityContext()
     
@@ -114,6 +107,17 @@ const LiveEditWrapper = ({ item, children }) => {
 }
 
 
+/**
+ * Komponenta pro editaci formuláře s explicitním potvrzením.
+ * Využívá `useEditAction` ke správě stavu konceptu (draft) a zobrazuje tlačítka
+ * "Uložit změny" a "Zrušit změny".
+ *
+ * @param {Object} props - Vlastnosti komponenty.
+ * @param {Object} props.item - Původní entita, která se upravuje.
+ * @param {React.ReactNode} props.children - Další potomci (obvykle formulářová pole), kteří se mají vykreslit.
+ * @param {Function} [props.asyncMutationAction=UpdateAsyncAction] - Asynchronní akce, která se má provést při uložení.
+ * @returns {JSX.Element} Formulář pro editaci s ovládacími tlačítky.
+ */
 export const LiveEdit = ({ item, children, asyncMutationAction=UpdateAsyncAction }) => {
     // const { run , error, loading, entity, data, onChange: contextOnChange, onBlur: contextOnBlur } = useGQLEntityContext()
     const {
@@ -129,6 +133,10 @@ export const LiveEdit = ({ item, children, asyncMutationAction=UpdateAsyncAction
         // onCommit: contextOnChange
     })
 
+    /**
+     * Zpracuje potvrzení úprav.
+     * @returns {Promise&lt;any>} Výsledek potvrzovací akce.
+     */
     const handleConfirm = useCallback(async () => {
         const result = await onConfirm()
         return result
@@ -167,13 +175,13 @@ export const LiveEdit = ({ item, children, asyncMutationAction=UpdateAsyncAction
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#CardCapsule">CardCapsule</a></li><li><a href="global.html#Children">Children</a></li><li><a href="global.html#CreateBody">CreateBody</a></li><li><a href="global.html#CreateButton">CreateButton</a></li><li><a href="global.html#CreateDialog">CreateDialog</a></li><li><a href="global.html#CreateLink">CreateLink</a></li><li><a href="global.html#DeleteBody">DeleteBody</a></li><li><a href="global.html#DeleteButton">DeleteButton</a></li><li><a href="global.html#DeleteDialog">DeleteDialog</a></li><li><a href="global.html#DeleteLink">DeleteLink</a></li><li><a href="global.html#ExamGQLModelRouterSegments">ExamGQLModelRouterSegments</a></li><li><a href="global.html#LargeCard">LargeCard</a></li><li><a href="global.html#LiveEdit_">LiveEdit_</a></li><li><a href="global.html#MediumCard">MediumCard</a></li><li><a href="global.html#MediumEditableContent">MediumEditableContent</a></li><li><a href="global.html#MyNavDropdown">MyNavDropdown</a></li><li><a href="global.html#PageItemBase">PageItemBase</a></li><li><a href="global.html#PageReadItemRolesOn">PageReadItemRolesOn</a></li><li><a href="global.html#ReadAsyncAction">ReadAsyncAction</a></li><li><a href="global.html#TemplateLink">TemplateLink</a></li><li><a href="global.html#TemplateScalarAttribute">TemplateScalarAttribute</a></li><li><a href="global.html#TemplateScalarAttributeLazy">TemplateScalarAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute">TemplateVectorsAttribute</a></li><li><a href="global.html#TemplateVectorsAttributeInfinite">TemplateVectorsAttributeInfinite</a></li><li><a href="global.html#TemplateVectorsAttributeLazy">TemplateVectorsAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute_old">TemplateVectorsAttribute_old</a></li><li><a href="global.html#VectorsVisualiser">VectorsVisualiser</a></li><li><a href="global.html#followUpTemplateVectorItemDelete">followUpTemplateVectorItemDelete</a></li><li><a href="global.html#followUpTemplateVectorItemInsert">followUpTemplateVectorItemInsert</a></li><li><a href="global.html#followUpTemplateVectorItemUpdate">followUpTemplateVectorItemUpdate</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AddPartForm">AddPartForm</a></li><li><a href="global.html#CardCapsule">CardCapsule</a></li><li><a href="global.html#Children">Children</a></li><li><a href="global.html#ConfirmEdit">ConfirmEdit</a></li><li><a href="global.html#CreateBody">CreateBody</a></li><li><a href="global.html#CreateButton">CreateButton</a></li><li><a href="global.html#CreateDialog">CreateDialog</a></li><li><a href="global.html#CreateLink">CreateLink</a></li><li><a href="global.html#CreateURI">CreateURI</a></li><li><a href="global.html#DefaultContent">DefaultContent</a></li><li><a href="global.html#DeleteBody">DeleteBody</a></li><li><a href="global.html#DeleteButton">DeleteButton</a></li><li><a href="global.html#DeleteDialog">DeleteDialog</a></li><li><a href="global.html#DeleteItemURI">DeleteItemURI</a></li><li><a href="global.html#DeleteLink">DeleteLink</a></li><li><a href="global.html#DeletePartButton">DeletePartButton</a></li><li><a href="global.html#DeleteURI">DeleteURI</a></li><li><a href="global.html#ExamEditForm">ExamEditForm</a></li><li><a href="global.html#ExamGQLModelRouterSegments">ExamGQLModelRouterSegments</a></li><li><a href="global.html#ExamParts">ExamParts</a></li><li><a href="global.html#InlineEditCell">InlineEditCell</a></li><li><a href="global.html#InteractiveMutations">InteractiveMutations</a></li><li><a href="global.html#LargeCard">LargeCard</a></li><li><a href="global.html#Link">Link</a></li><li><a href="global.html#LinkURI">LinkURI</a></li><li><a href="global.html#ListURI">ListURI</a></li><li><a href="global.html#LiveEdit">LiveEdit</a></li><li><a href="global.html#LiveEditWrapper">LiveEditWrapper</a></li><li><a href="global.html#LiveEdit_">LiveEdit_</a></li><li><a href="global.html#MediumCard">MediumCard</a></li><li><a href="global.html#MediumEditableContent">MediumEditableContent</a></li><li><a href="global.html#MyNavDropdown">MyNavDropdown</a></li><li><a href="global.html#PageItemBase">PageItemBase</a></li><li><a href="global.html#PageLink">PageLink</a></li><li><a href="global.html#PageReadItemRolesOn">PageReadItemRolesOn</a></li><li><a href="global.html#PartsTable">PartsTable</a></li><li><a href="global.html#ReadAsyncAction">ReadAsyncAction</a></li><li><a href="global.html#ReadItemURI">ReadItemURI</a></li><li><a href="global.html#ReadURI">ReadURI</a></li><li><a href="global.html#TemplateScalarAttribute">TemplateScalarAttribute</a></li><li><a href="global.html#TemplateScalarAttributeLazy">TemplateScalarAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute">TemplateVectorsAttribute</a></li><li><a href="global.html#TemplateVectorsAttributeInfinite">TemplateVectorsAttributeInfinite</a></li><li><a href="global.html#TemplateVectorsAttributeLazy">TemplateVectorsAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute_old">TemplateVectorsAttribute_old</a></li><li><a href="global.html#UpdateBody">UpdateBody</a></li><li><a href="global.html#UpdateButton">UpdateButton</a></li><li><a href="global.html#UpdateDialog">UpdateDialog</a></li><li><a href="global.html#UpdateItemURI">UpdateItemURI</a></li><li><a href="global.html#UpdateLink">UpdateLink</a></li><li><a href="global.html#UpdateURI">UpdateURI</a></li><li><a href="global.html#VectorItemsURI">VectorItemsURI</a></li><li><a href="global.html#VectorsVisualiser">VectorsVisualiser</a></li><li><a href="global.html#followUpTemplateVectorItemDelete">followUpTemplateVectorItemDelete</a></li><li><a href="global.html#followUpTemplateVectorItemInsert">followUpTemplateVectorItemInsert</a></li><li><a href="global.html#followUpTemplateVectorItemUpdate">followUpTemplateVectorItemUpdate</a></li><li><a href="global.html#idParam">idParam</a></li><li><a href="global.html#modelURI">modelURI</a></li><li><a href="global.html#unlinkPlanMiddleware">unlinkPlanMiddleware</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Jul 20 2026 13:46:51 GMT+0200 (středoevropský letní čas)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Jul 20 2026 14:27:25 GMT+0200 (středoevropský letní čas)
 </footer>
 
 <script> prettyPrint(); </script>

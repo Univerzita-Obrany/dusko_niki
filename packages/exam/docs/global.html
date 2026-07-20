@@ -239,6 +239,70 @@ while preserving their existing functionality.</p>
 
         
             
+<h4 class="name" id="ConfirmEdit"><span class="type-signature">(constant) </span>ConfirmEdit<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Komponenta, která poskytuje formulář pro úpravu entity s explicitními tlačítky
+pro potvrzení nebo zrušení změn. Využívá hook <code>useEditAction</code> pro správu
+konceptu (draft) stavu a logiku potvrzení.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Components_ConfirmEdit.jsx.html">ExamGQLModel/Components/ConfirmEdit.jsx</a>, <a href="ExamGQLModel_Components_ConfirmEdit.jsx.html#line18">line 18</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
 <h4 class="name" id="CreateBody"><span class="type-signature">(constant) </span>CreateBody<span class="type-signature"></span></h4>
 
 
@@ -523,6 +587,78 @@ který je odvozený z obecných <code>General*</code> komponent.</p>
 
         
             
+<h4 class="name" id="CreateURI"><span class="type-signature">(constant) </span>CreateURI<span class="type-signature"> :string</span></h4>
+
+
+
+
+<div class="description">
+    <p>URI for creating a new exam item.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">string</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Components_Link.jsx.html">ExamGQLModel/Components/Link.jsx</a>, <a href="ExamGQLModel_Components_Link.jsx.html#line9">line 9</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
 <h4 class="name" id="DeleteBody"><span class="type-signature">(constant) </span>DeleteBody<span class="type-signature"></span></h4>
 
 
@@ -721,6 +857,78 @@ rozhodne, co dál).</li>
 
         
             
+<h4 class="name" id="DeleteItemURI"><span class="type-signature">(constant) </span>DeleteItemURI<span class="type-signature"> :string</span></h4>
+
+
+
+
+<div class="description">
+    <p>Full URI for deleting a specific item by its ID.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">string</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Components_Link.jsx.html">ExamGQLModel/Components/Link.jsx</a>, <a href="ExamGQLModel_Components_Link.jsx.html#line29">line 29</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
 <h4 class="name" id="DeleteLink"><span class="type-signature">(constant) </span>DeleteLink<span class="type-signature"></span></h4>
 
 
@@ -768,6 +976,143 @@ přes <code>permissions</code>. Ostatní props přeposílá do Base komponenty.<
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
         <a href="ExamGQLModel_Mutations_Delete.jsx.html">ExamGQLModel/Mutations/Delete.jsx</a>, <a href="ExamGQLModel_Mutations_Delete.jsx.html#line33">line 33</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="DeleteURI"><span class="type-signature">(constant) </span>DeleteURI<span class="type-signature"> :string</span></h4>
+
+
+
+
+<div class="description">
+    <p>Base URI for deleting an exam item.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">string</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Components_Link.jsx.html">ExamGQLModel/Components/Link.jsx</a>, <a href="ExamGQLModel_Components_Link.jsx.html#line15">line 15</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="ExamEditForm"><span class="type-signature">(constant) </span>ExamEditForm<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Formulář pro úpravu zkoušky.</p>
+<p>Komponenta spravuje koncept (draft) stavu zkoušky, provádí validace
+(např. minimální/maximální skóre) a automaticky ukládá změny po krátké prodlevě
+od uživatelského vstupu.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Pages_ExamEditForm.jsx.html">ExamGQLModel/Pages/ExamEditForm.jsx</a>, <a href="ExamGQLModel_Pages_ExamEditForm.jsx.html#line26">line 26</a>
     </li></ul></dd>
     
 
@@ -874,6 +1219,133 @@ všechny children předané přes router budou dostávat objekt:</p>
 
         
             
+<h4 class="name" id="ExamParts"><span class="type-signature">(constant) </span>ExamParts<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Komponenta, která zobrazuje a spravuje části zkoušky.
+Umožňuje přidávat, upravovat a mazat části zkoušky.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Components_ExamParts.jsx.html">ExamGQLModel/Components/ExamParts.jsx</a>, <a href="ExamGQLModel_Components_ExamParts.jsx.html#line389">line 389</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="InteractiveMutations"><span class="type-signature">(constant) </span>InteractiveMutations<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Komponenta, která sdružuje běžné mutační akce pro entitu.
+Zobrazuje sadu tlačítek pro zobrazení, úpravu, vytvoření a smazání entit
+souvisejících s poskytnutou položkou, vše zabalené v <code>CardCapsule</code>.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Mutations_InteractiveMutations.jsx.html">ExamGQLModel/Mutations/InteractiveMutations.jsx</a>, <a href="ExamGQLModel_Mutations_InteractiveMutations.jsx.html#line39">line 39</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
 <h4 class="name" id="LargeCard"><span class="type-signature">(constant) </span>LargeCard<span class="type-signature"></span></h4>
 
 
@@ -944,20 +1416,15 @@ and a <code>MiddleColumn</code> for rendering additional children.</p>
 
         
             
-<h4 class="name" id="LiveEdit_"><span class="type-signature">(constant) </span>LiveEdit_<span class="type-signature"></span></h4>
+<h4 class="name" id="Link"><span class="type-signature">(constant) </span>Link<span class="type-signature"></span></h4>
 
 
 
 
 <div class="description">
-    <p>TemplateLiveEdit Component</p>
-<p>Interaktivní React komponenta pro live editaci entity <code>template</code> s podporou optimistického fetchování a debounce delaye.</p>
-<ul>
-<li>Používá <code>useAsyncAction</code> k načítání a update entit (např. GraphQL mutation).</li>
-<li>Pokud se hodnota pole změní, spustí se update po krátkém zpoždění (<code>delayer</code>) — uživatelské změny nejsou ihned posílány, ale až po pauze.</li>
-<li>Zobrazuje loading a error stav pomocí komponent <code>LoadingSpinner</code> a <code>ErrorHandler</code>.</li>
-<li>Předává editované hodnoty do komponenty <code>TemplateMediumEditableContent</code>, která zajišťuje zobrazení a editaci jednotlivých polí šablony (<code>template</code>).</li>
-</ul>
+    <p>Renders a <code>ProxyLink</code> to a specific action page for an exam entity.</p>
+<p>The target URL is dynamically constructed using the item's <code>id</code> and the specified action.
+The link text defaults to the item's name or ID if no children are provided.</p>
 </div>
 
 
@@ -995,7 +1462,93 @@ and a <code>MiddleColumn</code> for rendering additional children.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_LiveEdit.jsx.html">ExamGQLModel/Components/LiveEdit.jsx</a>, <a href="ExamGQLModel_Components_LiveEdit.jsx.html#line39">line 39</a>
+        <a href="ExamGQLModel_Components_Link.jsx.html">ExamGQLModel/Components/Link.jsx</a>, <a href="ExamGQLModel_Components_Link.jsx.html#line62">line 62</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>ProxyLink - The base component used for rendering the link.</li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+    <h5>Examples</h5>
+    
+    <pre class="prettyprint"><code>// Link to the view page for an examconst exam = { id: 'abc-123', name: 'Final Exam' };&lt;Link item={exam} />// Renders: &lt;ProxyLink to="/.../ExamGQLModel/view/abc-123">Final Exam&lt;/ProxyLink></code></pre>
+
+    <pre class="prettyprint"><code>// Link to the edit page for an exam with custom text&lt;Link item={exam} action="edit">Edit Exam&lt;/Link>// Renders: &lt;ProxyLink to="/.../ExamGQLModel/edit/abc-123">Edit Exam&lt;/ProxyLink></code></pre>
+
+
+
+        
+            
+<h4 class="name" id="LinkURI"><span class="type-signature">(constant) </span>LinkURI<span class="type-signature"> :string</span></h4>
+
+
+
+
+<div class="description">
+    <p>Default URI for a link, pointing to the read view.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">string</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Components_Link.jsx.html">ExamGQLModel/Components/Link.jsx</a>, <a href="ExamGQLModel_Components_Link.jsx.html#line18">line 18</a>
     </li></ul></dd>
     
 
@@ -1010,11 +1563,200 @@ and a <code>MiddleColumn</code> for rendering additional children.</p>
 
 
 
-    <h5>Examples</h5>
-    
-    <pre class="prettyprint"><code>// Standardní použití&lt;TemplateLiveEdit template={templateEntity} /></code></pre>
 
-    <pre class="prettyprint"><code>// S vlastním asyncAction a doplňkovým obsahem&lt;TemplateLiveEdit template={templateEntity} asyncAction={myUpdateAction}>  &lt;div>Extra obsah nebo poznámka&lt;/div>&lt;/TemplateLiveEdit></code></pre>
+        
+            
+<h4 class="name" id="ListURI"><span class="type-signature">(constant) </span>ListURI<span class="type-signature"> :string</span></h4>
+
+
+
+
+<div class="description">
+    <p>URI for listing exam items.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">string</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Components_Link.jsx.html">ExamGQLModel/Components/Link.jsx</a>, <a href="ExamGQLModel_Components_Link.jsx.html#line7">line 7</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="LiveEdit"><span class="type-signature">(constant) </span>LiveEdit<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Komponenta pro editaci formuláře s explicitním potvrzením.
+Využívá <code>useEditAction</code> ke správě stavu konceptu (draft) a zobrazuje tlačítka
+&quot;Uložit změny&quot; a &quot;Zrušit změny&quot;.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Components_LiveEdit.jsx.html">ExamGQLModel/Components/LiveEdit.jsx</a>, <a href="ExamGQLModel_Components_LiveEdit.jsx.html#line93">line 93</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="LiveEdit_"><span class="type-signature">(constant) </span>LiveEdit_<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="important tag-deprecated">Deprecated:</dt><dd><ul class="dummy"><li>This component appears to be an older or alternative implementation for live editing.It uses `AsyncActionProvider` and `LiveEditWrapper` to handle data changes.Prefer using `ExamEditForm` for auto-saving or `ConfirmEdit` for manual saving.Interaktivní React komponenta pro live editaci entity zkoušky.</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Components_LiveEdit.jsx.html">ExamGQLModel/Components/LiveEdit.jsx</a>, <a href="ExamGQLModel_Components_LiveEdit.jsx.html#line23">line 23</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
 
 
 
@@ -1304,6 +2046,69 @@ if an <code>item</code> object is provided.</p>
 
         
             
+<h4 class="name" id="PageLink"><span class="type-signature">(constant) </span>PageLink<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Komponenta, která vykresluje odkaz na hlavní stránku se seznamem (<code>VectorItemsURI</code>).
+Obaluje <code>ProxyLink</code>, aby ve výchozím nastavení zachovala parametry <code>search</code> a <code>hash</code>.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Mutations_InteractiveMutations.jsx.html">ExamGQLModel/Mutations/InteractiveMutations.jsx</a>, <a href="ExamGQLModel_Mutations_InteractiveMutations.jsx.html#line17">line 17</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
 <h4 class="name" id="PageReadItemRolesOn"><span class="type-signature">(constant) </span>PageReadItemRolesOn<span class="type-signature"></span></h4>
 
 
@@ -1448,6 +2253,150 @@ It can be dispatched with query variables to fetch data related to  entities fro
     <h5>Example</h5>
     
     <pre class="prettyprint"><code>// Example usage:const queryVariables = { id: "12345" };dispatch(ReadAsyncAction(queryVariables))  .then((result) => {    console.log("Fetched data:", result);  })  .catch((error) => {    console.error("Error fetching data:", error);  });</code></pre>
+
+
+
+        
+            
+<h4 class="name" id="ReadItemURI"><span class="type-signature">(constant) </span>ReadItemURI<span class="type-signature"> :string</span></h4>
+
+
+
+
+<div class="description">
+    <p>Full URI for viewing a specific item by its ID.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">string</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Components_Link.jsx.html">ExamGQLModel/Components/Link.jsx</a>, <a href="ExamGQLModel_Components_Link.jsx.html#line25">line 25</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="ReadURI"><span class="type-signature">(constant) </span>ReadURI<span class="type-signature"> :string</span></h4>
+
+
+
+
+<div class="description">
+    <p>Base URI for viewing an exam item.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">string</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Components_Link.jsx.html">ExamGQLModel/Components/Link.jsx</a>, <a href="ExamGQLModel_Components_Link.jsx.html#line11">line 11</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
 
 
 
@@ -1885,6 +2834,618 @@ and displays a placeholder message and a JSON representation for each item.</p>
 
 
         
+            
+<h4 class="name" id="UpdateBody"><span class="type-signature">(constant) </span>UpdateBody<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Komponenta, která slouží jako tělo stránky pro úpravy.
+Obaluje své potomky komponentou <code>ExamEditForm</code>, která poskytuje editační kontext a logiku.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Mutations_Update.jsx.html">ExamGQLModel/Mutations/Update.jsx</a>, <a href="ExamGQLModel_Mutations_Update.jsx.html#line162">line 162</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="UpdateButton"><span class="type-signature">(constant) </span>UpdateButton<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Wrapper nad <code>BaseUpdateButton</code> pro zkoušky. Toto tlačítko otevírá dialog pro úpravu entity.
+Je předkonfigurováno s výchozími komponentami a akcemi pro proces úprav.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Mutations_Update.jsx.html">ExamGQLModel/Mutations/Update.jsx</a>, <a href="ExamGQLModel_Mutations_Update.jsx.html#line132">line 132</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="UpdateDialog"><span class="type-signature">(constant) </span>UpdateDialog<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Wrapper nad <code>BaseUpdateDialog</code> nakonfigurovaný pro úpravu entity zkoušky.
+Poskytuje výchozí obsah a mutační akci.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Mutations_Update.jsx.html">ExamGQLModel/Mutations/Update.jsx</a>, <a href="ExamGQLModel_Mutations_Update.jsx.html#line103">line 103</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="UpdateItemURI"><span class="type-signature">(constant) </span>UpdateItemURI<span class="type-signature"> :string</span></h4>
+
+
+
+
+<div class="description">
+    <p>Full URI for editing a specific item by its ID.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">string</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Components_Link.jsx.html">ExamGQLModel/Components/Link.jsx</a>, <a href="ExamGQLModel_Components_Link.jsx.html#line27">line 27</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="UpdateLink"><span class="type-signature">(constant) </span>UpdateLink<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Wrapper nad <code>BaseUpdateLink</code>, který poskytuje výchozí vlastnosti pro úpravu entity zkoušky.
+Nastavuje výchozí URI vzor pro odkaz na úpravu a aplikuje předdefinovaná oprávnění.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Mutations_Update.jsx.html">ExamGQLModel/Mutations/Update.jsx</a>, <a href="ExamGQLModel_Mutations_Update.jsx.html#line81">line 81</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="UpdateURI"><span class="type-signature">(constant) </span>UpdateURI<span class="type-signature"> :string</span></h4>
+
+
+
+
+<div class="description">
+    <p>Base URI for editing an exam item.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">string</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Components_Link.jsx.html">ExamGQLModel/Components/Link.jsx</a>, <a href="ExamGQLModel_Components_Link.jsx.html#line13">line 13</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="VectorItemsURI"><span class="type-signature">(constant) </span>VectorItemsURI<span class="type-signature"> :string</span></h4>
+
+
+
+
+<div class="description">
+    <p>URI for the list view, used for collections of items.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">string</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Components_Link.jsx.html">ExamGQLModel/Components/Link.jsx</a>, <a href="ExamGQLModel_Components_Link.jsx.html#line20">line 20</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="idParam"><span class="type-signature">(constant) </span>idParam<span class="type-signature"> :string</span></h4>
+
+
+
+
+<div class="description">
+    <p>URL parameter for the item ID.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">string</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Components_Link.jsx.html">ExamGQLModel/Components/Link.jsx</a>, <a href="ExamGQLModel_Components_Link.jsx.html#line23">line 23</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="modelURI"><span class="type-signature">(constant) </span>modelURI<span class="type-signature"> :string</span></h4>
+
+
+
+
+<div class="description">
+    <p>Base URI for the ExamGQLModel.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">string</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Components_Link.jsx.html">ExamGQLModel/Components/Link.jsx</a>, <a href="ExamGQLModel_Components_Link.jsx.html#line5">line 5</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
     
 
     
@@ -1896,7 +3457,7 @@ and displays a placeholder message and a JSON representation for each item.</p>
     
 
     
-    <h4 class="name" id="TemplateLink"><span class="type-signature"></span>TemplateLink<span class="signature">(props)</span><span class="type-signature"> &rarr; {JSX.Element}</span></h4>
+    <h4 class="name" id="AddPartForm"><span class="type-signature"></span>AddPartForm<span class="signature">(props)</span><span class="type-signature"></span></h4>
     
 
     
@@ -1904,9 +3465,7 @@ and displays a placeholder message and a JSON representation for each item.</p>
 
 
 <div class="description">
-    <p>A React component that renders a <code>ProxyLink</code> to an &quot;template&quot; entity's view page.</p>
-<p>The target URL is dynamically constructed using the <code>template</code> object's <code>id</code>, and the link displays
-the <code>template</code> object's <code>name</code> as its clickable content.</p>
+    <p>Formulář pro přidání nové části zkoušky.</p>
 </div>
 
 
@@ -1958,7 +3517,7 @@ the <code>template</code> object's <code>name</code> as its clickable content.</
 
             
 
-            <td class="description last"><p>The properties for the <code>TemplateLink</code> component.</p>
+            <td class="description last"><p>Vlastnosti komponenty.</p>
                 <h6>Properties</h6>
                 
 
@@ -1984,7 +3543,7 @@ the <code>template</code> object's <code>name</code> as its clickable content.</
 
         <tr>
             
-                <td class="name"><code>template</code></td>
+                <td class="name"><code>parentItem</code></td>
             
 
             <td class="type">
@@ -2000,59 +3559,14 @@ the <code>template</code> object's <code>name</code> as its clickable content.</
 
             
 
-            <td class="description last"><p>The object representing the &quot;template&quot; entity.</p>
-                <h6>Properties</h6>
-                
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>id</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-|
-
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The unique identifier for the &quot;template&quot; entity. Used to construct the target URL.</p></td>
+            <td class="description last"><p>Nadřazená položka zkoušky.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>name</code></td>
+                <td class="name"><code>partType</code></td>
             
 
             <td class="type">
@@ -2068,14 +3582,53 @@ the <code>template</code> object's <code>name</code> as its clickable content.</
 
             
 
-            <td class="description last"><p>The display name for the &quot;template&quot; entity. Used as the link text.</p></td>
+            <td class="description last"><p>Typ přidávané části (např. &quot;zapocet&quot;, &quot;test&quot;).</p></td>
         </tr>
 
     
-    </tbody>
-</table>
 
+        <tr>
+            
+                <td class="name"><code>onCancel</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
             </td>
+
+            
+
+            
+
+            <td class="description last"><p>Callback funkce pro zrušení formuláře.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>onSuccess</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Callback funkce při úspěšném vytvoření.</p></td>
         </tr>
 
     
@@ -2123,19 +3676,199 @@ the <code>template</code> object's <code>name</code> as its clickable content.</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_Link.jsx.html">ExamGQLModel/Components/Link.jsx</a>, <a href="ExamGQLModel_Components_Link.jsx.html#line20">line 20</a>
+        <a href="ExamGQLModel_Components_ExamParts.jsx.html">ExamGQLModel/Components/ExamParts.jsx</a>, <a href="ExamGQLModel_Components_ExamParts.jsx.html#line93">line 93</a>
     </li></ul></dd>
     
 
     
 
     
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li>ProxyLink - The base component used for rendering the link.</li>
-        </ul>
-    </dd>
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="DefaultContent"><span class="type-signature"></span>DefaultContent<span class="signature">(props)</span><span class="type-signature"> &rarr; {JSX.Element}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Výchozí obsah pro dialog úprav. Obaluje <code>MediumEditableContent</code> a
+připravuje data pro vytvoření nové &quot;části&quot;, ačkoliv pro ni nevykresluje žádné ovládací prvky.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>props</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Vlastnosti komponenty, očekává se, že obsahují objekt <code>item</code>.</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>item</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Položka entity, která se upravuje.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Mutations_Update.jsx.html">ExamGQLModel/Mutations/Update.jsx</a>, <a href="ExamGQLModel_Mutations_Update.jsx.html#line26">line 26</a>
+    </li></ul></dd>
+    
+
+    
+
     
 
     
@@ -2158,10 +3891,6 @@ the <code>template</code> object's <code>name</code> as its clickable content.</
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    <p>A <code>ProxyLink</code> component linking to the specified &quot;template&quot; entity's view page.</p>
-</div>
-
 
 
 <dl>
@@ -2181,9 +3910,975 @@ the <code>template</code> object's <code>name</code> as its clickable content.</
 
 
 
-    <h5>Example</h5>
+
+        
+            
+
     
-    <pre class="prettyprint"><code>// Example usage with a sample template entity:const templateEntity = { id: 123, name: "Example Template Entity" };&lt;TemplateLink template={templateEntity} />// Renders: &lt;ProxyLink to="/template/template/view/123">Example Template Entity&lt;/ProxyLink></code></pre>
+
+    
+    <h4 class="name" id="DeletePartButton"><span class="type-signature"></span>DeletePartButton<span class="signature">(props)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Komponenta tlačítka pro smazání části zkoušky.
+V případě potřeby se také stará o odpojení od studijního plánu.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>props</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Vlastnosti komponenty.</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>part</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Část zkoušky, která má být smazána.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Components_ExamParts.jsx.html">ExamGQLModel/Components/ExamParts.jsx</a>, <a href="ExamGQLModel_Components_ExamParts.jsx.html#line45">line 45</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="InlineEditCell"><span class="type-signature"></span>InlineEditCell<span class="signature">(props)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Buňka tabulky, která umožňuje inline editaci pole.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>props</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Vlastnosti komponenty.</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>part</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Data části zkoušky pro daný řádek.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>field</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Pole části, které se má zobrazit/editovat.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    "text"
+                
+                </td>
+            
+
+            <td class="description last"><p>Typ vstupu pro editaci (např. &quot;text&quot;, &quot;number&quot;).</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>editable</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Zda je buňka editovatelná.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Components_ExamParts.jsx.html">ExamGQLModel/Components/ExamParts.jsx</a>, <a href="ExamGQLModel_Components_ExamParts.jsx.html#line324">line 324</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="LiveEditWrapper"><span class="type-signature"></span>LiveEditWrapper<span class="signature">(props)</span><span class="type-signature"> &rarr; {JSX.Element}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Interní wrapper komponenta pro <code>LiveEdit_</code>.
+Získává editační funkce z <code>useGQLEntityContext</code> a propojuje je s <code>MediumEditableContent</code>.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>props</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Vlastnosti komponenty.</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>item</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Entita, která se upravuje.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>children</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">React.ReactNode</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Potomci pro zobrazení v <code>MediumEditableContent</code>.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Components_LiveEdit.jsx.html">ExamGQLModel/Components/LiveEdit.jsx</a>, <a href="ExamGQLModel_Components_LiveEdit.jsx.html#line51">line 51</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">JSX.Element</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="PartsTable"><span class="type-signature"></span>PartsTable<span class="signature">(props)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Tabulková komponenta pro zobrazení seznamu částí zkoušky.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>props</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Vlastnosti komponenty.</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>parts</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;Object></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Seznam částí zkoušky k zobrazení.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>showActions</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Zda zobrazit tlačítka akcí (jako smazání).</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Components_ExamParts.jsx.html">ExamGQLModel/Components/ExamParts.jsx</a>, <a href="ExamGQLModel_Components_ExamParts.jsx.html#line277">line 277</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3000,6 +5695,166 @@ on a synthetic <code>template</code> object. All other props are forwarded.</p>
 
 
         
+            
+
+    
+
+    
+    <h4 class="name" id="unlinkPlanMiddleware"><span class="type-signature"></span>unlinkPlanMiddleware<span class="signature">(result)</span><span class="type-signature"> &rarr; {function}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Middleware pro zpracování výsledku odpojení studijního plánu.
+V případě neúspěchu vyhodí chybu.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>result</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Výsledek z GraphQL mutace.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Components_ExamParts.jsx.html">ExamGQLModel/Components/ExamParts.jsx</a>, <a href="ExamGQLModel_Components_ExamParts.jsx.html#line19">line 19</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Asynchronní funkce, která zpracovává řetězec middleware.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">function</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
     
 
     
@@ -3639,13 +6494,13 @@ Doporučení: segmenty používej jen pro čtení.</p></td>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#CardCapsule">CardCapsule</a></li><li><a href="global.html#Children">Children</a></li><li><a href="global.html#CreateBody">CreateBody</a></li><li><a href="global.html#CreateButton">CreateButton</a></li><li><a href="global.html#CreateDialog">CreateDialog</a></li><li><a href="global.html#CreateLink">CreateLink</a></li><li><a href="global.html#DeleteBody">DeleteBody</a></li><li><a href="global.html#DeleteButton">DeleteButton</a></li><li><a href="global.html#DeleteDialog">DeleteDialog</a></li><li><a href="global.html#DeleteLink">DeleteLink</a></li><li><a href="global.html#ExamGQLModelRouterSegments">ExamGQLModelRouterSegments</a></li><li><a href="global.html#LargeCard">LargeCard</a></li><li><a href="global.html#LiveEdit_">LiveEdit_</a></li><li><a href="global.html#MediumCard">MediumCard</a></li><li><a href="global.html#MediumEditableContent">MediumEditableContent</a></li><li><a href="global.html#MyNavDropdown">MyNavDropdown</a></li><li><a href="global.html#PageItemBase">PageItemBase</a></li><li><a href="global.html#PageReadItemRolesOn">PageReadItemRolesOn</a></li><li><a href="global.html#ReadAsyncAction">ReadAsyncAction</a></li><li><a href="global.html#TemplateLink">TemplateLink</a></li><li><a href="global.html#TemplateScalarAttribute">TemplateScalarAttribute</a></li><li><a href="global.html#TemplateScalarAttributeLazy">TemplateScalarAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute">TemplateVectorsAttribute</a></li><li><a href="global.html#TemplateVectorsAttributeInfinite">TemplateVectorsAttributeInfinite</a></li><li><a href="global.html#TemplateVectorsAttributeLazy">TemplateVectorsAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute_old">TemplateVectorsAttribute_old</a></li><li><a href="global.html#VectorsVisualiser">VectorsVisualiser</a></li><li><a href="global.html#followUpTemplateVectorItemDelete">followUpTemplateVectorItemDelete</a></li><li><a href="global.html#followUpTemplateVectorItemInsert">followUpTemplateVectorItemInsert</a></li><li><a href="global.html#followUpTemplateVectorItemUpdate">followUpTemplateVectorItemUpdate</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AddPartForm">AddPartForm</a></li><li><a href="global.html#CardCapsule">CardCapsule</a></li><li><a href="global.html#Children">Children</a></li><li><a href="global.html#ConfirmEdit">ConfirmEdit</a></li><li><a href="global.html#CreateBody">CreateBody</a></li><li><a href="global.html#CreateButton">CreateButton</a></li><li><a href="global.html#CreateDialog">CreateDialog</a></li><li><a href="global.html#CreateLink">CreateLink</a></li><li><a href="global.html#CreateURI">CreateURI</a></li><li><a href="global.html#DefaultContent">DefaultContent</a></li><li><a href="global.html#DeleteBody">DeleteBody</a></li><li><a href="global.html#DeleteButton">DeleteButton</a></li><li><a href="global.html#DeleteDialog">DeleteDialog</a></li><li><a href="global.html#DeleteItemURI">DeleteItemURI</a></li><li><a href="global.html#DeleteLink">DeleteLink</a></li><li><a href="global.html#DeletePartButton">DeletePartButton</a></li><li><a href="global.html#DeleteURI">DeleteURI</a></li><li><a href="global.html#ExamEditForm">ExamEditForm</a></li><li><a href="global.html#ExamGQLModelRouterSegments">ExamGQLModelRouterSegments</a></li><li><a href="global.html#ExamParts">ExamParts</a></li><li><a href="global.html#InlineEditCell">InlineEditCell</a></li><li><a href="global.html#InteractiveMutations">InteractiveMutations</a></li><li><a href="global.html#LargeCard">LargeCard</a></li><li><a href="global.html#Link">Link</a></li><li><a href="global.html#LinkURI">LinkURI</a></li><li><a href="global.html#ListURI">ListURI</a></li><li><a href="global.html#LiveEdit">LiveEdit</a></li><li><a href="global.html#LiveEditWrapper">LiveEditWrapper</a></li><li><a href="global.html#LiveEdit_">LiveEdit_</a></li><li><a href="global.html#MediumCard">MediumCard</a></li><li><a href="global.html#MediumEditableContent">MediumEditableContent</a></li><li><a href="global.html#MyNavDropdown">MyNavDropdown</a></li><li><a href="global.html#PageItemBase">PageItemBase</a></li><li><a href="global.html#PageLink">PageLink</a></li><li><a href="global.html#PageReadItemRolesOn">PageReadItemRolesOn</a></li><li><a href="global.html#PartsTable">PartsTable</a></li><li><a href="global.html#ReadAsyncAction">ReadAsyncAction</a></li><li><a href="global.html#ReadItemURI">ReadItemURI</a></li><li><a href="global.html#ReadURI">ReadURI</a></li><li><a href="global.html#TemplateScalarAttribute">TemplateScalarAttribute</a></li><li><a href="global.html#TemplateScalarAttributeLazy">TemplateScalarAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute">TemplateVectorsAttribute</a></li><li><a href="global.html#TemplateVectorsAttributeInfinite">TemplateVectorsAttributeInfinite</a></li><li><a href="global.html#TemplateVectorsAttributeLazy">TemplateVectorsAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute_old">TemplateVectorsAttribute_old</a></li><li><a href="global.html#UpdateBody">UpdateBody</a></li><li><a href="global.html#UpdateButton">UpdateButton</a></li><li><a href="global.html#UpdateDialog">UpdateDialog</a></li><li><a href="global.html#UpdateItemURI">UpdateItemURI</a></li><li><a href="global.html#UpdateLink">UpdateLink</a></li><li><a href="global.html#UpdateURI">UpdateURI</a></li><li><a href="global.html#VectorItemsURI">VectorItemsURI</a></li><li><a href="global.html#VectorsVisualiser">VectorsVisualiser</a></li><li><a href="global.html#followUpTemplateVectorItemDelete">followUpTemplateVectorItemDelete</a></li><li><a href="global.html#followUpTemplateVectorItemInsert">followUpTemplateVectorItemInsert</a></li><li><a href="global.html#followUpTemplateVectorItemUpdate">followUpTemplateVectorItemUpdate</a></li><li><a href="global.html#idParam">idParam</a></li><li><a href="global.html#modelURI">modelURI</a></li><li><a href="global.html#unlinkPlanMiddleware">unlinkPlanMiddleware</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Jul 20 2026 13:46:51 GMT+0200 (středoevropský letní čas)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Jul 20 2026 14:27:25 GMT+0200 (středoevropský letní čas)
 </footer>
 
 <script> prettyPrint(); </script>

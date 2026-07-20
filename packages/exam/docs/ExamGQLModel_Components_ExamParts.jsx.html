@@ -1,4 +1,32 @@
-import { useState, useCallback, useEffect } from "react"
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: ExamGQLModel/Components/ExamParts.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: ExamGQLModel/Components/ExamParts.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { useState, useCallback, useEffect } from "react"
 import { useLocation } from "react-router"
 import { CardCapsule } from "./CardCapsule"
 import { Link } from "./Link"
@@ -54,7 +82,7 @@ const DeletePartButton = ({ part }) => {
 
         setLoading(true)
         try {
-            if (part.plan?.id && part.plan?.lastchange) {
+            if (part.plan?.id &amp;&amp; part.plan?.lastchange) {
                 await unlinkPlan({ id: part.plan.id, lastchange: part.plan.lastchange })
             }
             await deleteExam({
@@ -71,14 +99,14 @@ const DeletePartButton = ({ part }) => {
     }, [part, deleteExam, unlinkPlan])
 
     return (
-        <button
+        &lt;button
             className="btn btn-outline-danger btn-sm"
             onClick={handleDelete}
             disabled={loading}
             title="Smazat"
         >
             {loading ? "..." : "✕"}
-        </button>
+        &lt;/button>
     )
 }
 
@@ -172,26 +200,26 @@ const AddPartForm = ({ parentItem, partType, onCancel, onSuccess }) => {
     }
 
     return (
-        <div className="card card-body bg-light mb-3">
-            <h6 className="mb-3">{getTitle()}</h6>
-            <form onSubmit={handleSubmit}>
-                <div className="row g-2 align-items-center">
-                    <div className="col-12">
-                        <label className="col-form-label">Jméno:</label>
-                        <input
+        &lt;div className="card card-body bg-light mb-3">
+            &lt;h6 className="mb-3">{getTitle()}&lt;/h6>
+            &lt;form onSubmit={handleSubmit}>
+                &lt;div className="row g-2 align-items-center">
+                    &lt;div className="col-12">
+                        &lt;label className="col-form-label">Jméno:&lt;/label>
+                        &lt;input
                             type="text"
                             className="form-control form-control-sm"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             placeholder="Jméno části"
                         />
-                    </div>
+                    &lt;/div>
 
-                    <div className="col-auto">
-                        <label className="col-form-label">Min bodů:</label>
-                    </div>
-                    <div className="col-auto">
-                        <input
+                    &lt;div className="col-auto">
+                        &lt;label className="col-form-label">Min bodů:&lt;/label>
+                    &lt;/div>
+                    &lt;div className="col-auto">
+                        &lt;input
                             type="number"
                             className="form-control form-control-sm"
                             value={minScore}
@@ -200,13 +228,13 @@ const AddPartForm = ({ parentItem, partType, onCancel, onSuccess }) => {
                             max="1000"
                             style={{ width: "80px" }}
                         />
-                    </div>
+                    &lt;/div>
 
-                    <div className="col-auto">
-                        <label className="col-form-label">Max bodů:</label>
-                    </div>
-                    <div className="col-auto">
-                        <input
+                    &lt;div className="col-auto">
+                        &lt;label className="col-form-label">Max bodů:&lt;/label>
+                    &lt;/div>
+                    &lt;div className="col-auto">
+                        &lt;input
                             type="number"
                             className="form-control form-control-sm"
                             value={maxScore}
@@ -215,101 +243,101 @@ const AddPartForm = ({ parentItem, partType, onCancel, onSuccess }) => {
                             max="1000"
                             style={{ width: "80px" }}
                         />
-                    </div>
+                    &lt;/div>
 
-                    {partType === "zapocet" && (
-                        <div className="col-auto">
-                            <div className="form-check">
-                                <input
+                    {partType === "zapocet" &amp;&amp; (
+                        &lt;div className="col-auto">
+                            &lt;div className="form-check">
+                                &lt;input
                                     type="checkbox"
                                     className="form-check-input"
                                     id="klasifikovany"
                                     checked={isKlasifikovany}
                                     onChange={(e) => setIsKlasifikovany(e.target.checked)}
                                 />
-                                <label className="form-check-label" htmlFor="klasifikovany">
+                                &lt;label className="form-check-label" htmlFor="klasifikovany">
                                     Klasifikovaný zápočet
-                                </label>
-                            </div>
-                        </div>
+                                &lt;/label>
+                            &lt;/div>
+                        &lt;/div>
                     )}
 
-                    <div className="col-12">
-                        <label className="col-form-label">Popis:</label>
-                        <textarea
+                    &lt;div className="col-12">
+                        &lt;label className="col-form-label">Popis:&lt;/label>
+                        &lt;textarea
                             className="form-control form-control-sm"
                             rows={3}
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                             placeholder="Popis části"
                         />
-                    </div>
+                    &lt;/div>
 
-                    <div className="col-auto">
-                        <button
+                    &lt;div className="col-auto">
+                        &lt;button
                             type="submit"
                             className="btn btn-primary btn-sm"
                             disabled={loading}
                         >
                             {loading ? "Vytvářím..." : "Vytvořit"}
-                        </button>
-                        <button
+                        &lt;/button>
+                        &lt;button
                             type="button"
                             className="btn btn-secondary btn-sm ms-1"
                             onClick={onCancel}
                             disabled={loading}
                         >
                             Zrušit
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
+                        &lt;/button>
+                    &lt;/div>
+                &lt;/div>
+            &lt;/form>
+        &lt;/div>
     )
 }
 
 /**
  * Tabulková komponenta pro zobrazení seznamu částí zkoušky.
  * @param {Object} props - Vlastnosti komponenty.
- * @param {Array<Object>} props.parts - Seznam částí zkoušky k zobrazení.
+ * @param {Array&lt;Object>} props.parts - Seznam částí zkoušky k zobrazení.
  * @param {boolean} [props.showActions=false] - Zda zobrazit tlačítka akcí (jako smazání).
  */
 const PartsTable = ({ parts, showActions = false }) => {
     if (!parts || parts.length === 0) {
-        return <p className="text-muted">Zatím nejsou přidány žádné části.</p>
+        return &lt;p className="text-muted">Zatím nejsou přidány žádné části.&lt;/p>
     }
 
     return (
-        <table className="table table-sm table-hover">
-            <thead>
-                <tr>
-                    <th>Název</th>
-                    <th>Max bodů</th>
-                    <th>Min bodů</th>
-                    {showActions && <th style={{ width: "60px" }}></th>}
-                </tr>
-            </thead>
-            <tbody>
+        &lt;table className="table table-sm table-hover">
+            &lt;thead>
+                &lt;tr>
+                    &lt;th>Název&lt;/th>
+                    &lt;th>Max bodů&lt;/th>
+                    &lt;th>Min bodů&lt;/th>
+                    {showActions &amp;&amp; &lt;th style={{ width: "60px" }}>&lt;/th>}
+                &lt;/tr>
+            &lt;/thead>
+            &lt;tbody>
                 {parts.map((part) => (
-                    <tr key={part.id}>
-                        <td>
-                            <InlineEditCell part={part} field="name" editable={showActions} />
-                        </td>
-                        <td>
-                            <InlineEditCell part={part} field="maxScore" type="number" editable={showActions} />
-                        </td>
-                        <td>
-                            <InlineEditCell part={part} field="minScore" type="number" editable={showActions} />
-                        </td>
-                        {showActions && (
-                            <td>
-                                <DeletePartButton part={part} />
-                            </td>
+                    &lt;tr key={part.id}>
+                        &lt;td>
+                            &lt;InlineEditCell part={part} field="name" editable={showActions} />
+                        &lt;/td>
+                        &lt;td>
+                            &lt;InlineEditCell part={part} field="maxScore" type="number" editable={showActions} />
+                        &lt;/td>
+                        &lt;td>
+                            &lt;InlineEditCell part={part} field="minScore" type="number" editable={showActions} />
+                        &lt;/td>
+                        {showActions &amp;&amp; (
+                            &lt;td>
+                                &lt;DeletePartButton part={part} />
+                            &lt;/td>
                         )}
-                    </tr>
+                    &lt;/tr>
                 ))}
-            </tbody>
-        </table>
+            &lt;/tbody>
+        &lt;/table>
     )
 }
 
@@ -346,16 +374,16 @@ const InlineEditCell = ({ part, field, type = "text", editable = false }) => {
 
     if (!editable) {
         if (field === "name") {
-            return <Link item={part} />
+            return &lt;Link item={part} />
         }
 
-        return <span>{part[field] ?? "-"}</span>
+        return &lt;span>{part[field] ?? "-"}&lt;/span>
     }
 
     if (editing) {
         return (
-            <div className="d-flex gap-1 align-items-center">
-                <input
+            &lt;div className="d-flex gap-1 align-items-center">
+                &lt;input
                     autoFocus
                     type={type}
                     className="form-control form-control-sm"
@@ -363,20 +391,20 @@ const InlineEditCell = ({ part, field, type = "text", editable = false }) => {
                     onChange={(e) => setValue(e.target.value)}
                     style={type === "number" ? { width: "90px" } : undefined}
                 />
-                <button className="btn btn-success btn-sm" type="button" onClick={handleSave} disabled={loading}>
+                &lt;button className="btn btn-success btn-sm" type="button" onClick={handleSave} disabled={loading}>
                     {loading ? "..." : "✓"}
-                </button>
-                <button className="btn btn-secondary btn-sm" type="button" onClick={() => setEditing(false)} disabled={loading}>
+                &lt;/button>
+                &lt;button className="btn btn-secondary btn-sm" type="button" onClick={() => setEditing(false)} disabled={loading}>
                     ✕
-                </button>
-            </div>
+                &lt;/button>
+            &lt;/div>
         )
     }
 
     return (
-        <button className="btn btn-link btn-sm p-0 text-decoration-none" type="button" onClick={() => setEditing(true)}>
+        &lt;button className="btn btn-link btn-sm p-0 text-decoration-none" type="button" onClick={() => setEditing(true)}>
             {part[field] ?? "-"}
-        </button>
+        &lt;/button>
     )
 }
 
@@ -394,37 +422,37 @@ export const ExamParts = ({ item }) => {
     const showActions = pathname.includes("/edit/")
 
     return (
-        <CardCapsule item={item} title="Části zkoušky (parts)">
-            {showActions && (
-                <div className="mb-3">
-                    <button
+        &lt;CardCapsule item={item} title="Části zkoušky (parts)">
+            {showActions &amp;&amp; (
+                &lt;div className="mb-3">
+                    &lt;button
                         className="btn btn-outline-primary btn-sm me-2"
                         onClick={() => setActiveForm("zapocet")}
                         disabled={activeForm !== null}
                     >
                         + Přidat Zápočet
-                    </button>
-                    <button
+                    &lt;/button>
+                    &lt;button
                         className="btn btn-outline-primary btn-sm me-2"
                         onClick={() => setActiveForm("zkouska")}
                         disabled={activeForm !== null}
                     >
                         + Přidat Zkoušku
-                    </button>
-                    <button
+                    &lt;/button>
+                    &lt;button
                         className="btn btn-outline-primary btn-sm"
                         onClick={() => setShowOtherOptions((current) => !current)}
                         disabled={activeForm !== null}
                     >
                         + Přidat jiné
-                    </button>
-                </div>
+                    &lt;/button>
+                &lt;/div>
             )}
 
-            {showActions && showOtherOptions && activeForm === null && (
-                <div className="card card-body bg-light mb-3">
-                    <div className="d-flex gap-2 flex-wrap">
-                        <button
+            {showActions &amp;&amp; showOtherOptions &amp;&amp; activeForm === null &amp;&amp; (
+                &lt;div className="card card-body bg-light mb-3">
+                    &lt;div className="d-flex gap-2 flex-wrap">
+                        &lt;button
                             className="btn btn-outline-primary btn-sm"
                             onClick={() => {
                                 setActiveForm("test")
@@ -433,8 +461,8 @@ export const ExamParts = ({ item }) => {
                             type="button"
                         >
                             Test
-                        </button>
-                        <button
+                        &lt;/button>
+                        &lt;button
                             className="btn btn-outline-primary btn-sm"
                             onClick={() => {
                                 setActiveForm("jine")
@@ -443,20 +471,42 @@ export const ExamParts = ({ item }) => {
                             type="button"
                         >
                             Jiná část
-                        </button>
-                    </div>
-                </div>
+                        &lt;/button>
+                    &lt;/div>
+                &lt;/div>
             )}
 
-            {showActions && activeForm && (
-                <AddPartForm
+            {showActions &amp;&amp; activeForm &amp;&amp; (
+                &lt;AddPartForm
                     parentItem={item}
                     partType={activeForm}
                     onCancel={() => setActiveForm(null)}
                 />
             )}
 
-            <PartsTable parts={parts} showActions={showActions} />
-        </CardCapsule>
+            &lt;PartsTable parts={parts} showActions={showActions} />
+        &lt;/CardCapsule>
     )
-}
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AddPartForm">AddPartForm</a></li><li><a href="global.html#CardCapsule">CardCapsule</a></li><li><a href="global.html#Children">Children</a></li><li><a href="global.html#ConfirmEdit">ConfirmEdit</a></li><li><a href="global.html#CreateBody">CreateBody</a></li><li><a href="global.html#CreateButton">CreateButton</a></li><li><a href="global.html#CreateDialog">CreateDialog</a></li><li><a href="global.html#CreateLink">CreateLink</a></li><li><a href="global.html#CreateURI">CreateURI</a></li><li><a href="global.html#DefaultContent">DefaultContent</a></li><li><a href="global.html#DeleteBody">DeleteBody</a></li><li><a href="global.html#DeleteButton">DeleteButton</a></li><li><a href="global.html#DeleteDialog">DeleteDialog</a></li><li><a href="global.html#DeleteItemURI">DeleteItemURI</a></li><li><a href="global.html#DeleteLink">DeleteLink</a></li><li><a href="global.html#DeletePartButton">DeletePartButton</a></li><li><a href="global.html#DeleteURI">DeleteURI</a></li><li><a href="global.html#ExamEditForm">ExamEditForm</a></li><li><a href="global.html#ExamGQLModelRouterSegments">ExamGQLModelRouterSegments</a></li><li><a href="global.html#ExamParts">ExamParts</a></li><li><a href="global.html#InlineEditCell">InlineEditCell</a></li><li><a href="global.html#InteractiveMutations">InteractiveMutations</a></li><li><a href="global.html#LargeCard">LargeCard</a></li><li><a href="global.html#Link">Link</a></li><li><a href="global.html#LinkURI">LinkURI</a></li><li><a href="global.html#ListURI">ListURI</a></li><li><a href="global.html#LiveEdit">LiveEdit</a></li><li><a href="global.html#LiveEditWrapper">LiveEditWrapper</a></li><li><a href="global.html#LiveEdit_">LiveEdit_</a></li><li><a href="global.html#MediumCard">MediumCard</a></li><li><a href="global.html#MediumEditableContent">MediumEditableContent</a></li><li><a href="global.html#MyNavDropdown">MyNavDropdown</a></li><li><a href="global.html#PageItemBase">PageItemBase</a></li><li><a href="global.html#PageLink">PageLink</a></li><li><a href="global.html#PageReadItemRolesOn">PageReadItemRolesOn</a></li><li><a href="global.html#PartsTable">PartsTable</a></li><li><a href="global.html#ReadAsyncAction">ReadAsyncAction</a></li><li><a href="global.html#ReadItemURI">ReadItemURI</a></li><li><a href="global.html#ReadURI">ReadURI</a></li><li><a href="global.html#TemplateScalarAttribute">TemplateScalarAttribute</a></li><li><a href="global.html#TemplateScalarAttributeLazy">TemplateScalarAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute">TemplateVectorsAttribute</a></li><li><a href="global.html#TemplateVectorsAttributeInfinite">TemplateVectorsAttributeInfinite</a></li><li><a href="global.html#TemplateVectorsAttributeLazy">TemplateVectorsAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute_old">TemplateVectorsAttribute_old</a></li><li><a href="global.html#UpdateBody">UpdateBody</a></li><li><a href="global.html#UpdateButton">UpdateButton</a></li><li><a href="global.html#UpdateDialog">UpdateDialog</a></li><li><a href="global.html#UpdateItemURI">UpdateItemURI</a></li><li><a href="global.html#UpdateLink">UpdateLink</a></li><li><a href="global.html#UpdateURI">UpdateURI</a></li><li><a href="global.html#VectorItemsURI">VectorItemsURI</a></li><li><a href="global.html#VectorsVisualiser">VectorsVisualiser</a></li><li><a href="global.html#followUpTemplateVectorItemDelete">followUpTemplateVectorItemDelete</a></li><li><a href="global.html#followUpTemplateVectorItemInsert">followUpTemplateVectorItemInsert</a></li><li><a href="global.html#followUpTemplateVectorItemUpdate">followUpTemplateVectorItemUpdate</a></li><li><a href="global.html#idParam">idParam</a></li><li><a href="global.html#modelURI">modelURI</a></li><li><a href="global.html#unlinkPlanMiddleware">unlinkPlanMiddleware</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Jul 20 2026 14:27:25 GMT+0200 (středoevropský letní čas)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

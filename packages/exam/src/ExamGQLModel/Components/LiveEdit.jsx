@@ -6,35 +6,19 @@ import { CreateDelayer, ErrorHandler, LoadingSpinner } from "@hrbolek/uoisfronte
 import { MediumEditableContent } from "./MediumEditableContent";
 import { ReadItemURI } from "./Link";
 import { useEditAction } from "../../../../dynamic/src/Hooks/useEditAction";
+import { useGQLEntityContext, AsyncActionProvider } from "../../../../_template/src/Base/Helpers/GQLEntityProvider";
 
 /**
- * TemplateLiveEdit Component
+ * @deprecated This component appears to be an older or alternative implementation for live editing.
+ * It uses `AsyncActionProvider` and `LiveEditWrapper` to handle data changes.
+ * Prefer using `ExamEditForm` for auto-saving or `ConfirmEdit` for manual saving.
  *
- * Interaktivní React komponenta pro live editaci entity `template` s podporou optimistického fetchování a debounce delaye.
+ * Interaktivní React komponenta pro live editaci entity zkoušky.
  *
- * - Používá `useAsyncAction` k načítání a update entit (např. GraphQL mutation).
- * - Pokud se hodnota pole změní, spustí se update po krátkém zpoždění (`delayer`) — uživatelské změny nejsou ihned posílány, ale až po pauze.
- * - Zobrazuje loading a error stav pomocí komponent `LoadingSpinner` a `ErrorHandler`.
- * - Předává editované hodnoty do komponenty `TemplateMediumEditableContent`, která zajišťuje zobrazení a editaci jednotlivých polí šablony (`template`).
- *
- * @component
- * @param {Object} props - Props objekt.
- * @param {Object} props.template - Objekt reprezentující editovanou šablonu (template entity).
- * @param {React.ReactNode} [props.children] - Libovolné children, které se vloží pod editační komponentu.
- * @param {Function} [props.asyncAction=TemplateUpdateAsyncAction] - Asynchronní akce pro update (`useAsyncAction`), typicky GraphQL update mutation.
- *
- * @example
- * // Standardní použití
- * <TemplateLiveEdit template={templateEntity} />
- *
- * @example
- * // S vlastním asyncAction a doplňkovým obsahem
- * <TemplateLiveEdit template={templateEntity} asyncAction={myUpdateAction}>
- *   <div>Extra obsah nebo poznámka</div>
- * </TemplateLiveEdit>
- *
- * @returns {JSX.Element}
- *   Interaktivní komponenta pro live editaci šablony, včetně spinneru a error handleru.
+ * @param {Object} props - Vlastnosti komponenty.
+ * @param {React.ReactNode} props.children - Potomci, kteří se mají vykreslit uvnitř editačního kontextu.
+ * @param {Function} [props.asyncAction=UpdateAsyncAction] - Asynchronní akce pro provedení úpravy.
+ * @returns {JSX.Element} Komponenta poskytující kontext pro live editaci.
  */
 export const LiveEdit_ = ({ children, asyncAction=UpdateAsyncAction}) => {
     const { onChange, onBlur, item } = useGQLEntityContext()
@@ -55,6 +39,15 @@ export const LiveEdit_ = ({ children, asyncAction=UpdateAsyncAction}) => {
     )
 }
 
+/**
+ * Interní wrapper komponenta pro `LiveEdit_`.
+ * Získává editační funkce z `useGQLEntityContext` a propojuje je s `MediumEditableContent`.
+ *
+ * @param {Object} props - Vlastnosti komponenty.
+ * @param {Object} props.item - Entita, která se upravuje.
+ * @param {React.ReactNode} props.children - Potomci pro zobrazení v `MediumEditableContent`.
+ * @returns {JSX.Element}
+ */
 const LiveEditWrapper = ({ item, children }) => {
     const { run , error, loading, entity, data, onChange, onBlur } = useGQLEntityContext()
     
@@ -86,6 +79,17 @@ const LiveEditWrapper = ({ item, children }) => {
 }
 
 
+/**
+ * Komponenta pro editaci formuláře s explicitním potvrzením.
+ * Využívá `useEditAction` ke správě stavu konceptu (draft) a zobrazuje tlačítka
+ * "Uložit změny" a "Zrušit změny".
+ *
+ * @param {Object} props - Vlastnosti komponenty.
+ * @param {Object} props.item - Původní entita, která se upravuje.
+ * @param {React.ReactNode} props.children - Další potomci (obvykle formulářová pole), kteří se mají vykreslit.
+ * @param {Function} [props.asyncMutationAction=UpdateAsyncAction] - Asynchronní akce, která se má provést při uložení.
+ * @returns {JSX.Element} Formulář pro editaci s ovládacími tlačítky.
+ */
 export const LiveEdit = ({ item, children, asyncMutationAction=UpdateAsyncAction }) => {
     // const { run , error, loading, entity, data, onChange: contextOnChange, onBlur: contextOnBlur } = useGQLEntityContext()
     const {
@@ -101,6 +105,10 @@ export const LiveEdit = ({ item, children, asyncMutationAction=UpdateAsyncAction
         // onCommit: contextOnChange
     })
 
+    /**
+     * Zpracuje potvrzení úprav.
+     * @returns {Promise<any>} Výsledek potvrzovací akce.
+     */
     const handleConfirm = useCallback(async () => {
         const result = await onConfirm()
         return result

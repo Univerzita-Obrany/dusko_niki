@@ -13,6 +13,16 @@ import { UpdateAsyncAction } from "../Queries";
 
 import { MediumEditableContent } from "../Components/MediumEditableContent";
 
+/**
+ * Formulář pro úpravu zkoušky.
+ *
+ * Komponenta spravuje koncept (draft) stavu zkoušky, provádí validace
+ * (např. minimální/maximální skóre) a automaticky ukládá změny po krátké prodlevě
+ * od uživatelského vstupu.
+ * @param {Object} props - Vlastnosti komponenty.
+ * @param {React.ReactNode} props.children - Další potomci, kteří se mají vykreslit uvnitř formuláře.
+ * @returns {JSX.Element} Vykreslená komponenta formuláře.
+ */
 export const ExamEditForm = ({ children }) => {
 
     const dispatch = useDispatch();

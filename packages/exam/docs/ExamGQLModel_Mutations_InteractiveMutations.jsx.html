@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Source: ExamGQLModel/Mutations/InteractiveMutations.jsx</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,32 +17,66 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Source: ExamGQLModel/Mutations/InteractiveMutations.jsx</h1>
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { CardCapsule, VectorItemsURI } from "../Components"
+import { CreateButton, CreateLink } from "./Create"
+import { UpdateButton, UpdateLink } from "./Update"
+import { ProxyLink } from "../../../../_template/src/Base/Components/ProxyLink"
+import { DeleteButton } from "./Delete"
 
+/**
+ * Komponenta, která vykresluje odkaz na hlavní stránku se seznamem (`VectorItemsURI`).
+ * Obaluje `ProxyLink`, aby ve výchozím nastavení zachovala parametry `search` a `hash`.
+ *
+ * @param {Object} props - Vlastnosti komponenty.
+ * @param {React.ReactNode} props.children - Obsah, který se má zobrazit uvnitř odkazu.
+ * @param {boolean} [props.preserveHash=true] - Zda zachovat URL hash.
+ * @param {boolean} [props.preserveSearch=true] - Zda zachovat URL search parametry.
+ * @returns {JSX.Element} Komponenta `ProxyLink`.
+ */
+export const PageLink = ({ children, preserveHash = true, preserveSearch = true, ...props }) => {
+    return (
+        &lt;ProxyLink
+            to={VectorItemsURI}
+            preserveHash={preserveHash}
+            preserveSearch={preserveSearch}
+            {...props}
+        >
+            {children}
+        &lt;/ProxyLink>
+    );
+};
 
-    <h3> </h3>
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
+/**
+ * Komponenta, která sdružuje běžné mutační akce pro entitu.
+ * Zobrazuje sadu tlačítek pro zobrazení, úpravu, vytvoření a smazání entit
+ * souvisejících s poskytnutou položkou, vše zabalené v `CardCapsule`.
+ *
+ * @param {Object} props - Vlastnosti komponenty.
+ * @param {Object} props.item - Položka entity, pro kterou se vykreslují ovládací prvky mutací.
+ * @returns {JSX.Element} `CardCapsule` obsahující interaktivní mutační tlačítka.
+ */
+export const InteractiveMutations = ({ item }) => {
+    return (
+        &lt;CardCapsule item={item} title="Nástroje">
+            &lt;PageLink className="btn btn-outline-success">Stránka&lt;/PageLink>
+            &lt;UpdateLink className="btn btn-outline-success" item={item}>Upravit&lt;/UpdateLink>
+            &lt;UpdateButton className="btn btn-outline-success" item={item}>Upravit Dialog&lt;/UpdateButton>
+            &lt;CreateButton className="btn btn-outline-success" rbacitem={{}} parentItem={item}>Vytvořit nový&lt;/CreateButton>
+            &lt;DeleteButton className="btn btn-outline-danger" item={item}>Odstranit&lt;/DeleteButton>
+        &lt;/CardCapsule>
+    )
+}</code></pre>
+        </article>
+    </section>
 
 
 
