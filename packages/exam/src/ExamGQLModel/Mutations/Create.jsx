@@ -1,25 +1,66 @@
+/**
+ * @fileoverview Komponenty pro vytváření nových záznamů zkoušek.
+ * Obsahuje wrappery nad základními Create komponentami s přednastaveními
+ * specifickými pro model ExamGQLModel.
+ * @module ExamGQLModel/Mutations/Create
+ */
+
 import { CreateURI, MediumEditableContent, ReadItemURI } from "../Components"
 import { InsertAsyncAction } from "../Queries"
-import { 
-    CreateBody as BaseCreateBody, 
-    CreateButton as BaseCreateButton, 
-    CreateDialog as BaseCreateDialog, 
+import {
+    CreateBody as BaseCreateBody,
+    CreateButton as BaseCreateButton,
+    CreateDialog as BaseCreateDialog,
     CreateLink  as BaseCreateLink
 } from "../../../../_template/src/Base/Mutations/Create"
 
+/**
+ * Výchozí komponenta pro editovatelný obsah ve formuláři vytvoření.
+ * @param {Object} props - Vlastnosti předané do MediumEditableContent.
+ * @returns {JSX.Element} Komponenta MediumEditableContent.
+ */
 const DefaultContent = (props) => <MediumEditableContent {...props} />
+
+/**
+ * Asynchronní akce pro vložení nové zkoušky.
+ * @type {Function}
+ */
 const MutationAsyncAction = InsertAsyncAction
 
+/**
+ * Konfigurace RBAC oprávnění pro vytváření zkoušek.
+ * @constant {Object}
+ * @property {Array} oneOfRoles - Pole vyžadovaných rolí (prázdné = bez omezení).
+ * @property {string} mode - Režim kontroly oprávnění ("absolute").
+ */
 const permissions = {
     oneOfRoles: [],
     mode: "absolute",
 }
 
-// Default IDs from system data - these reference existing records in the database
-const DEFAULT_PLAN_ID = "28c25266-daa4-4579-a32a-7a4394ee463d"  // from acplans
-const DEFAULT_TYPE_ID = "a00a0322-b095-11ed-9bd8-0242ac110002"  // from acclassificationtypes (name: "Z")
+/**
+ * Výchozí ID typu zkoušky z databáze acclassificationtypes (name: "Z").
+ * @constant {string}
+ */
+const DEFAULT_TYPE_ID = "a00a0322-b095-11ed-9bd8-0242ac110002"
 
-const createDefaultItem = () => ({ id: crypto.randomUUID(), name: "Nový" });
+/**
+ * Generuje náhodné UUID v4 formátu.
+ * @returns {string} Vygenerované UUID.
+ */
+const generateUUID = () => {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+};
+
+/**
+ * Vytvoří výchozí objekt pro novou zkoušku.
+ * @returns {Object} Objekt s vygenerovaným ID a výchozím názvem.
+ */
+const createDefaultItem = () => ({ id: generateUUID(), name: "Nový" });
 
 /**
  * Wrapper nad `BaseCreateLink` (alias importu `CreateLink` z Base/Mutations/Create),
@@ -99,7 +140,7 @@ export const CreateButton = ({
 }) => {
     const finalItem = item ?? {
         ...createDefaultItem(),
-        planId: parentItem?.planId ?? DEFAULT_PLAN_ID,
+        planId: parentItem?.planId || null,  // planId je volitelný, semestr se získá přes examId query
         typeId: parentItem?.typeId ?? DEFAULT_TYPE_ID
     }
     return <BaseCreateButton 

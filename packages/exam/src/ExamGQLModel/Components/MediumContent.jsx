@@ -1,105 +1,77 @@
-import { Col } from "../../../../_template/src/Base/Components/Col"
-import { Row } from "../../../../_template/src/Base/Components/Row"
-import { Link } from "./Link"
 /**
- * A component that displays medium-level content for an template entity.
- *
- * This component renders a label "TemplateMediumContent" followed by a serialized representation of the `template` object
- * and any additional child content. It is designed to handle and display information about an template entity object.
- *
- * @component
- * @param {Object} props - The properties for the TemplateMediumContent component.
- * @param {Object} props.template - The object representing the template entity.
- * @param {string|number} props.template.id - The unique identifier for the template entity.
- * @param {string} props.template.name - The name or label of the template entity.
- * @param {React.ReactNode} [props.children=null] - Additional content to render after the serialized `template` object.
- *
- * @returns {JSX.Element} A JSX element displaying the entity's details and optional content.
- *
- * @example
- * // Example usage:
- * const templateEntity = { id: 123, name: "Sample Entity" };
- * 
- * <TemplateMediumContent template={templateEntity}>
- *   <p>Additional information about the entity.</p>
- * </TemplateMediumContent>
+ * @fileoverview Komponenta pro zobrazení středně detailního obsahu zkoušky.
+ * Zobrazuje základní informace o zkoušce včetně názvu, popisu, bodů a semestru.
+ * @module ExamGQLModel/Components/MediumContent
  */
-// export const MediumContent = ({ item, children}) => {
-//     return (
-//         <MediumContent_ item={item}>
-//             {children}
-//         </MediumContent_>
-//     )
-// }
 
-// export const MediumContent_ = ({ item, children }) => {
-//     return (
-//         <>
-//             {Object.entries(item).map(([attribute_name, attribute_value]) => {
-//                 // if (attribute_name !== "id") return null
-//                 if (Array.isArray(attribute_value)) return null
-//                 if (typeof attribute_value === "object" && attribute_value !== null) return null
-//                 let attribute_value_result = attribute_value
-//                 // let attribute_value_result = attribute_value
-//                 if (Array.isArray(attribute_value))
-//                     // attribute_value_result = <CardCapsule><Table data={attribute_value} /></CardCapsule>
-//                     return null
-//                 else if (typeof attribute_value === "object" && attribute_value !== null)
-//                     // attribute_value_result = <MediumCard item={attribute_value} />
-//                     return null
-//                 else if (attribute_name === "__typename") {
-//                     /*attribute_value_result = <Link item={attribute_value} />*/
-//                     // console.log("else1", attribute_name, attribute_value)
-//                 }
-//                 if (attribute_name === "id")
-//                     attribute_value_result = <Link item={item}>{item?.id || "Data error"}</Link>
-//                 if (attribute_name === "name")
-//                     attribute_value_result = <Link item={item} />
-//                 // else return null
-//                 if (attribute_value)
-//                     return (
-//                         <Row key={attribute_name}>
-//                             <Col className="col-4"><b>{attribute_name}</b></Col>
-//                             <Col className="col-8">{attribute_value_result}</Col>
-//                         </Row>
-//                     )
-//                 else return null
-//             })}
-//             {Object.entries(item).map(([attribute_name, attribute_value]) => {
-//                 if (attribute_value !== null) return null
-//                 let attribute_value_result = JSON.stringify(attribute_value)
-//                 if (Array.isArray(attribute_value))
-//                     // attribute_value_result = <CardCapsule><Table data={attribute_value} /></CardCapsule>
-//                     return null
-//                 else if (typeof attribute_value === "object" && attribute_value !== null)
-//                     // attribute_value_result = <MediumCard item={attribute_value} />
-//                     return null
-//                 else if (attribute_name === "__typename") {
-//                     /*attribute_value_result = <Link item={attribute_value} />*/
-//                     console.log("else2", attribute_name, attribute_value)
-//                 }
-//                 if (attribute_value)
-//                     return null
-//                 else
-//                     return (
-//                         <Row key={attribute_name}>
-//                             <Col className="col-4"><b>{attribute_name}</b></Col>
-//                             <Col className="col-8">{attribute_value_result}</Col>
-//                         </Row>
-//                     )
-//             })}
-//             {children}
-//         </>
-//     )
-// }
+import { useMemo } from "react"
+import { Link as RouterLink } from "react-router-dom"
+import { Link } from "./Link"
+// import { MediumContent as MediumContent_} from "../../../../_template/src/Base/Components/MediumContent"
+import { Attribute, formatDateTime } from "../../../../_template/src/Base/Components"
+import { ReadStudyPlanByIdAsyncAction, ReadStudyPlanByExamIdAsyncAction } from "../Queries"
+import { useAsyncThunkAction } from "../../../../dynamic/src/Hooks"
 
-import { MediumContent as MediumContent_} from "../../../../_template/src/Base/Components/MediumContent"
-import {Attribute, formatDateTime} from "../../../../_template/src/Base/Components"
+/**
+ * Získá planId z položky zkoušky.
+ * Hledá planId buď přímo na položce, nebo v jejích částech.
+ * @param {Object} item - Položka zkoušky.
+ * @param {string} [item.planId] - ID studijního plánu přímo na položce.
+ * @param {Array<Object>} [item.parts] - Pole částí zkoušky.
+ * @returns {string|null} ID studijního plánu nebo null, pokud není nalezeno.
+ */
+const getPlanId = (item) => {
+    if (item?.planId) {
+        return item.planId
+    }
+    const partWithPlan = item?.parts?.find(part => part?.planId)
+    return partWithPlan?.planId || null
+}
 
-//export { MediumContent } from "../../../../_template/src/Base/Components/MediumContent"
-
+/**
+ * Komponenta pro zobrazení středně detailního obsahu zkoušky.
+ * Zobrazuje informace jako název, popis, body, semestr, části a role uživatele.
+ * @param {Object} props - Vlastnosti komponenty.
+ * @param {Object} props.item - Data zkoušky k zobrazení.
+ * @param {string} [props.item.name] - Název zkoušky.
+ * @param {string} [props.item.nameEn] - Anglický název zkoušky.
+ * @param {string} [props.item.description] - Popis zkoušky.
+ * @param {string} [props.item.descriptionEn] - Anglický popis zkoušky.
+ * @param {number} [props.item.minScore] - Minimální počet bodů.
+ * @param {number} [props.item.maxScore] - Maximální počet bodů.
+ * @param {Array<Object>} [props.item.parts] - Části zkoušky.
+ * @param {React.ReactNode} [props.children] - Dětské komponenty k vykreslení.
+ * @returns {JSX.Element} Vykreslená komponenta s detaily zkoušky.
+ */
 export const MediumContent = ({ item, children}) => {
-     console.log("item", item)
+    const planId = getPlanId(item)
+
+    // Fetch StudyPlan podle planId (když je k dispozici)
+    const { data: dataById, loading: loadingById } = useAsyncThunkAction(
+        ReadStudyPlanByIdAsyncAction,
+        { id: planId },
+        { network: !!planId }
+    )
+
+    // Fetch StudyPlan podle examId (když není planId) - používá snake_case exam_id
+    const examIdQueryVars = useMemo(() => {
+        if (planId || !item?.id) return null
+        return { where: { exam_id: { _eq: item.id } }, limit: 1 }
+    }, [planId, item?.id])
+
+    const { data: dataByExamId, loading: loadingByExamId } = useAsyncThunkAction(
+        ReadStudyPlanByExamIdAsyncAction,
+        examIdQueryVars,
+        { network: !!examIdQueryVars }
+    )
+
+    // Extrahuj semester z výsledku - priorita: planId query, pak examId query
+    const studyPlanById = dataById?.data?.studyPlanById || dataById?.studyPlanById
+    const studyPlansPage = dataByExamId?.data?.studyPlanPage || dataByExamId?.studyPlanPage || []
+    const studyPlanByExamId = studyPlansPage.length > 0 ? studyPlansPage[0] : null
+
+    const semester = studyPlanById?.semester || studyPlanByExamId?.semester || null
+    const loading = loadingById || loadingByExamId
     return (
         <>
             {item?.name && (
@@ -133,11 +105,20 @@ export const MediumContent = ({ item, children}) => {
                 </Attribute>
             )}
             
-            {item?.plan && (
-                <Attribute label="Plán">
-                    {item.plan.name || item.plan.id}
-                </Attribute>
-            )}
+            <Attribute label="Semestr">
+                {loading ? (
+                    <span className="text-muted">Načítám...</span>
+                ) : semester ? (
+                    <RouterLink
+                        to={`/semestr/SemesterGQLModel/view/${semester.id}`}
+                        className="text-decoration-none"
+                    >
+                        {semester.order}. semestr{semester.subject?.name && ` - ${semester.subject.name}`}
+                    </RouterLink>
+                ) : (
+                    <span className="text-muted">Není přiřazen studijní plán</span>
+                )}
+            </Attribute>
             
             {item?.parent?.id && (
                 <Attribute label="Nadřazený exam">

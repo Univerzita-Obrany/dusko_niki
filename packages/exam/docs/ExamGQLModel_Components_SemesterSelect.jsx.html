@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: ExamGQLModel/Components/SemesterSelect.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: ExamGQLModel/Components/SemesterSelect.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview Komponenta pro výběr semestru a jeho propojení se zkouškou.
+ * Umožňuje uživateli vybrat semestr ze seznamu studijních plánů
+ * a automaticky propojí vybraný plán se zkouškou.
+ * @module ExamGQLModel/Components/SemesterSelect
+ */
+
+import { useState, useEffect, useMemo, useCallback } from "react"
+import { createQueryStrLazy } from "@hrbolek/uoisfrontend-gql-shared"
+import { createAsyncGraphQLAction2 } from "../../../../dynamic/src/Core/createAsyncGraphQLAction2"
+import { useAsyncThunkAction } from "../../../../dynamic/src/Hooks"
+import { Label } from "../../../../_template/src/Base/FormControls/Label"
+
+/**
+ * GraphQL query pro načtení stránkovaného seznamu studijních plánů se semestry.
+ * @constant {string}
+ */
+const StudyPlansQueryStr = `
+query studyPlanPage($skip: Int, $limit: Int) {
+  studyPlanPage(skip: $skip, limit: $limit) {
+    __typename
+    id
+    lastchange
+    examId
+    semesterId
+    semester {
+      __typename
+      id
+      order
+      subject {
+        __typename
+        id
+        name
+      }
+    }
+  }
+}
+`
+
+/**
+ * GraphQL query pro načtení studijního plánu propojeného s konkrétním examem.
+ * @constant {string}
+ */
+const StudyPlanByExamIdQueryStr = `
+query studyPlanByExamId($skip: Int, $limit: Int, $where: StudyPlanInputFilter) {
+  studyPlanPage(skip: $skip, limit: $limit, where: $where) {
+    __typename
+    id
+    lastchange
+    examId
+    semesterId
+    semester {
+      __typename
+      id
+      order
+      subject {
+        __typename
+        id
+        name
+      }
+    }
+  }
+}
+`
+
+/**
+ * GraphQL mutace pro aktualizaci studijního plánu (propojení s examem).
+ * @constant {string}
+ */
+const UpdateStudyPlanMutationStr = `
+mutation studyPlanUpdate($id: UUID!, $lastchange: DateTime!, $examId: UUID) {
+  studyPlanUpdate(studyPlan: {id: $id, lastchange: $lastchange, examId: $examId}) {
+    ... on StudyPlanGQLModel {
+      __typename
+      id
+      lastchange
+      examId
+      semesterId
+      semester {
+        __typename
+        id
+        order
+        subject {
+          __typename
+          id
+          name
+        }
+      }
+    }
+    ... on StudyPlanGQLModelUpdateError {
+      __typename
+      msg
+      failed
+    }
+  }
+}
+`
+
+/**
+ * GraphQL mutace pro aktualizaci planId u zkoušky.
+ * @constant {string}
+ */
+const UpdateExamPlanIdMutationStr = `
+mutation examUpdate($id: UUID!, $lastchange: DateTime!, $planId: UUID) {
+  examUpdate(exam: {id: $id, lastchange: $lastchange, planId: $planId}) {
+    ... on ExamGQLModel {
+      __typename
+      id
+      lastchange
+      planId
+    }
+    ... on ExamGQLModelUpdateError {
+      __typename
+      msg
+      failed
+    }
+  }
+}
+`
+
+/**
+ * GraphQL mutace pro aktualizaci názvu zkoušky.
+ * @constant {string}
+ */
+const UpdateExamNameMutationStr = `
+mutation examUpdateName($id: UUID!, $lastchange: DateTime!, $name: String, $nameEn: String) {
+  examUpdate(exam: {id: $id, lastchange: $lastchange, name: $name, nameEn: $nameEn}) {
+    ... on ExamGQLModel {
+      __typename
+      id
+      lastchange
+      name
+      nameEn
+    }
+    ... on ExamGQLModelUpdateError {
+      __typename
+      msg
+      failed
+    }
+  }
+}
+`
+
+/**
+ * Lazy-loaded GraphQL query pro studijní plány.
+ * @type {Function}
+ */
+const StudyPlansQuery = createQueryStrLazy(StudyPlansQueryStr)
+
+/**
+ * Lazy-loaded GraphQL query pro studijní plán podle examId.
+ * @type {Function}
+ */
+const StudyPlanByExamIdQuery = createQueryStrLazy(StudyPlanByExamIdQueryStr)
+
+/**
+ * Lazy-loaded GraphQL mutace pro aktualizaci studijního plánu.
+ * @type {Function}
+ */
+const UpdateStudyPlanMutation = createQueryStrLazy(UpdateStudyPlanMutationStr)
+
+/**
+ * Lazy-loaded GraphQL mutace pro aktualizaci planId zkoušky.
+ * @type {Function}
+ */
+const UpdateExamPlanIdMutation = createQueryStrLazy(UpdateExamPlanIdMutationStr)
+
+/**
+ * Lazy-loaded GraphQL mutace pro aktualizaci názvu zkoušky.
+ * @type {Function}
+ */
+const UpdateExamNameMutation = createQueryStrLazy(UpdateExamNameMutationStr)
+
+/**
+ * Asynchronní akce pro načtení studijních plánů.
+ * @type {Function}
+ */
+const FetchStudyPlansAction = createAsyncGraphQLAction2(StudyPlansQuery)
+
+/**
+ * Asynchronní akce pro načtení studijního plánu podle examId.
+ * @type {Function}
+ */
+const FetchStudyPlanByExamIdAction = createAsyncGraphQLAction2(StudyPlanByExamIdQuery)
+
+/**
+ * Asynchronní akce pro aktualizaci studijního plánu.
+ * @type {Function}
+ */
+const UpdateStudyPlanAction = createAsyncGraphQLAction2(UpdateStudyPlanMutation)
+
+/**
+ * Asynchronní akce pro aktualizaci planId zkoušky.
+ * @type {Function}
+ */
+const UpdateExamPlanIdAction = createAsyncGraphQLAction2(UpdateExamPlanIdMutation)
+
+/**
+ * Asynchronní akce pro aktualizaci názvu zkoušky.
+ * @type {Function}
+ */
+const UpdateExamNameAction = createAsyncGraphQLAction2(UpdateExamNameMutation)
+
+/**
+ * Komponenta pro výběr semestru a propojení se zkouškou.
+ * Zobrazuje select s dostupnými studijními plány a umožňuje jejich výběr.
+ * Při změně výběru automaticky:
+ * - Odpojí starý studijní plán od zkoušky
+ * - Propojí nový studijní plán se zkouškou
+ * - Aktualizuje název zkoušky podle předmětu
+ * - Aktualizuje planId u všech částí zkoušky
+ *
+ * @param {Object} props - Vlastnosti komponenty.
+ * @param {Object} props.item - Data zkoušky.
+ * @param {string} props.item.id - Jedinečný identifikátor zkoušky.
+ * @param {string} props.item.lastchange - Timestamp poslední změny.
+ * @param {Array&lt;Object>} [props.item.parts] - Části zkoušky.
+ * @param {Function} [props.onUpdate] - Callback volaný po úspěšné aktualizaci.
+ * @returns {JSX.Element} Select element pro výběr semestru.
+ */
+export const SemesterSelect = ({ item, onUpdate }) => {
+    const [saving, setSaving] = useState(false)
+    const [selectedPlanId, setSelectedPlanId] = useState(null)
+
+    // Fetch všechny StudyPlans
+    const { data: allPlansData, loading: loadingAll } = useAsyncThunkAction(
+        FetchStudyPlansAction,
+        { limit: 100 },
+        { network: true }
+    )
+
+    // Fetch aktuální StudyPlan propojený s tímto examem
+    const examIdQueryVars = useMemo(() => {
+        if (!item?.id) return null
+        return { where: { exam_id: { _eq: item.id } }, limit: 1 }
+    }, [item?.id])
+
+    const { data: currentPlanData, loading: loadingCurrent } = useAsyncThunkAction(
+        FetchStudyPlanByExamIdAction,
+        examIdQueryVars,
+        { network: !!examIdQueryVars }
+    )
+
+    const { run: updateStudyPlan } = useAsyncThunkAction(
+        UpdateStudyPlanAction,
+        {},
+        { deferred: true }
+    )
+
+    const { run: updateExamPlanId } = useAsyncThunkAction(
+        UpdateExamPlanIdAction,
+        {},
+        { deferred: true }
+    )
+
+    const { run: updateExamName } = useAsyncThunkAction(
+        UpdateExamNameAction,
+        {},
+        { deferred: true }
+    )
+
+    // Extrahuj data
+    const allPlans = allPlansData?.data?.studyPlanPage || allPlansData?.studyPlanPage || []
+    const currentPlans = currentPlanData?.data?.studyPlanPage || currentPlanData?.studyPlanPage || []
+    const currentPlan = currentPlans.length > 0 ? currentPlans[0] : null
+
+    // Nastav vybraný plan při načtení
+    useEffect(() => {
+        if (currentPlan?.id &amp;&amp; !selectedPlanId) {
+            setSelectedPlanId(currentPlan.id)
+        }
+    }, [currentPlan?.id, selectedPlanId])
+
+    // Handler pro změnu výběru
+    const handleChange = useCallback(async (e) => {
+        const newPlanId = e.target.value || null
+        setSelectedPlanId(newPlanId)
+
+        if (!item?.id) return
+
+        setSaving(true)
+        try {
+            // Odpoj starý StudyPlan (pokud existuje)
+            if (currentPlan &amp;&amp; currentPlan.id !== newPlanId) {
+                await updateStudyPlan({
+                    id: currentPlan.id,
+                    lastchange: currentPlan.lastchange,
+                    examId: null
+                })
+            }
+
+            // Propoj nový StudyPlan s hlavním examem a nastav název
+            if (newPlanId) {
+                const newPlan = allPlans.find(p => p.id === newPlanId)
+                if (newPlan) {
+                    await updateStudyPlan({
+                        id: newPlan.id,
+                        lastchange: newPlan.lastchange,
+                        examId: item.id
+                    })
+
+                    // Automaticky nastav název examu na "Subject name - hodnocení"
+                    const subjectName = newPlan.semester?.subject?.name
+                    if (subjectName &amp;&amp; item?.lastchange) {
+                        const newName = `${subjectName} - hodnocení`
+                        const newNameEn = `${subjectName} - evaluation`
+                        try {
+                            await updateExamName({
+                                id: item.id,
+                                lastchange: item.lastchange,
+                                name: newName,
+                                nameEn: newNameEn
+                            })
+                            console.log(`Updated exam name to: ${newName}`)
+                        } catch (nameError) {
+                            console.error("Failed to update exam name:", nameError)
+                        }
+                    }
+                }
+            }
+
+            // Aktualizuj planId u všech částí (parts)
+            const parts = item?.parts || []
+            for (const part of parts) {
+                if (part?.id &amp;&amp; part?.lastchange) {
+                    try {
+                        await updateExamPlanId({
+                            id: part.id,
+                            lastchange: part.lastchange,
+                            planId: newPlanId
+                        })
+                        console.log(`Updated part ${part.name} planId to ${newPlanId}`)
+                    } catch (partError) {
+                        console.error(`Failed to update part ${part.name}:`, partError)
+                    }
+                }
+            }
+
+            // Refresh stránky pro zobrazení změn
+            if (onUpdate) {
+                onUpdate()
+            } else {
+                window.location.reload()
+            }
+        } catch (error) {
+            console.error("Failed to update semester link:", error)
+            alert("Nepodařilo se změnit semestr: " + error.message)
+        } finally {
+            setSaving(false)
+        }
+    }, [item?.id, item?.lastchange, item?.parts, currentPlan, allPlans, updateStudyPlan, updateExamPlanId, updateExamName, onUpdate])
+
+    /**
+     * Formátuje popisek studijního plánu pro zobrazení v select option.
+     * @param {Object} plan - Studijní plán.
+     * @param {Object} [plan.semester] - Semestr přiřazený k plánu.
+     * @param {number} [plan.semester.order] - Pořadí semestru.
+     * @param {Object} [plan.semester.subject] - Předmět přiřazený k semestru.
+     * @returns {string} Formátovaný popisek (např. "1. semestr - Matematika").
+     */
+    const formatPlanLabel = (plan) => {
+        const semester = plan?.semester
+        if (!semester) return `StudyPlan ${plan.id.slice(0, 8)}...`
+        const subjectName = semester.subject?.name || ""
+        return `${semester.order}. semestr${subjectName ? ` - ${subjectName}` : ""}`
+    }
+
+    const loading = loadingAll || loadingCurrent
+
+    return (
+        &lt;Label id="semester" title="Semestr">
+            &lt;select
+                id="semester"
+                className="form-select"
+                value={selectedPlanId || ""}
+                onChange={handleChange}
+                disabled={loading || saving}
+            >
+                &lt;option value="">
+                    {loading ? "Načítám..." : saving ? "Ukládám..." : "-- Vyberte semestr --"}
+                &lt;/option>
+                {allPlans.map(plan => (
+                    &lt;option key={plan.id} value={plan.id}>
+                        {formatPlanLabel(plan)}
+                        {plan.examId &amp;&amp; plan.examId !== item?.id ? " (obsazeno)" : ""}
+                    &lt;/option>
+                ))}
+            &lt;/select>
+        &lt;/Label>
+    )
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ExamGQLModel_Components.html">ExamGQLModel/Components</a></li><li><a href="module-ExamGQLModel_Components_ExamParts.html">ExamGQLModel/Components/ExamParts</a></li><li><a href="module-ExamGQLModel_Components_MediumContent.html">ExamGQLModel/Components/MediumContent</a></li><li><a href="module-ExamGQLModel_Components_MediumEditableContent.html">ExamGQLModel/Components/MediumEditableContent</a></li><li><a href="module-ExamGQLModel_Components_SemesterSelect.html">ExamGQLModel/Components/SemesterSelect</a></li><li><a href="module-ExamGQLModel_Mutations_Create.html">ExamGQLModel/Mutations/Create</a></li><li><a href="module-ExamGQLModel_Queries.html">ExamGQLModel/Queries</a></li><li><a href="module-ExamGQLModel_Queries_Fragments.html">ExamGQLModel/Queries/Fragments</a></li><li><a href="module-ExamGQLModel_Queries_ReadStudyPlanByExamIdAsyncAction.html">ExamGQLModel/Queries/ReadStudyPlanByExamIdAsyncAction</a></li><li><a href="module-ExamGQLModel_Queries_UpdateAsyncAction.html">ExamGQLModel/Queries/UpdateAsyncAction</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CardCapsule">CardCapsule</a></li><li><a href="global.html#Children">Children</a></li><li><a href="global.html#ConfirmEdit">ConfirmEdit</a></li><li><a href="global.html#CreateURI">CreateURI</a></li><li><a href="global.html#DefaultContent">DefaultContent</a></li><li><a href="global.html#DeleteBody">DeleteBody</a></li><li><a href="global.html#DeleteButton">DeleteButton</a></li><li><a href="global.html#DeleteDialog">DeleteDialog</a></li><li><a href="global.html#DeleteItemURI">DeleteItemURI</a></li><li><a href="global.html#DeleteLink">DeleteLink</a></li><li><a href="global.html#DeleteURI">DeleteURI</a></li><li><a href="global.html#ExamEditForm">ExamEditForm</a></li><li><a href="global.html#ExamGQLModelRouterSegments">ExamGQLModelRouterSegments</a></li><li><a href="global.html#InteractiveMutations">InteractiveMutations</a></li><li><a href="global.html#LargeCard">LargeCard</a></li><li><a href="global.html#Link">Link</a></li><li><a href="global.html#LinkURI">LinkURI</a></li><li><a href="global.html#ListURI">ListURI</a></li><li><a href="global.html#LiveEdit">LiveEdit</a></li><li><a href="global.html#LiveEditWrapper">LiveEditWrapper</a></li><li><a href="global.html#LiveEdit_">LiveEdit_</a></li><li><a href="global.html#MediumCard">MediumCard</a></li><li><a href="global.html#MyNavDropdown">MyNavDropdown</a></li><li><a href="global.html#PageItemBase">PageItemBase</a></li><li><a href="global.html#PageLink">PageLink</a></li><li><a href="global.html#PageReadItemRolesOn">PageReadItemRolesOn</a></li><li><a href="global.html#ReadAsyncAction">ReadAsyncAction</a></li><li><a href="global.html#ReadItemURI">ReadItemURI</a></li><li><a href="global.html#ReadURI">ReadURI</a></li><li><a href="global.html#TemplateScalarAttribute">TemplateScalarAttribute</a></li><li><a href="global.html#TemplateScalarAttributeLazy">TemplateScalarAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute">TemplateVectorsAttribute</a></li><li><a href="global.html#TemplateVectorsAttributeInfinite">TemplateVectorsAttributeInfinite</a></li><li><a href="global.html#TemplateVectorsAttributeLazy">TemplateVectorsAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute_old">TemplateVectorsAttribute_old</a></li><li><a href="global.html#UpdateBody">UpdateBody</a></li><li><a href="global.html#UpdateButton">UpdateButton</a></li><li><a href="global.html#UpdateDialog">UpdateDialog</a></li><li><a href="global.html#UpdateItemURI">UpdateItemURI</a></li><li><a href="global.html#UpdateLink">UpdateLink</a></li><li><a href="global.html#UpdateURI">UpdateURI</a></li><li><a href="global.html#VectorItemsURI">VectorItemsURI</a></li><li><a href="global.html#VectorsVisualiser">VectorsVisualiser</a></li><li><a href="global.html#followUpTemplateVectorItemDelete">followUpTemplateVectorItemDelete</a></li><li><a href="global.html#followUpTemplateVectorItemInsert">followUpTemplateVectorItemInsert</a></li><li><a href="global.html#followUpTemplateVectorItemUpdate">followUpTemplateVectorItemUpdate</a></li><li><a href="global.html#idParam">idParam</a></li><li><a href="global.html#modelURI">modelURI</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Tue Jul 21 2026 12:49:09 GMT+0200 (stredoeurópsky letný čas)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

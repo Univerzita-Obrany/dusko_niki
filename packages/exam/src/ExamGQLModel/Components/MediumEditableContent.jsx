@@ -1,40 +1,64 @@
+/**
+ * @fileoverview Komponenta pro editaci středně detailního obsahu zkoušky.
+ * Poskytuje formulářové prvky pro úpravu názvu, popisu, bodů a semestru.
+ * @module ExamGQLModel/Components/MediumEditableContent
+ */
+
 import { Input } from "../../../../_template/src/Base/FormControls/Input"
 import { Label } from "../../../../_template/src/Base/FormControls/Label"
+import { SemesterSelect } from "./SemesterSelect"
 
+/**
+ * Zakáže scrollování na vstupních polích typu number.
+ * Používá se jako handler pro událost onWheel.
+ * @param {Event} e - Událost kolečka myši.
+ */
 const disableScroll = (e) => e.target.blur()
 
 /**
- * A component that displays medium-level content for an template entity.
- *
- * This component renders a label "TemplateMediumContent" followed by a serialized representation of the `template` object
- * and any additional child content. It is designed to handle and display information about an template entity object.
+ * Komponenta pro editaci obsahu zkoušky.
+ * Zobrazuje formulářové prvky pro úpravu názvu, anglického názvu, minimálního a maximálního počtu bodů,
+ * popisu a anglického popisu. Pro hlavní exam (bez parentId) zobrazuje také výběr semestru.
  *
  * @component
- * @param {Object} props - The properties for the TemplateMediumContent component.
- * @param {Object} props.template - The object representing the template entity.
- * @param {string|number} props.template.id - The unique identifier for the template entity.
- * @param {string} props.template.name - The name or label of the template entity.
- * @param {React.ReactNode} [props.children=null] - Additional content to render after the serialized `template` object.
- *
- * @returns {JSX.Element} A JSX element displaying the entity's details and optional content.
+ * @param {Object} props - Vlastnosti komponenty.
+ * @param {Object} props.item - Původní data zkoušky.
+ * @param {string} [props.item.id] - Jedinečný identifikátor zkoušky.
+ * @param {string} [props.item.name] - Název zkoušky.
+ * @param {string} [props.item.nameEn] - Anglický název zkoušky.
+ * @param {number} [props.item.minScore] - Minimální počet bodů.
+ * @param {number} [props.item.maxScore] - Maximální počet bodů.
+ * @param {string} [props.item.description] - Popis zkoušky.
+ * @param {string} [props.item.descriptionEn] - Anglický popis zkoušky.
+ * @param {string} [props.item.parentId] - ID nadřazené zkoušky (pokud je to část).
+ * @param {Object} [props.draft] - Rozpracovaná verze dat (draft) pro editaci.
+ * @param {Function} [props.onChange] - Callback volaný při změně hodnoty vstupního pole.
+ * @param {Function} [props.onBlur] - Callback volaný při opuštění vstupního pole.
+ * @param {React.ReactNode} [props.children] - Dětské komponenty k vykreslení.
+ * @returns {JSX.Element} Formulářová komponenta pro editaci zkoušky.
  *
  * @example
- * // Example usage:
- * const templateEntity = { id: 123, name: "Sample Entity" };
+ * const examItem = { id: "123", name: "Zkouška z matematiky", minScore: 0, maxScore: 100 };
  *
- * <TemplateMediumContent template={templateEntity}>
- *   <p>Additional information about the entity.</p>
- * </TemplateMediumContent>
+ * <MediumEditableContent
+ *   item={examItem}
+ *   onChange={(e) => handleChange(e)}
+ *   onBlur={(e) => handleBlur(e)}
+ * />
  */
 export const MediumEditableContent = ({ item, draft, onChange=(e)=>null, onBlur=(e)=>null, children}) => {
     const source = draft ?? item ?? {}
     return (
         <>
         {/* defaultValue={item?.name|| "Název"}  */}
-            <Input id={"name"} label={"Jméno"} className="form-control" value={source?.name ?? ""} placeholder={"Jméno"} onChange={onChange} />
+            <Input id={"name"} label={"Název"} className="form-control" value={source?.name ?? ""} placeholder={"Název"} onChange={onChange} />
             <Input id={"nameEn"} label={"Anglický název"} className="form-control" value={source?.nameEn ?? ""} placeholder={"Anglický název"} onChange={onChange} />
             <Input id={"minScore"} type="number" label={"Minimální počet bodů"} className="form-control" value={source?.minScore ?? ""} placeholder={"Minimální počet bodů"} onChange={onChange} onWheel={disableScroll} />
             <Input id={"maxScore"} type="number" label={"Maximální počet bodů"} className="form-control" value={source?.maxScore ?? ""} placeholder={"Maximální počet bodů"} onChange={onChange} onWheel={disableScroll} />
+
+            {/* Select pro výběr semestru - pouze pro hlavní exam (bez parentId) */}
+            {!source?.parentId && <SemesterSelect item={item} />}
+
             <Label id="description" title="Popis">
                 <textarea
                     id="description"

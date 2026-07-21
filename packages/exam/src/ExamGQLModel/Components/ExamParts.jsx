@@ -1,3 +1,9 @@
+/**
+ * @fileoverview Komponenta pro správu částí zkoušky (parts).
+ * Umožňuje zobrazení, přidávání, editaci a mazání částí zkoušky jako jsou zápočty, testy a zkoušky.
+ * @module ExamGQLModel/Components/ExamParts
+ */
+
 import { useState, useCallback, useEffect } from "react"
 import { useLocation } from "react-router"
 import { CardCapsule } from "./CardCapsule"
@@ -7,14 +13,50 @@ import { useAsyncThunkAction } from "../../../../dynamic/src/Hooks"
 import { createQueryStrLazy } from "@hrbolek/uoisfrontend-gql-shared"
 import { createAsyncGraphQLAction2 } from "../../../../dynamic/src/Core/createAsyncGraphQLAction2"
 
+/**
+ * Výchozí ID typu zkoušky z databáze (acclassificationtypes).
+ * @constant {string}
+ */
 const DEFAULT_TYPE_ID = "a00a0322-b095-11ed-9bd8-0242ac110002"
-const DEFAULT_PLAN_ID = "28c25266-daa4-4579-a32a-7a4394ee463d"
+
+/**
+ * Generuje náhodné UUID v4 formátu.
+ * @returns {string} Vygenerované UUID.
+ */
+const generateUUID = () => {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+};
+
+/**
+ * Získá planId z rodičovského examu nebo z jeho částí.
+ * @param {Object} parentItem - Rodičovská položka zkoušky.
+ * @param {string} [parentItem.planId] - ID studijního plánu na rodičovské položce.
+ * @param {Array<Object>} [parentItem.parts] - Pole částí rodičovské zkoušky.
+ * @returns {string|null} ID studijního plánu nebo null, pokud není k dispozici.
+ */
+const getPlanIdFromParent = (parentItem) => {
+    // Pokud má parent vlastní planId, použij ho
+    if (parentItem?.planId) {
+        return parentItem.planId
+    }
+    // Jinak zkus najít planId v existujících částech
+    const partWithPlan = parentItem?.parts?.find(part => part?.planId)
+    if (partWithPlan?.planId) {
+        return partWithPlan.planId
+    }
+    // Žádný planId není k dispozici - backend ho nevyžaduje
+    return null
+}
 
 /**
  * Middleware pro zpracování výsledku odpojení studijního plánu.
- * V případě neúspěchu vyhodí chybu.
+ * V případě neúspěchu vyhodí chybu s detaily o selhání.
  * @param {Object} result - Výsledek z GraphQL mutace.
- * @returns {function} Asynchronní funkce, která zpracovává řetězec middleware.
+ * @returns {Function} Asynchronní funkce, která zpracovává řetězec middleware.
  */
 const unlinkPlanMiddleware = (result) => async (dispatch, getState, next) => {
     const dataRoot = result?.data ?? result
@@ -27,6 +69,11 @@ const unlinkPlanMiddleware = (result) => async (dispatch, getState, next) => {
     return next(result)
 }
 
+/**
+ * GraphQL akce pro odpojení studijního plánu od zkoušky.
+ * Nastaví examId na null pro daný studijní plán.
+ * @type {Function}
+ */
 const UnlinkPlanAction = createAsyncGraphQLAction2(createQueryStrLazy(`
 mutation UnlinkStudyPlan($id: UUID!, $lastchange: DateTime!) {
   result: studyPlanUpdate(studyPlan: {id: $id, lastchange: $lastchange, examId: null}) {
@@ -38,9 +85,15 @@ mutation UnlinkStudyPlan($id: UUID!, $lastchange: DateTime!) {
 
 /**
  * Komponenta tlačítka pro smazání části zkoušky.
- * V případě potřeby se také stará o odpojení od studijního plánu.
+ * V případě potřeby se také stará o odpojení od studijního plánu před samotným smazáním.
+ * Po úspěšném smazání provede reload stránky.
  * @param {Object} props - Vlastnosti komponenty.
  * @param {Object} props.part - Část zkoušky, která má být smazána.
+ * @param {string} props.part.id - Jedinečný identifikátor části.
+ * @param {string} props.part.name - Název části.
+ * @param {string} props.part.lastchange - Timestamp poslední změny.
+ * @param {Object} [props.part.plan] - Přiřazený studijní plán.
+ * @returns {JSX.Element} Tlačítko pro smazání části.
  */
 const DeletePartButton = ({ part }) => {
     const [loading, setLoading] = useState(false)
@@ -84,11 +137,17 @@ const DeletePartButton = ({ part }) => {
 
 /**
  * Formulář pro přidání nové části zkoušky.
+ * Zobrazuje vstupní pole pro název, minimální a maximální body, popis.
+ * Pro typ "zapocet" umožňuje volbu klasifikovaného zápočtu.
  * @param {Object} props - Vlastnosti komponenty.
  * @param {Object} props.parentItem - Nadřazená položka zkoušky.
- * @param {string} props.partType - Typ přidávané části (např. "zapocet", "test").
- * @param {function} props.onCancel - Callback funkce pro zrušení formuláře.
- * @param {function} props.onSuccess - Callback funkce při úspěšném vytvoření.
+ * @param {string} props.parentItem.id - ID nadřazené zkoušky.
+ * @param {string} [props.parentItem.typeId] - ID typu zkoušky.
+ * @param {string} [props.parentItem.planId] - ID studijního plánu.
+ * @param {string} props.partType - Typ přidávané části ("zapocet", "test", "zkouska", "jine").
+ * @param {Function} props.onCancel - Callback funkce pro zrušení formuláře.
+ * @param {Function} [props.onSuccess] - Callback funkce volaná při úspěšném vytvoření.
+ * @returns {JSX.Element} Formulář pro vytvoření nové části.
  */
 const AddPartForm = ({ parentItem, partType, onCancel, onSuccess }) => {
     const [loading, setLoading] = useState(false)
@@ -130,8 +189,14 @@ const AddPartForm = ({ parentItem, partType, onCancel, onSuccess }) => {
         setLoading(true)
         try {
             const partConfig = getPartConfig()
+            // Získej planId z rodičovského examu nebo jeho částí
+            const planId = getPlanIdFromParent(parentItem)
+
+            const generatedId = generateUUID()
+            console.log("Generated UUID:", generatedId)
+
             const newPart = {
-                id: crypto.randomUUID(),
+                id: generatedId,
                 name: name.trim() || partConfig.name,
                 nameEn: partConfig.nameEn,
                 description: description.trim(),
@@ -139,9 +204,11 @@ const AddPartForm = ({ parentItem, partType, onCancel, onSuccess }) => {
                 maxScore: parseInt(maxScore, 10) || 100,
                 parentId: parentItem?.id,
                 typeId: parentItem?.typeId ?? DEFAULT_TYPE_ID,
-                planId: DEFAULT_PLAN_ID,
+                planId: planId,
             }
 
+            console.log("Creating exam part with:", newPart)
+            console.log("newPart.id:", newPart.id, "typeof:", typeof newPart.id)
             const result = await run(newPart)
             console.log("Created exam part:", result)
 
@@ -270,9 +337,16 @@ const AddPartForm = ({ parentItem, partType, onCancel, onSuccess }) => {
 
 /**
  * Tabulková komponenta pro zobrazení seznamu částí zkoušky.
+ * Zobrazuje název, maximální a minimální body pro každou část.
+ * Pokud je povoleno showActions, zobrazuje také tlačítka pro editaci a mazání.
  * @param {Object} props - Vlastnosti komponenty.
  * @param {Array<Object>} props.parts - Seznam částí zkoušky k zobrazení.
- * @param {boolean} [props.showActions=false] - Zda zobrazit tlačítka akcí (jako smazání).
+ * @param {string} props.parts[].id - Jedinečný identifikátor části.
+ * @param {string} props.parts[].name - Název části.
+ * @param {number} props.parts[].minScore - Minimální počet bodů.
+ * @param {number} props.parts[].maxScore - Maximální počet bodů.
+ * @param {boolean} [props.showActions=false] - Zda zobrazit tlačítka akcí (editace, smazání).
+ * @returns {JSX.Element} Tabulka s částmi zkoušky nebo zpráva o prázdném seznamu.
  */
 const PartsTable = ({ parts, showActions = false }) => {
     if (!parts || parts.length === 0) {
@@ -315,11 +389,16 @@ const PartsTable = ({ parts, showActions = false }) => {
 
 /**
  * Buňka tabulky, která umožňuje inline editaci pole.
+ * V needitovatelném režimu zobrazuje hodnotu jako link (pro pole "name") nebo prostý text.
+ * V editovatelném režimu po kliknutí zobrazí vstupní pole s tlačítky pro uložení/zrušení.
  * @param {Object} props - Vlastnosti komponenty.
  * @param {Object} props.part - Data části zkoušky pro daný řádek.
+ * @param {string} props.part.id - Jedinečný identifikátor části.
+ * @param {string} props.part.lastchange - Timestamp poslední změny.
  * @param {string} props.field - Pole části, které se má zobrazit/editovat.
- * @param {string} [props.type="text"] - Typ vstupu pro editaci (např. "text", "number").
+ * @param {string} [props.type="text"] - Typ vstupu pro editaci ("text" nebo "number").
  * @param {boolean} [props.editable=false] - Zda je buňka editovatelná.
+ * @returns {JSX.Element} Buňka tabulky s možností inline editace.
  */
 const InlineEditCell = ({ part, field, type = "text", editable = false }) => {
     const [editing, setEditing] = useState(false)
@@ -381,10 +460,16 @@ const InlineEditCell = ({ part, field, type = "text", editable = false }) => {
 }
 
 /**
- * Komponenta, která zobrazuje a spravuje části zkoušky.
- * Umožňuje přidávat, upravovat a mazat části zkoušky.
+ * Hlavní komponenta pro zobrazení a správu částí zkoušky.
+ * Umožňuje přidávat nové části (zápočet, zkouška, test, jiné),
+ * upravovat existující části inline a mazat je.
+ * Před přidáním částí vyžaduje, aby byl přiřazen semestr.
  * @param {Object} props - Vlastnosti komponenty.
  * @param {Object} props.item - Hlavní položka zkoušky obsahující její části.
+ * @param {string} props.item.id - Jedinečný identifikátor zkoušky.
+ * @param {string} [props.item.planId] - ID přiřazeného studijního plánu.
+ * @param {Array<Object>} [props.item.parts] - Pole částí zkoušky.
+ * @returns {JSX.Element} Karta s tabulkou částí a tlačítky pro správu.
  */
 export const ExamParts = ({ item }) => {
     const parts = item?.parts || []
@@ -393,9 +478,19 @@ export const ExamParts = ({ item }) => {
     const { pathname } = useLocation()
     const showActions = pathname.includes("/edit/")
 
+    // Zkontroluj jestli má exam přiřazený semestr (přes planId nebo parts s planId)
+    const hasSemester = item?.planId || parts.some(part => part?.planId)
+
     return (
         <CardCapsule item={item} title="Části zkoušky (parts)">
-            {showActions && (
+            {showActions && !hasSemester && (
+                <div className="alert alert-warning mb-3" role="alert">
+                    <strong>⚠️ Není přiřazen semestr!</strong>
+                    <p className="mb-0 mt-1">Pro přidání částí zkoušky musíte nejprve vybrat semestr v poli "Semestr" níže.</p>
+                </div>
+            )}
+
+            {showActions && hasSemester && (
                 <div className="mb-3">
                     <button
                         className="btn btn-outline-primary btn-sm me-2"
@@ -421,7 +516,7 @@ export const ExamParts = ({ item }) => {
                 </div>
             )}
 
-            {showActions && showOtherOptions && activeForm === null && (
+            {showActions && hasSemester && showOtherOptions && activeForm === null && (
                 <div className="card card-body bg-light mb-3">
                     <div className="d-flex gap-2 flex-wrap">
                         <button
@@ -448,7 +543,7 @@ export const ExamParts = ({ item }) => {
                 </div>
             )}
 
-            {showActions && activeForm && (
+            {showActions && hasSemester && activeForm && (
                 <AddPartForm
                     parentItem={item}
                     partType={activeForm}
