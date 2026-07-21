@@ -147,13 +147,18 @@ a automaticky propojí vybraný plán se zkouškou.</p></div>
 
 <div class="description">
     <p>Komponenta pro výběr semestru a propojení se zkouškou.
-Zobrazuje select s dostupnými studijními plány a umožňuje jejich výběr.
-Při změně výběru automaticky:</p>
+Zobrazuje select s dostupnými studijními plány a umožňuje jejich výběr.</p>
+<p>Chování při editaci existujícího examu (má lastchange):</p>
 <ul>
 <li>Odpojí starý studijní plán od zkoušky</li>
 <li>Propojí nový studijní plán se zkouškou</li>
 <li>Aktualizuje název zkoušky podle předmětu</li>
 <li>Aktualizuje planId u všech částí zkoušky</li>
+</ul>
+<p>Chování při vytváření nového examu (nemá lastchange):</p>
+<ul>
+<li>Pouze uloží vybraný planId do draftu přes onChange</li>
+<li>Propojení se provede až po vytvoření examu</li>
 </ul>
 </div>
 
@@ -192,7 +197,7 @@ Při změně výběru automaticky:</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line221">line 221</a>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line265">line 265</a>
     </li></ul></dd>
     
 
@@ -264,7 +269,79 @@ Při změně výběru automaticky:</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line184">line 184</a>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line216">line 216</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="~FetchStudyPlanByIdAction"><span class="type-signature">(inner, constant) </span>FetchStudyPlanByIdAction<span class="type-signature"> :function</span></h4>
+
+
+
+
+<div class="description">
+    <p>Asynchronní akce pro načtení studijního plánu podle ID.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">function</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line222">line 222</a>
     </li></ul></dd>
     
 
@@ -336,7 +413,7 @@ Při změně výběru automaticky:</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line178">line 178</a>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line210">line 210</a>
     </li></ul></dd>
     
 
@@ -408,7 +485,7 @@ Při změně výběru automaticky:</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line154">line 154</a>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line180">line 180</a>
     </li></ul></dd>
     
 
@@ -498,6 +575,150 @@ Při změně výběru automaticky:</p>
 
         
             
+<h4 class="name" id="~StudyPlanByIdQuery"><span class="type-signature">(inner, constant) </span>StudyPlanByIdQuery<span class="type-signature"> :function</span></h4>
+
+
+
+
+<div class="description">
+    <p>Lazy-loaded GraphQL query pro studijní plán podle ID.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">function</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line186">line 186</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="~StudyPlanByIdQueryStr"><span class="type-signature">(inner, constant) </span>StudyPlanByIdQueryStr<span class="type-signature"> :string</span></h4>
+
+
+
+
+<div class="description">
+    <p>GraphQL query pro načtení jednoho studijního plánu podle ID.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">string</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line70">line 70</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
 <h4 class="name" id="~StudyPlansQuery"><span class="type-signature">(inner, constant) </span>StudyPlansQuery<span class="type-signature"> :function</span></h4>
 
 
@@ -552,7 +773,7 @@ Při změně výběru automaticky:</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line148">line 148</a>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line174">line 174</a>
     </li></ul></dd>
     
 
@@ -696,7 +917,7 @@ Při změně výběru automaticky:</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line202">line 202</a>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line240">line 240</a>
     </li></ul></dd>
     
 
@@ -768,7 +989,7 @@ Při změně výběru automaticky:</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line172">line 172</a>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line204">line 204</a>
     </li></ul></dd>
     
 
@@ -840,7 +1061,7 @@ Při změně výběru automaticky:</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line125">line 125</a>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line151">line 151</a>
     </li></ul></dd>
     
 
@@ -912,7 +1133,7 @@ Při změně výběru automaticky:</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line196">line 196</a>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line234">line 234</a>
     </li></ul></dd>
     
 
@@ -984,7 +1205,7 @@ Při změně výběru automaticky:</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line166">line 166</a>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line198">line 198</a>
     </li></ul></dd>
     
 
@@ -1056,7 +1277,7 @@ Při změně výběru automaticky:</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line103">line 103</a>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line129">line 129</a>
     </li></ul></dd>
     
 
@@ -1128,7 +1349,7 @@ Při změně výběru automaticky:</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line190">line 190</a>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line228">line 228</a>
     </li></ul></dd>
     
 
@@ -1200,7 +1421,7 @@ Při změně výběru automaticky:</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line160">line 160</a>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line192">line 192</a>
     </li></ul></dd>
     
 
@@ -1272,7 +1493,7 @@ Při změně výběru automaticky:</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line70">line 70</a>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line96">line 96</a>
     </li></ul></dd>
     
 
@@ -1312,7 +1533,7 @@ Při změně výběru automaticky:</p>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Tue Jul 21 2026 12:49:09 GMT+0200 (stredoeurópsky letný čas)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Tue Jul 21 2026 22:52:03 GMT+0200 (stredoeurópsky letný čas)
 </footer>
 
 <script> prettyPrint(); </script>

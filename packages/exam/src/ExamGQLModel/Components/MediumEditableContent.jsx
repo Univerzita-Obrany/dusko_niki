@@ -56,8 +56,13 @@ export const MediumEditableContent = ({ item, draft, onChange=(e)=>null, onBlur=
             <Input id={"minScore"} type="number" label={"Minimální počet bodů"} className="form-control" value={source?.minScore ?? ""} placeholder={"Minimální počet bodů"} onChange={onChange} onWheel={disableScroll} />
             <Input id={"maxScore"} type="number" label={"Maximální počet bodů"} className="form-control" value={source?.maxScore ?? ""} placeholder={"Maximální počet bodů"} onChange={onChange} onWheel={disableScroll} />
 
-            {/* Select pro výběr semestru - pouze pro hlavní exam (bez parentId) */}
-            {!source?.parentId && <SemesterSelect item={item} />}
+            {/*
+              * Select pro výběr semestru - pouze pro hlavní exam (bez parentId).
+              * Předává se onChange callback, který SemesterSelect použije v create mode
+              * pro uložení vybraného planId do draftu. V edit mode SemesterSelect
+              * provádí GraphQL mutace přímo.
+              */}
+            {!source?.parentId && <SemesterSelect item={item} onChange={onChange} />}
 
             <Label id="description" title="Popis">
                 <textarea

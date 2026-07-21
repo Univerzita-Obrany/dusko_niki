@@ -92,6 +92,32 @@ query studyPlanByExamId($skip: Int, $limit: Int, $where: StudyPlanInputFilter) {
 `
 
 /**
+ * GraphQL query pro načtení jednoho studijního plánu podle ID.
+ * @constant {string}
+ */
+const StudyPlanByIdQueryStr = `
+query studyPlanById($id: UUID!) {
+  studyPlanById(id: $id) {
+    __typename
+    id
+    lastchange
+    examId
+    semesterId
+    semester {
+      __typename
+      id
+      order
+      subject {
+        __typename
+        id
+        name
+      }
+    }
+  }
+}
+`
+
+/**
  * GraphQL mutace pro aktualizaci studijního plánu (propojení s examem).
  * @constant {string}
  */
@@ -182,6 +208,12 @@ const StudyPlansQuery = createQueryStrLazy(StudyPlansQueryStr)
 const StudyPlanByExamIdQuery = createQueryStrLazy(StudyPlanByExamIdQueryStr)
 
 /**
+ * Lazy-loaded GraphQL query pro studijní plán podle ID.
+ * @type {Function}
+ */
+const StudyPlanByIdQuery = createQueryStrLazy(StudyPlanByIdQueryStr)
+
+/**
  * Lazy-loaded GraphQL mutace pro aktualizaci studijního plánu.
  * @type {Function}
  */
@@ -212,6 +244,12 @@ const FetchStudyPlansAction = createAsyncGraphQLAction2(StudyPlansQuery)
 const FetchStudyPlanByExamIdAction = createAsyncGraphQLAction2(StudyPlanByExamIdQuery)
 
 /**
+ * Asynchronní akce pro načtení studijního plánu podle ID.
+ * @type {Function}
+ */
+const FetchStudyPlanByIdAction = createAsyncGraphQLAction2(StudyPlanByIdQuery)
+
+/**
  * Asynchronní akce pro aktualizaci studijního plánu.
  * @type {Function}
  */
@@ -232,23 +270,38 @@ const UpdateExamNameAction = createAsyncGraphQLAction2(UpdateExamNameMutation)
 /**
  * Komponenta pro výběr semestru a propojení se zkouškou.
  * Zobrazuje select s dostupnými studijními plány a umožňuje jejich výběr.
- * Při změně výběru automaticky:
+ *
+ * Chování při editaci existujícího examu (má lastchange):
  * - Odpojí starý studijní plán od zkoušky
  * - Propojí nový studijní plán se zkouškou
  * - Aktualizuje název zkoušky podle předmětu
  * - Aktualizuje planId u všech částí zkoušky
  *
+ * Chování při vytváření nového examu (nemá lastchange):
+ * - Pouze uloží vybraný planId do draftu přes onChange
+ * - Propojení se provede až po vytvoření examu
+ *
  * @param {Object} props - Vlastnosti komponenty.
  * @param {Object} props.item - Data zkoušky.
  * @param {string} props.item.id - Jedinečný identifikátor zkoušky.
- * @param {string} props.item.lastchange - Timestamp poslední změny.
+ * @param {string} [props.item.lastchange] - Timestamp poslední změny (undefined při vytváření).
  * @param {Array&lt;Object>} [props.item.parts] - Části zkoušky.
+ * @param {Function} [props.onChange] - Callback pro změnu hodnoty při vytváření (draft mode).
  * @param {Function} [props.onUpdate] - Callback volaný po úspěšné aktualizaci.
  * @returns {JSX.Element} Select element pro výběr semestru.
  */
-export const SemesterSelect = ({ item, onUpdate }) => {
+export const SemesterSelect = ({ item, onChange, onUpdate }) => {
+    // Stav indikující, zda probíhá ukládání změn
     const [saving, setSaving] = useState(false)
+
+    // Aktuálně vybraný ID studijního plánu
     const [selectedPlanId, setSelectedPlanId] = useState(null)
+
+    // Detekce režimu vytváření nového examu.
+    // Pokud item nemá lastchange, znamená to, že ještě není uložen v databázi.
+    // V tomto režimu komponenta pouze ukládá vybranou hodnotu do draftu přes onChange,
+    // místo okamžitého volání GraphQL mutací.
+    const isCreateMode = !item?.lastchange
 
     // Fetch všechny StudyPlans
     const { data: allPlansData, loading: loadingAll } = useAsyncThunkAction(
@@ -257,11 +310,11 @@ export const SemesterSelect = ({ item, onUpdate }) => {
         { network: true }
     )
 
-    // Fetch aktuální StudyPlan propojený s tímto examem
+    // Fetch aktuální StudyPlan propojený s tímto examem (pouze v edit mode)
     const examIdQueryVars = useMemo(() => {
-        if (!item?.id) return null
+        if (isCreateMode || !item?.id) return null
         return { where: { exam_id: { _eq: item.id } }, limit: 1 }
-    }, [item?.id])
+    }, [isCreateMode, item?.id])
 
     const { data: currentPlanData, loading: loadingCurrent } = useAsyncThunkAction(
         FetchStudyPlanByExamIdAction,
@@ -287,6 +340,12 @@ export const SemesterSelect = ({ item, onUpdate }) => {
         { deferred: true }
     )
 
+    const { run: fetchStudyPlanById } = useAsyncThunkAction(
+        FetchStudyPlanByIdAction,
+        {},
+        { deferred: true }
+    )
+
     // Extrahuj data
     const allPlans = allPlansData?.data?.studyPlanPage || allPlansData?.studyPlanPage || []
     const currentPlans = currentPlanData?.data?.studyPlanPage || currentPlanData?.studyPlanPage || []
@@ -299,10 +358,36 @@ export const SemesterSelect = ({ item, onUpdate }) => {
         }
     }, [currentPlan?.id, selectedPlanId])
 
-    // Handler pro změnu výběru
+    /**
+     * Handler pro změnu výběru semestru.
+     *
+     * V režimu vytváření (isCreateMode = true):
+     * - Pouze uloží vybraný planId do draftu přes onChange callback
+     * - Simuluje event objekt kompatibilní s ostatními form handlery
+     *
+     * V režimu editace (isCreateMode = false):
+     * - Odpojí předchozí studijní plán od examu
+     * - Načte čerstvá data nového plánu pro aktuální lastchange
+     * - Propojí nový studijní plán s examem
+     * - Automaticky aktualizuje název examu podle předmětu
+     * - Aktualizuje planId u všech částí (parts) examu
+     * - Provede reload stránky nebo zavolá onUpdate callback
+     *
+     * @param {Event} e - Událost změny select elementu.
+     * @returns {Promise&lt;void>}
+     */
     const handleChange = useCallback(async (e) => {
         const newPlanId = e.target.value || null
         setSelectedPlanId(newPlanId)
+
+        // V create mode pouze uložíme planId do draftu přes onChange
+        if (isCreateMode) {
+            if (onChange) {
+                // Simulujeme event pro onChange handler
+                onChange({ target: { id: "planId", value: newPlanId } })
+            }
+            return
+        }
 
         if (!item?.id) return
 
@@ -319,13 +404,19 @@ export const SemesterSelect = ({ item, onUpdate }) => {
 
             // Propoj nový StudyPlan s hlavním examem a nastav název
             if (newPlanId) {
-                const newPlan = allPlans.find(p => p.id === newPlanId)
-                if (newPlan) {
+                // Načti čerstvá data pro studijní plán s aktuálním lastchange
+                const freshPlanData = await fetchStudyPlanById({ id: newPlanId })
+                const freshPlan = freshPlanData?.data?.studyPlanById || freshPlanData?.studyPlanById
+
+                if (freshPlan) {
                     await updateStudyPlan({
-                        id: newPlan.id,
-                        lastchange: newPlan.lastchange,
+                        id: freshPlan.id,
+                        lastchange: freshPlan.lastchange,
                         examId: item.id
                     })
+
+                    // Použij semester z čerstvých dat
+                    const newPlan = freshPlan
 
                     // Automaticky nastav název examu na "Subject name - hodnocení"
                     const subjectName = newPlan.semester?.subject?.name
@@ -344,6 +435,8 @@ export const SemesterSelect = ({ item, onUpdate }) => {
                             console.error("Failed to update exam name:", nameError)
                         }
                     }
+                } else {
+                    console.error("Failed to fetch fresh study plan data for id:", newPlanId)
                 }
             }
 
@@ -376,7 +469,7 @@ export const SemesterSelect = ({ item, onUpdate }) => {
         } finally {
             setSaving(false)
         }
-    }, [item?.id, item?.lastchange, item?.parts, currentPlan, allPlans, updateStudyPlan, updateExamPlanId, updateExamName, onUpdate])
+    }, [isCreateMode, onChange, item?.id, item?.lastchange, item?.parts, currentPlan, updateStudyPlan, updateExamPlanId, updateExamName, fetchStudyPlanById, onUpdate])
 
     /**
      * Formátuje popisek studijního plánu pro zobrazení v select option.
@@ -433,7 +526,7 @@ export const SemesterSelect = ({ item, onUpdate }) => {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Tue Jul 21 2026 12:49:09 GMT+0200 (stredoeurópsky letný čas)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Tue Jul 21 2026 22:52:03 GMT+0200 (stredoeurópsky letný čas)
 </footer>
 
 <script> prettyPrint(); </script>
