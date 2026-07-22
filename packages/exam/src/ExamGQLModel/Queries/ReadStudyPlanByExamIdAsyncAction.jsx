@@ -17,6 +17,7 @@ query studyPlanById($id: UUID!) {
   studyPlanById(id: $id) {
     __typename
     id
+    lastchange
     semesterId
     semester {
       __typename
@@ -42,6 +43,7 @@ query studyPlanByExamId($skip: Int, $limit: Int, $where: StudyPlanInputFilter) {
   studyPlanPage(skip: $skip, limit: $limit, where: $where) {
     __typename
     id
+    lastchange
     semesterId
     semester {
       __typename

@@ -1,7 +1,8 @@
 /**
  * @fileoverview Komponenta pro výběr semestru a jeho propojení se zkouškou.
- * Umožňuje uživateli vybrat semestr ze seznamu studijních plánů
- * a automaticky propojí vybraný plán se zkouškou.
+ * Umožňuje uživateli vybrat semestr ze seznamu studijních plánů, automaticky propojí
+ * vybraný plán se zkouškou a nastaví název zkoušky podle předmětu a čísla semestru
+ * ve formátu `"${subjectName} ${order} - hodnocení"`.
  * @module ExamGQLModel/Components/SemesterSelect
  */
 
@@ -233,25 +234,26 @@ const UpdateStudyPlanAction = createAsyncGraphQLAction2(UpdateStudyPlanMutation)
  */
 const UpdateExamPlanIdAction = createAsyncGraphQLAction2(UpdateExamPlanIdMutation)
 
+const UpdateExamNameAction = createAsyncGraphQLAction2(UpdateExamNameMutation)
+
 /**
  * Asynchronní akce pro aktualizaci názvu zkoušky.
  * @type {Function}
  */
-const UpdateExamNameAction = createAsyncGraphQLAction2(UpdateExamNameMutation)
 
 /**
  * Komponenta pro výběr semestru a propojení se zkouškou.
  * Zobrazuje select s dostupnými studijními plány a umožňuje jejich výběr.
  *
- * Chování při editaci existujícího examu (má lastchange):
- * - Odpojí starý studijní plán od zkoušky
- * - Propojí nový studijní plán se zkouškou
- * - Aktualizuje název zkoušky podle předmětu
- * - Aktualizuje planId u všech částí zkoušky
+ * Chování při editaci existujícího examu (má `lastchange`):
+ * - Odpojí starý studijní plán od zkoušky (`examId = null`).
+ * - Propojí nový studijní plán se zkouškou (`examId = item.id`).
+ * - Aktualizuje název zkoušky na `"${subjectName} ${order} - hodnocení"`.
+ * - Aktualizuje `planId` u všech parts zkoušky.
  *
- * Chování při vytváření nového examu (nemá lastchange):
- * - Pouze uloží vybraný planId do draftu přes onChange
- * - Propojení se provede až po vytvoření examu
+ * Chování při vytváření nového examu (nemá `lastchange`):
+ * - Uloží `planId`, `name` a `nameEn` do draftu přes `onChange`.
+ * - Název se nastaví na `"${subjectName} ${order} - hodnocení"` ihned při výběru.
  *
  * @param {Object} props - Vlastnosti komponenty.
  * @param {Object} props.item - Data zkoušky.
@@ -333,17 +335,18 @@ export const SemesterSelect = ({ item, onChange, onUpdate }) => {
     /**
      * Handler pro změnu výběru semestru.
      *
-     * V režimu vytváření (isCreateMode = true):
-     * - Pouze uloží vybraný planId do draftu přes onChange callback
-     * - Simuluje event objekt kompatibilní s ostatními form handlery
+     * V režimu vytváření (`isCreateMode = true`, exam ještě nemá `lastchange`):
+     * - Uloží `planId` do draftu přes `onChange`.
+     * - Pokud vybraný plán má předmět, nastaví také `name` a `nameEn` do draftu
+     *   ve formátu `"${subjectName} ${order} - hodnocení"`.
      *
-     * V režimu editace (isCreateMode = false):
-     * - Odpojí předchozí studijní plán od examu
-     * - Načte čerstvá data nového plánu pro aktuální lastchange
-     * - Propojí nový studijní plán s examem
-     * - Automaticky aktualizuje název examu podle předmětu
-     * - Aktualizuje planId u všech částí (parts) examu
-     * - Provede reload stránky nebo zavolá onUpdate callback
+     * V režimu editace (`isCreateMode = false`):
+     * - Odpojí předchozí studijní plán od examu (nastaví `examId = null`).
+     * - Načte čerstvá data nového plánu (aktuální `lastchange`).
+     * - Propojí nový plán s examem (`examId = item.id`).
+     * - Aktualizuje název examu na `"${subjectName} ${order} - hodnocení"`.
+     * - Aktualizuje `planId` u všech parts examu.
+     * - Provede reload stránky nebo zavolá `onUpdate` callback.
      *
      * @param {Event} e - Událost změny select elementu.
      * @returns {Promise<void>}
@@ -352,11 +355,19 @@ export const SemesterSelect = ({ item, onChange, onUpdate }) => {
         const newPlanId = e.target.value || null
         setSelectedPlanId(newPlanId)
 
-        // V create mode pouze uložíme planId do draftu přes onChange
+        // V create mode uložíme planId (a případně název) do draftu přes onChange
         if (isCreateMode) {
             if (onChange) {
-                // Simulujeme event pro onChange handler
                 onChange({ target: { id: "planId", value: newPlanId } })
+                if (newPlanId) {
+                    const plan = allPlans.find(p => p.id === newPlanId)
+                    const subjectName = plan?.semester?.subject?.name
+                    const order = plan?.semester?.order
+                    if (subjectName) {
+                        onChange({ target: { id: "name", value: `${subjectName} ${order} - hodnocení` } })
+                        onChange({ target: { id: "nameEn", value: `${subjectName} ${order} - evaluation` } })
+                    }
+                }
             }
             return
         }
@@ -387,22 +398,16 @@ export const SemesterSelect = ({ item, onChange, onUpdate }) => {
                         examId: item.id
                     })
 
-                    // Použij semester z čerstvých dat
-                    const newPlan = freshPlan
-
-                    // Automaticky nastav název examu na "Subject name - hodnocení"
-                    const subjectName = newPlan.semester?.subject?.name
+                    const subjectName = freshPlan.semester?.subject?.name
+                    const order = freshPlan.semester?.order
                     if (subjectName && item?.lastchange) {
-                        const newName = `${subjectName} - hodnocení`
-                        const newNameEn = `${subjectName} - evaluation`
                         try {
                             await updateExamName({
                                 id: item.id,
                                 lastchange: item.lastchange,
-                                name: newName,
-                                nameEn: newNameEn
+                                name: `${subjectName} ${order} - hodnocení`,
+                                nameEn: `${subjectName} ${order} - evaluation`
                             })
-                            console.log(`Updated exam name to: ${newName}`)
                         } catch (nameError) {
                             console.error("Failed to update exam name:", nameError)
                         }
@@ -441,7 +446,7 @@ export const SemesterSelect = ({ item, onChange, onUpdate }) => {
         } finally {
             setSaving(false)
         }
-    }, [isCreateMode, onChange, item?.id, item?.lastchange, item?.parts, currentPlan, updateStudyPlan, updateExamPlanId, updateExamName, fetchStudyPlanById, onUpdate])
+    }, [isCreateMode, onChange, item?.id, item?.lastchange, item?.parts, currentPlan, allPlans, updateStudyPlan, updateExamPlanId, updateExamName, fetchStudyPlanById, onUpdate])
 
     /**
      * Formátuje popisek studijního plánu pro zobrazení v select option.

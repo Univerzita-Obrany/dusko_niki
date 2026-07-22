@@ -30,7 +30,13 @@ const getPlanId = (item) => {
 
 /**
  * Komponenta pro zobrazení středně detailního obsahu zkoušky.
- * Zobrazuje informace jako název, popis, body, semestr, části a role uživatele.
+ * Zobrazuje název, anglický název, popis, body, semestr, odkaz na studijní plán,
+ * nadřazený exam, části a role uživatele.
+ *
+ * Studijní plán (a z něj semestr) se načítá dvěma způsoby:
+ * - Primárně podle `planId` examu (`ReadStudyPlanByIdAsyncAction`).
+ * - Jako fallback podle `examId` na plánu (`ReadStudyPlanByExamIdAsyncAction`).
+ *
  * @param {Object} props - Vlastnosti komponenty.
  * @param {Object} props.item - Data zkoušky k zobrazení.
  * @param {string} [props.item.name] - Název zkoušky.
@@ -39,8 +45,10 @@ const getPlanId = (item) => {
  * @param {string} [props.item.descriptionEn] - Anglický popis zkoušky.
  * @param {number} [props.item.minScore] - Minimální počet bodů.
  * @param {number} [props.item.maxScore] - Maximální počet bodů.
- * @param {Array<Object>} [props.item.parts] - Části zkoušky.
- * @param {React.ReactNode} [props.children] - Dětské komponenty k vykreslení.
+ * @param {string} [props.item.planId] - UUID studijního plánu propojeného s examem.
+ * @param {Array<Object>} [props.item.parts] - Části zkoušky (každá může mít vlastní planId).
+ * @param {Object} [props.item.parent] - Nadřazený exam (id + name).
+ * @param {React.ReactNode} [props.children] - Dětské komponenty vložené na konec.
  * @returns {JSX.Element} Vykreslená komponenta s detaily zkoušky.
  */
 export const MediumContent = ({ item, children}) => {
@@ -70,7 +78,8 @@ export const MediumContent = ({ item, children}) => {
     const studyPlansPage = dataByExamId?.data?.studyPlanPage || dataByExamId?.studyPlanPage || []
     const studyPlanByExamId = studyPlansPage.length > 0 ? studyPlansPage[0] : null
 
-    const semester = studyPlanById?.semester || studyPlanByExamId?.semester || null
+    const studyPlan = studyPlanById || studyPlanByExamId
+    const semester = studyPlan?.semester || null
     const loading = loadingById || loadingByExamId
     return (
         <>
@@ -119,6 +128,16 @@ export const MediumContent = ({ item, children}) => {
                     <span className="text-muted">Není přiřazen studijní plán</span>
                 )}
             </Attribute>
+            {studyPlan?.id && (
+                <Attribute label="Studijní plán">
+                    <RouterLink
+                        to={`/studyplan/StudyPlanGQLModel/view/${studyPlan.id}`}
+                        className="text-decoration-none"
+                    >
+                        {studyPlan.name || studyPlan.id}
+                    </RouterLink>
+                </Attribute>
+            )}
             
             {item?.parent?.id && (
                 <Attribute label="Nadřazený exam">

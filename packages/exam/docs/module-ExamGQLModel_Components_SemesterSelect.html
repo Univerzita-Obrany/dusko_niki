@@ -39,8 +39,9 @@
     
         
             <div class="description"><p>Komponenta pro výběr semestru a jeho propojení se zkouškou.
-Umožňuje uživateli vybrat semestr ze seznamu studijních plánů
-a automaticky propojí vybraný plán se zkouškou.</p></div>
+Umožňuje uživateli vybrat semestr ze seznamu studijních plánů, automaticky propojí
+vybraný plán se zkouškou a nastaví název zkoušky podle předmětu a čísla semestru
+ve formátu <code>&quot;${subjectName} ${order} - hodnocení&quot;</code>.</p></div>
         
 
         
@@ -148,17 +149,17 @@ a automaticky propojí vybraný plán se zkouškou.</p></div>
 <div class="description">
     <p>Komponenta pro výběr semestru a propojení se zkouškou.
 Zobrazuje select s dostupnými studijními plány a umožňuje jejich výběr.</p>
-<p>Chování při editaci existujícího examu (má lastchange):</p>
+<p>Chování při editaci existujícího examu (má <code>lastchange</code>):</p>
 <ul>
-<li>Odpojí starý studijní plán od zkoušky</li>
-<li>Propojí nový studijní plán se zkouškou</li>
-<li>Aktualizuje název zkoušky podle předmětu</li>
-<li>Aktualizuje planId u všech částí zkoušky</li>
+<li>Odpojí starý studijní plán od zkoušky (<code>examId = null</code>).</li>
+<li>Propojí nový studijní plán se zkouškou (<code>examId = item.id</code>).</li>
+<li>Aktualizuje název zkoušky na <code>&quot;${subjectName} ${order} - hodnocení&quot;</code>.</li>
+<li>Aktualizuje <code>planId</code> u všech parts zkoušky.</li>
 </ul>
-<p>Chování při vytváření nového examu (nemá lastchange):</p>
+<p>Chování při vytváření nového examu (nemá <code>lastchange</code>):</p>
 <ul>
-<li>Pouze uloží vybraný planId do draftu přes onChange</li>
-<li>Propojení se provede až po vytvoření examu</li>
+<li>Uloží <code>planId</code>, <code>name</code> a <code>nameEn</code> do draftu přes <code>onChange</code>.</li>
+<li>Název se nastaví na <code>&quot;${subjectName} ${order} - hodnocení&quot;</code> ihned při výběru.</li>
 </ul>
 </div>
 
@@ -197,7 +198,7 @@ Zobrazuje select s dostupnými studijními plány a umožňuje jejich výběr.</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line265">line 265</a>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line267">line 267</a>
     </li></ul></dd>
     
 
@@ -269,7 +270,7 @@ Zobrazuje select s dostupnými studijními plány a umožňuje jejich výběr.</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line216">line 216</a>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line217">line 217</a>
     </li></ul></dd>
     
 
@@ -341,7 +342,7 @@ Zobrazuje select s dostupnými studijními plány a umožňuje jejich výběr.</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line222">line 222</a>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line223">line 223</a>
     </li></ul></dd>
     
 
@@ -413,7 +414,7 @@ Zobrazuje select s dostupnými studijními plány a umožňuje jejich výběr.</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line210">line 210</a>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line211">line 211</a>
     </li></ul></dd>
     
 
@@ -485,7 +486,7 @@ Zobrazuje select s dostupnými studijními plány a umožňuje jejich výběr.</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line180">line 180</a>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line181">line 181</a>
     </li></ul></dd>
     
 
@@ -557,7 +558,7 @@ Zobrazuje select s dostupnými studijními plány a umožňuje jejich výběr.</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line44">line 44</a>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line45">line 45</a>
     </li></ul></dd>
     
 
@@ -629,7 +630,7 @@ Zobrazuje select s dostupnými studijními plány a umožňuje jejich výběr.</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line186">line 186</a>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line187">line 187</a>
     </li></ul></dd>
     
 
@@ -701,7 +702,7 @@ Zobrazuje select s dostupnými studijními plány a umožňuje jejich výběr.</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line70">line 70</a>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line71">line 71</a>
     </li></ul></dd>
     
 
@@ -773,7 +774,7 @@ Zobrazuje select s dostupnými studijními plány a umožňuje jejich výběr.</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line174">line 174</a>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line175">line 175</a>
     </li></ul></dd>
     
 
@@ -845,79 +846,7 @@ Zobrazuje select s dostupnými studijními plány a umožňuje jejich výběr.</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line18">line 18</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="~UpdateExamNameAction"><span class="type-signature">(inner, constant) </span>UpdateExamNameAction<span class="type-signature"> :function</span></h4>
-
-
-
-
-<div class="description">
-    <p>Asynchronní akce pro aktualizaci názvu zkoušky.</p>
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">function</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line240">line 240</a>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line19">line 19</a>
     </li></ul></dd>
     
 
@@ -989,7 +918,7 @@ Zobrazuje select s dostupnými studijními plány a umožňuje jejich výběr.</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line204">line 204</a>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line205">line 205</a>
     </li></ul></dd>
     
 
@@ -1061,7 +990,7 @@ Zobrazuje select s dostupnými studijními plány a umožňuje jejich výběr.</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line151">line 151</a>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line152">line 152</a>
     </li></ul></dd>
     
 
@@ -1133,7 +1062,7 @@ Zobrazuje select s dostupnými studijními plány a umožňuje jejich výběr.</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line234">line 234</a>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line235">line 235</a>
     </li></ul></dd>
     
 
@@ -1205,7 +1134,7 @@ Zobrazuje select s dostupnými studijními plány a umožňuje jejich výběr.</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line198">line 198</a>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line199">line 199</a>
     </li></ul></dd>
     
 
@@ -1277,7 +1206,7 @@ Zobrazuje select s dostupnými studijními plány a umožňuje jejich výběr.</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line129">line 129</a>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line130">line 130</a>
     </li></ul></dd>
     
 
@@ -1349,7 +1278,7 @@ Zobrazuje select s dostupnými studijními plány a umožňuje jejich výběr.</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line228">line 228</a>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line229">line 229</a>
     </li></ul></dd>
     
 
@@ -1421,7 +1350,7 @@ Zobrazuje select s dostupnými studijními plány a umožňuje jejich výběr.</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line192">line 192</a>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line193">line 193</a>
     </li></ul></dd>
     
 
@@ -1493,7 +1422,7 @@ Zobrazuje select s dostupnými studijními plány a umožňuje jejich výběr.</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line96">line 96</a>
+        <a href="ExamGQLModel_Components_SemesterSelect.jsx.html">ExamGQLModel/Components/SemesterSelect.jsx</a>, <a href="ExamGQLModel_Components_SemesterSelect.jsx.html#line97">line 97</a>
     </li></ul></dd>
     
 
@@ -1527,13 +1456,13 @@ Zobrazuje select s dostupnými studijními plány a umožňuje jejich výběr.</
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ExamGQLModel_Components.html">ExamGQLModel/Components</a></li><li><a href="module-ExamGQLModel_Components_ExamParts.html">ExamGQLModel/Components/ExamParts</a></li><li><a href="module-ExamGQLModel_Components_MediumContent.html">ExamGQLModel/Components/MediumContent</a></li><li><a href="module-ExamGQLModel_Components_MediumEditableContent.html">ExamGQLModel/Components/MediumEditableContent</a></li><li><a href="module-ExamGQLModel_Components_SemesterSelect.html">ExamGQLModel/Components/SemesterSelect</a></li><li><a href="module-ExamGQLModel_Mutations_Create.html">ExamGQLModel/Mutations/Create</a></li><li><a href="module-ExamGQLModel_Queries.html">ExamGQLModel/Queries</a></li><li><a href="module-ExamGQLModel_Queries_Fragments.html">ExamGQLModel/Queries/Fragments</a></li><li><a href="module-ExamGQLModel_Queries_ReadStudyPlanByExamIdAsyncAction.html">ExamGQLModel/Queries/ReadStudyPlanByExamIdAsyncAction</a></li><li><a href="module-ExamGQLModel_Queries_UpdateAsyncAction.html">ExamGQLModel/Queries/UpdateAsyncAction</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CardCapsule">CardCapsule</a></li><li><a href="global.html#Children">Children</a></li><li><a href="global.html#ConfirmEdit">ConfirmEdit</a></li><li><a href="global.html#CreateURI">CreateURI</a></li><li><a href="global.html#DefaultContent">DefaultContent</a></li><li><a href="global.html#DeleteBody">DeleteBody</a></li><li><a href="global.html#DeleteButton">DeleteButton</a></li><li><a href="global.html#DeleteDialog">DeleteDialog</a></li><li><a href="global.html#DeleteItemURI">DeleteItemURI</a></li><li><a href="global.html#DeleteLink">DeleteLink</a></li><li><a href="global.html#DeleteURI">DeleteURI</a></li><li><a href="global.html#ExamEditForm">ExamEditForm</a></li><li><a href="global.html#ExamGQLModelRouterSegments">ExamGQLModelRouterSegments</a></li><li><a href="global.html#InteractiveMutations">InteractiveMutations</a></li><li><a href="global.html#LargeCard">LargeCard</a></li><li><a href="global.html#Link">Link</a></li><li><a href="global.html#LinkURI">LinkURI</a></li><li><a href="global.html#ListURI">ListURI</a></li><li><a href="global.html#LiveEdit">LiveEdit</a></li><li><a href="global.html#LiveEditWrapper">LiveEditWrapper</a></li><li><a href="global.html#LiveEdit_">LiveEdit_</a></li><li><a href="global.html#MediumCard">MediumCard</a></li><li><a href="global.html#MyNavDropdown">MyNavDropdown</a></li><li><a href="global.html#PageItemBase">PageItemBase</a></li><li><a href="global.html#PageLink">PageLink</a></li><li><a href="global.html#PageReadItemRolesOn">PageReadItemRolesOn</a></li><li><a href="global.html#ReadAsyncAction">ReadAsyncAction</a></li><li><a href="global.html#ReadItemURI">ReadItemURI</a></li><li><a href="global.html#ReadURI">ReadURI</a></li><li><a href="global.html#TemplateScalarAttribute">TemplateScalarAttribute</a></li><li><a href="global.html#TemplateScalarAttributeLazy">TemplateScalarAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute">TemplateVectorsAttribute</a></li><li><a href="global.html#TemplateVectorsAttributeInfinite">TemplateVectorsAttributeInfinite</a></li><li><a href="global.html#TemplateVectorsAttributeLazy">TemplateVectorsAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute_old">TemplateVectorsAttribute_old</a></li><li><a href="global.html#UpdateBody">UpdateBody</a></li><li><a href="global.html#UpdateButton">UpdateButton</a></li><li><a href="global.html#UpdateDialog">UpdateDialog</a></li><li><a href="global.html#UpdateItemURI">UpdateItemURI</a></li><li><a href="global.html#UpdateLink">UpdateLink</a></li><li><a href="global.html#UpdateURI">UpdateURI</a></li><li><a href="global.html#VectorItemsURI">VectorItemsURI</a></li><li><a href="global.html#VectorsVisualiser">VectorsVisualiser</a></li><li><a href="global.html#followUpTemplateVectorItemDelete">followUpTemplateVectorItemDelete</a></li><li><a href="global.html#followUpTemplateVectorItemInsert">followUpTemplateVectorItemInsert</a></li><li><a href="global.html#followUpTemplateVectorItemUpdate">followUpTemplateVectorItemUpdate</a></li><li><a href="global.html#idParam">idParam</a></li><li><a href="global.html#modelURI">modelURI</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ExamGQLModel_Components.html">ExamGQLModel/Components</a></li><li><a href="module-ExamGQLModel_Components_ExamParts.html">ExamGQLModel/Components/ExamParts</a></li><li><a href="module-ExamGQLModel_Components_MediumContent.html">ExamGQLModel/Components/MediumContent</a></li><li><a href="module-ExamGQLModel_Components_MediumEditableContent.html">ExamGQLModel/Components/MediumEditableContent</a></li><li><a href="module-ExamGQLModel_Components_SemesterSelect.html">ExamGQLModel/Components/SemesterSelect</a></li><li><a href="module-ExamGQLModel_Mutations_Create.html">ExamGQLModel/Mutations/Create</a></li><li><a href="module-ExamGQLModel_Mutations_Delete.html">ExamGQLModel/Mutations/Delete</a></li><li><a href="module-ExamGQLModel_Queries.html">ExamGQLModel/Queries</a></li><li><a href="module-ExamGQLModel_Queries_Fragments.html">ExamGQLModel/Queries/Fragments</a></li><li><a href="module-ExamGQLModel_Queries_ReadStudyPlanByExamIdAsyncAction.html">ExamGQLModel/Queries/ReadStudyPlanByExamIdAsyncAction</a></li><li><a href="module-ExamGQLModel_Queries_UpdateAsyncAction.html">ExamGQLModel/Queries/UpdateAsyncAction</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CardCapsule">CardCapsule</a></li><li><a href="global.html#Children">Children</a></li><li><a href="global.html#ConfirmEdit">ConfirmEdit</a></li><li><a href="global.html#CreateURI">CreateURI</a></li><li><a href="global.html#DefaultContent">DefaultContent</a></li><li><a href="global.html#DeleteItemURI">DeleteItemURI</a></li><li><a href="global.html#DeleteURI">DeleteURI</a></li><li><a href="global.html#ExamEditForm">ExamEditForm</a></li><li><a href="global.html#ExamGQLModelRouterSegments">ExamGQLModelRouterSegments</a></li><li><a href="global.html#InteractiveMutations">InteractiveMutations</a></li><li><a href="global.html#LargeCard">LargeCard</a></li><li><a href="global.html#Link">Link</a></li><li><a href="global.html#LinkURI">LinkURI</a></li><li><a href="global.html#ListURI">ListURI</a></li><li><a href="global.html#LiveEdit">LiveEdit</a></li><li><a href="global.html#LiveEditWrapper">LiveEditWrapper</a></li><li><a href="global.html#LiveEdit_">LiveEdit_</a></li><li><a href="global.html#MediumCard">MediumCard</a></li><li><a href="global.html#MyNavDropdown">MyNavDropdown</a></li><li><a href="global.html#PageItemBase">PageItemBase</a></li><li><a href="global.html#PageLink">PageLink</a></li><li><a href="global.html#PageReadItemRolesOn">PageReadItemRolesOn</a></li><li><a href="global.html#ReadAsyncAction">ReadAsyncAction</a></li><li><a href="global.html#ReadItemURI">ReadItemURI</a></li><li><a href="global.html#ReadURI">ReadURI</a></li><li><a href="global.html#TemplateScalarAttribute">TemplateScalarAttribute</a></li><li><a href="global.html#TemplateScalarAttributeLazy">TemplateScalarAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute">TemplateVectorsAttribute</a></li><li><a href="global.html#TemplateVectorsAttributeInfinite">TemplateVectorsAttributeInfinite</a></li><li><a href="global.html#TemplateVectorsAttributeLazy">TemplateVectorsAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute_old">TemplateVectorsAttribute_old</a></li><li><a href="global.html#UpdateBody">UpdateBody</a></li><li><a href="global.html#UpdateButton">UpdateButton</a></li><li><a href="global.html#UpdateDialog">UpdateDialog</a></li><li><a href="global.html#UpdateItemURI">UpdateItemURI</a></li><li><a href="global.html#UpdateLink">UpdateLink</a></li><li><a href="global.html#UpdateURI">UpdateURI</a></li><li><a href="global.html#VectorItemsURI">VectorItemsURI</a></li><li><a href="global.html#VectorsVisualiser">VectorsVisualiser</a></li><li><a href="global.html#followUpTemplateVectorItemDelete">followUpTemplateVectorItemDelete</a></li><li><a href="global.html#followUpTemplateVectorItemInsert">followUpTemplateVectorItemInsert</a></li><li><a href="global.html#followUpTemplateVectorItemUpdate">followUpTemplateVectorItemUpdate</a></li><li><a href="global.html#idParam">idParam</a></li><li><a href="global.html#modelURI">modelURI</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Tue Jul 21 2026 22:52:03 GMT+0200 (stredoeurópsky letný čas)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Jul 22 2026 17:09:29 GMT+0200 (stredoeurópsky letný čas)
 </footer>
 
 <script> prettyPrint(); </script>

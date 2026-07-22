@@ -8,7 +8,7 @@ import { useState, useCallback, useEffect } from "react"
 import { useLocation } from "react-router"
 import { CardCapsule } from "./CardCapsule"
 import { Link } from "./Link"
-import { InsertAsyncAction, DeleteAsyncAction, UpdateAsyncAction } from "../Queries"
+import { InsertAsyncAction, DeleteAsyncAction, UpdateAsyncAction, ReadStudyPlanByExamIdAsyncAction } from "../Queries"
 import { useAsyncThunkAction } from "../../../../dynamic/src/Hooks"
 import { createQueryStrLazy } from "@hrbolek/uoisfrontend-gql-shared"
 import { createAsyncGraphQLAction2 } from "../../../../dynamic/src/Core/createAsyncGraphQLAction2"
@@ -70,13 +70,18 @@ const unlinkPlanMiddleware = (result) => async (dispatch, getState, next) => {
 }
 
 /**
- * GraphQL akce pro odpojení studijního plánu od zkoušky.
- * Nastaví examId na null pro daný studijní plán.
+ * GraphQL akce pro přesměrování studijního plánu na jiný exam.
+ * Při mazání partu nastaví `examId` na rodičovský exam (ne null),
+ * aby rodičovský exam nepřišel o propojení se semestrem.
  * @type {Function}
+ * @param {Object} vars
+ * @param {string} vars.id - UUID studijního plánu.
+ * @param {string} vars.lastchange - Timestamp poslední změny plánu.
+ * @param {string|null} vars.examId - UUID examu, na který se plán přesměruje (typicky parentId partu).
  */
-const UnlinkPlanAction = createAsyncGraphQLAction2(createQueryStrLazy(`
-mutation UnlinkStudyPlan($id: UUID!, $lastchange: DateTime!) {
-  result: studyPlanUpdate(studyPlan: {id: $id, lastchange: $lastchange, examId: null}) {
+const ReassignPlanAction = createAsyncGraphQLAction2(createQueryStrLazy(`
+mutation ReassignStudyPlan($id: UUID!, $lastchange: DateTime!, $examId: UUID) {
+  result: studyPlanUpdate(studyPlan: {id: $id, lastchange: $lastchange, examId: $examId}) {
     ... on StudyPlanGQLModelUpdateError { failed msg }
     ... on StudyPlanGQLModel { id lastchange }
   }
@@ -84,21 +89,27 @@ mutation UnlinkStudyPlan($id: UUID!, $lastchange: DateTime!) {
 `), unlinkPlanMiddleware)
 
 /**
- * Komponenta tlačítka pro smazání části zkoušky.
- * V případě potřeby se také stará o odpojení od studijního plánu před samotným smazáním.
- * Po úspěšném smazání provede reload stránky.
+ * Tlačítko pro smazání části zkoušky (part/exampart).
+ *
+ * Před smazáním partu:
+ * 1. Načte studijní plán propojený s tímto partem (přes `exam_id = part.id`).
+ * 2. Přesměruje plán na rodičovský exam (`examId = part.parentId`), aby rodič nepřišel o semestr.
+ * 3. Smaže part.
+ * 4. Provede reload stránky.
+ *
  * @param {Object} props - Vlastnosti komponenty.
  * @param {Object} props.part - Část zkoušky, která má být smazána.
- * @param {string} props.part.id - Jedinečný identifikátor části.
- * @param {string} props.part.name - Název části.
- * @param {string} props.part.lastchange - Timestamp poslední změny.
- * @param {Object} [props.part.plan] - Přiřazený studijní plán.
+ * @param {string} props.part.id - UUID části.
+ * @param {string} props.part.name - Název části (použit v confirm dialogu).
+ * @param {string} props.part.lastchange - Timestamp poslední změny části.
+ * @param {string} [props.part.parentId] - UUID rodičovského examu (pro přesměrování plánu).
  * @returns {JSX.Element} Tlačítko pro smazání části.
  */
 const DeletePartButton = ({ part }) => {
     const [loading, setLoading] = useState(false)
     const { run: deleteExam } = useAsyncThunkAction(DeleteAsyncAction, {}, { deferred: true })
-    const { run: unlinkPlan } = useAsyncThunkAction(UnlinkPlanAction, {}, { deferred: true })
+    const { run: reassignPlan } = useAsyncThunkAction(ReassignPlanAction, {}, { deferred: true })
+    const { run: fetchPlan } = useAsyncThunkAction(ReadStudyPlanByExamIdAsyncAction, {}, { deferred: true })
 
     const handleDelete = useCallback(async () => {
         if (!confirm(`Opravdu chcete smazat "${part.name}"?`)) {
@@ -107,13 +118,18 @@ const DeletePartButton = ({ part }) => {
 
         setLoading(true)
         try {
-            if (part.plan?.id && part.plan?.lastchange) {
-                await unlinkPlan({ id: part.plan.id, lastchange: part.plan.lastchange })
+            // Fetch the study plan linked to this part via examId
+            const planResult = await fetchPlan({ where: { exam_id: { _eq: part.id } }, limit: 1 })
+            const plans = planResult?.data?.studyPlanPage || planResult?.studyPlanPage || []
+            if (plans.length > 0 && plans[0].id && plans[0].lastchange) {
+                // Reassign plan to parent exam (not null) to keep parent's semester connection
+                await reassignPlan({
+                    id: plans[0].id,
+                    lastchange: plans[0].lastchange,
+                    examId: part.parentId ?? null,
+                })
             }
-            await deleteExam({
-                id: part.id,
-                lastchange: part.lastchange
-            })
+            await deleteExam({ id: part.id, lastchange: part.lastchange })
             window.location.reload()
         } catch (error) {
             console.error("Failed to delete exam part:", error)
@@ -121,7 +137,7 @@ const DeletePartButton = ({ part }) => {
         } finally {
             setLoading(false)
         }
-    }, [part, deleteExam, unlinkPlan])
+    }, [part, deleteExam, reassignPlan, fetchPlan])
 
     return (
         <button

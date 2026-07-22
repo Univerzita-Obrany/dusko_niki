@@ -28,8 +28,9 @@
         <article>
             <pre class="prettyprint source linenums"><code>/**
  * @fileoverview Komponenta pro výběr semestru a jeho propojení se zkouškou.
- * Umožňuje uživateli vybrat semestr ze seznamu studijních plánů
- * a automaticky propojí vybraný plán se zkouškou.
+ * Umožňuje uživateli vybrat semestr ze seznamu studijních plánů, automaticky propojí
+ * vybraný plán se zkouškou a nastaví název zkoušky podle předmětu a čísla semestru
+ * ve formátu `"${subjectName} ${order} - hodnocení"`.
  * @module ExamGQLModel/Components/SemesterSelect
  */
 
@@ -261,25 +262,26 @@ const UpdateStudyPlanAction = createAsyncGraphQLAction2(UpdateStudyPlanMutation)
  */
 const UpdateExamPlanIdAction = createAsyncGraphQLAction2(UpdateExamPlanIdMutation)
 
+const UpdateExamNameAction = createAsyncGraphQLAction2(UpdateExamNameMutation)
+
 /**
  * Asynchronní akce pro aktualizaci názvu zkoušky.
  * @type {Function}
  */
-const UpdateExamNameAction = createAsyncGraphQLAction2(UpdateExamNameMutation)
 
 /**
  * Komponenta pro výběr semestru a propojení se zkouškou.
  * Zobrazuje select s dostupnými studijními plány a umožňuje jejich výběr.
  *
- * Chování při editaci existujícího examu (má lastchange):
- * - Odpojí starý studijní plán od zkoušky
- * - Propojí nový studijní plán se zkouškou
- * - Aktualizuje název zkoušky podle předmětu
- * - Aktualizuje planId u všech částí zkoušky
+ * Chování při editaci existujícího examu (má `lastchange`):
+ * - Odpojí starý studijní plán od zkoušky (`examId = null`).
+ * - Propojí nový studijní plán se zkouškou (`examId = item.id`).
+ * - Aktualizuje název zkoušky na `"${subjectName} ${order} - hodnocení"`.
+ * - Aktualizuje `planId` u všech parts zkoušky.
  *
- * Chování při vytváření nového examu (nemá lastchange):
- * - Pouze uloží vybraný planId do draftu přes onChange
- * - Propojení se provede až po vytvoření examu
+ * Chování při vytváření nového examu (nemá `lastchange`):
+ * - Uloží `planId`, `name` a `nameEn` do draftu přes `onChange`.
+ * - Název se nastaví na `"${subjectName} ${order} - hodnocení"` ihned při výběru.
  *
  * @param {Object} props - Vlastnosti komponenty.
  * @param {Object} props.item - Data zkoušky.
@@ -361,17 +363,18 @@ export const SemesterSelect = ({ item, onChange, onUpdate }) => {
     /**
      * Handler pro změnu výběru semestru.
      *
-     * V režimu vytváření (isCreateMode = true):
-     * - Pouze uloží vybraný planId do draftu přes onChange callback
-     * - Simuluje event objekt kompatibilní s ostatními form handlery
+     * V režimu vytváření (`isCreateMode = true`, exam ještě nemá `lastchange`):
+     * - Uloží `planId` do draftu přes `onChange`.
+     * - Pokud vybraný plán má předmět, nastaví také `name` a `nameEn` do draftu
+     *   ve formátu `"${subjectName} ${order} - hodnocení"`.
      *
-     * V režimu editace (isCreateMode = false):
-     * - Odpojí předchozí studijní plán od examu
-     * - Načte čerstvá data nového plánu pro aktuální lastchange
-     * - Propojí nový studijní plán s examem
-     * - Automaticky aktualizuje název examu podle předmětu
-     * - Aktualizuje planId u všech částí (parts) examu
-     * - Provede reload stránky nebo zavolá onUpdate callback
+     * V režimu editace (`isCreateMode = false`):
+     * - Odpojí předchozí studijní plán od examu (nastaví `examId = null`).
+     * - Načte čerstvá data nového plánu (aktuální `lastchange`).
+     * - Propojí nový plán s examem (`examId = item.id`).
+     * - Aktualizuje název examu na `"${subjectName} ${order} - hodnocení"`.
+     * - Aktualizuje `planId` u všech parts examu.
+     * - Provede reload stránky nebo zavolá `onUpdate` callback.
      *
      * @param {Event} e - Událost změny select elementu.
      * @returns {Promise&lt;void>}
@@ -380,11 +383,19 @@ export const SemesterSelect = ({ item, onChange, onUpdate }) => {
         const newPlanId = e.target.value || null
         setSelectedPlanId(newPlanId)
 
-        // V create mode pouze uložíme planId do draftu přes onChange
+        // V create mode uložíme planId (a případně název) do draftu přes onChange
         if (isCreateMode) {
             if (onChange) {
-                // Simulujeme event pro onChange handler
                 onChange({ target: { id: "planId", value: newPlanId } })
+                if (newPlanId) {
+                    const plan = allPlans.find(p => p.id === newPlanId)
+                    const subjectName = plan?.semester?.subject?.name
+                    const order = plan?.semester?.order
+                    if (subjectName) {
+                        onChange({ target: { id: "name", value: `${subjectName} ${order} - hodnocení` } })
+                        onChange({ target: { id: "nameEn", value: `${subjectName} ${order} - evaluation` } })
+                    }
+                }
             }
             return
         }
@@ -415,22 +426,16 @@ export const SemesterSelect = ({ item, onChange, onUpdate }) => {
                         examId: item.id
                     })
 
-                    // Použij semester z čerstvých dat
-                    const newPlan = freshPlan
-
-                    // Automaticky nastav název examu na "Subject name - hodnocení"
-                    const subjectName = newPlan.semester?.subject?.name
+                    const subjectName = freshPlan.semester?.subject?.name
+                    const order = freshPlan.semester?.order
                     if (subjectName &amp;&amp; item?.lastchange) {
-                        const newName = `${subjectName} - hodnocení`
-                        const newNameEn = `${subjectName} - evaluation`
                         try {
                             await updateExamName({
                                 id: item.id,
                                 lastchange: item.lastchange,
-                                name: newName,
-                                nameEn: newNameEn
+                                name: `${subjectName} ${order} - hodnocení`,
+                                nameEn: `${subjectName} ${order} - evaluation`
                             })
-                            console.log(`Updated exam name to: ${newName}`)
                         } catch (nameError) {
                             console.error("Failed to update exam name:", nameError)
                         }
@@ -469,7 +474,7 @@ export const SemesterSelect = ({ item, onChange, onUpdate }) => {
         } finally {
             setSaving(false)
         }
-    }, [isCreateMode, onChange, item?.id, item?.lastchange, item?.parts, currentPlan, updateStudyPlan, updateExamPlanId, updateExamName, fetchStudyPlanById, onUpdate])
+    }, [isCreateMode, onChange, item?.id, item?.lastchange, item?.parts, currentPlan, allPlans, updateStudyPlan, updateExamPlanId, updateExamName, fetchStudyPlanById, onUpdate])
 
     /**
      * Formátuje popisek studijního plánu pro zobrazení v select option.
@@ -520,13 +525,13 @@ export const SemesterSelect = ({ item, onChange, onUpdate }) => {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ExamGQLModel_Components.html">ExamGQLModel/Components</a></li><li><a href="module-ExamGQLModel_Components_ExamParts.html">ExamGQLModel/Components/ExamParts</a></li><li><a href="module-ExamGQLModel_Components_MediumContent.html">ExamGQLModel/Components/MediumContent</a></li><li><a href="module-ExamGQLModel_Components_MediumEditableContent.html">ExamGQLModel/Components/MediumEditableContent</a></li><li><a href="module-ExamGQLModel_Components_SemesterSelect.html">ExamGQLModel/Components/SemesterSelect</a></li><li><a href="module-ExamGQLModel_Mutations_Create.html">ExamGQLModel/Mutations/Create</a></li><li><a href="module-ExamGQLModel_Queries.html">ExamGQLModel/Queries</a></li><li><a href="module-ExamGQLModel_Queries_Fragments.html">ExamGQLModel/Queries/Fragments</a></li><li><a href="module-ExamGQLModel_Queries_ReadStudyPlanByExamIdAsyncAction.html">ExamGQLModel/Queries/ReadStudyPlanByExamIdAsyncAction</a></li><li><a href="module-ExamGQLModel_Queries_UpdateAsyncAction.html">ExamGQLModel/Queries/UpdateAsyncAction</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CardCapsule">CardCapsule</a></li><li><a href="global.html#Children">Children</a></li><li><a href="global.html#ConfirmEdit">ConfirmEdit</a></li><li><a href="global.html#CreateURI">CreateURI</a></li><li><a href="global.html#DefaultContent">DefaultContent</a></li><li><a href="global.html#DeleteBody">DeleteBody</a></li><li><a href="global.html#DeleteButton">DeleteButton</a></li><li><a href="global.html#DeleteDialog">DeleteDialog</a></li><li><a href="global.html#DeleteItemURI">DeleteItemURI</a></li><li><a href="global.html#DeleteLink">DeleteLink</a></li><li><a href="global.html#DeleteURI">DeleteURI</a></li><li><a href="global.html#ExamEditForm">ExamEditForm</a></li><li><a href="global.html#ExamGQLModelRouterSegments">ExamGQLModelRouterSegments</a></li><li><a href="global.html#InteractiveMutations">InteractiveMutations</a></li><li><a href="global.html#LargeCard">LargeCard</a></li><li><a href="global.html#Link">Link</a></li><li><a href="global.html#LinkURI">LinkURI</a></li><li><a href="global.html#ListURI">ListURI</a></li><li><a href="global.html#LiveEdit">LiveEdit</a></li><li><a href="global.html#LiveEditWrapper">LiveEditWrapper</a></li><li><a href="global.html#LiveEdit_">LiveEdit_</a></li><li><a href="global.html#MediumCard">MediumCard</a></li><li><a href="global.html#MyNavDropdown">MyNavDropdown</a></li><li><a href="global.html#PageItemBase">PageItemBase</a></li><li><a href="global.html#PageLink">PageLink</a></li><li><a href="global.html#PageReadItemRolesOn">PageReadItemRolesOn</a></li><li><a href="global.html#ReadAsyncAction">ReadAsyncAction</a></li><li><a href="global.html#ReadItemURI">ReadItemURI</a></li><li><a href="global.html#ReadURI">ReadURI</a></li><li><a href="global.html#TemplateScalarAttribute">TemplateScalarAttribute</a></li><li><a href="global.html#TemplateScalarAttributeLazy">TemplateScalarAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute">TemplateVectorsAttribute</a></li><li><a href="global.html#TemplateVectorsAttributeInfinite">TemplateVectorsAttributeInfinite</a></li><li><a href="global.html#TemplateVectorsAttributeLazy">TemplateVectorsAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute_old">TemplateVectorsAttribute_old</a></li><li><a href="global.html#UpdateBody">UpdateBody</a></li><li><a href="global.html#UpdateButton">UpdateButton</a></li><li><a href="global.html#UpdateDialog">UpdateDialog</a></li><li><a href="global.html#UpdateItemURI">UpdateItemURI</a></li><li><a href="global.html#UpdateLink">UpdateLink</a></li><li><a href="global.html#UpdateURI">UpdateURI</a></li><li><a href="global.html#VectorItemsURI">VectorItemsURI</a></li><li><a href="global.html#VectorsVisualiser">VectorsVisualiser</a></li><li><a href="global.html#followUpTemplateVectorItemDelete">followUpTemplateVectorItemDelete</a></li><li><a href="global.html#followUpTemplateVectorItemInsert">followUpTemplateVectorItemInsert</a></li><li><a href="global.html#followUpTemplateVectorItemUpdate">followUpTemplateVectorItemUpdate</a></li><li><a href="global.html#idParam">idParam</a></li><li><a href="global.html#modelURI">modelURI</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ExamGQLModel_Components.html">ExamGQLModel/Components</a></li><li><a href="module-ExamGQLModel_Components_ExamParts.html">ExamGQLModel/Components/ExamParts</a></li><li><a href="module-ExamGQLModel_Components_MediumContent.html">ExamGQLModel/Components/MediumContent</a></li><li><a href="module-ExamGQLModel_Components_MediumEditableContent.html">ExamGQLModel/Components/MediumEditableContent</a></li><li><a href="module-ExamGQLModel_Components_SemesterSelect.html">ExamGQLModel/Components/SemesterSelect</a></li><li><a href="module-ExamGQLModel_Mutations_Create.html">ExamGQLModel/Mutations/Create</a></li><li><a href="module-ExamGQLModel_Mutations_Delete.html">ExamGQLModel/Mutations/Delete</a></li><li><a href="module-ExamGQLModel_Queries.html">ExamGQLModel/Queries</a></li><li><a href="module-ExamGQLModel_Queries_Fragments.html">ExamGQLModel/Queries/Fragments</a></li><li><a href="module-ExamGQLModel_Queries_ReadStudyPlanByExamIdAsyncAction.html">ExamGQLModel/Queries/ReadStudyPlanByExamIdAsyncAction</a></li><li><a href="module-ExamGQLModel_Queries_UpdateAsyncAction.html">ExamGQLModel/Queries/UpdateAsyncAction</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CardCapsule">CardCapsule</a></li><li><a href="global.html#Children">Children</a></li><li><a href="global.html#ConfirmEdit">ConfirmEdit</a></li><li><a href="global.html#CreateURI">CreateURI</a></li><li><a href="global.html#DefaultContent">DefaultContent</a></li><li><a href="global.html#DeleteItemURI">DeleteItemURI</a></li><li><a href="global.html#DeleteURI">DeleteURI</a></li><li><a href="global.html#ExamEditForm">ExamEditForm</a></li><li><a href="global.html#ExamGQLModelRouterSegments">ExamGQLModelRouterSegments</a></li><li><a href="global.html#InteractiveMutations">InteractiveMutations</a></li><li><a href="global.html#LargeCard">LargeCard</a></li><li><a href="global.html#Link">Link</a></li><li><a href="global.html#LinkURI">LinkURI</a></li><li><a href="global.html#ListURI">ListURI</a></li><li><a href="global.html#LiveEdit">LiveEdit</a></li><li><a href="global.html#LiveEditWrapper">LiveEditWrapper</a></li><li><a href="global.html#LiveEdit_">LiveEdit_</a></li><li><a href="global.html#MediumCard">MediumCard</a></li><li><a href="global.html#MyNavDropdown">MyNavDropdown</a></li><li><a href="global.html#PageItemBase">PageItemBase</a></li><li><a href="global.html#PageLink">PageLink</a></li><li><a href="global.html#PageReadItemRolesOn">PageReadItemRolesOn</a></li><li><a href="global.html#ReadAsyncAction">ReadAsyncAction</a></li><li><a href="global.html#ReadItemURI">ReadItemURI</a></li><li><a href="global.html#ReadURI">ReadURI</a></li><li><a href="global.html#TemplateScalarAttribute">TemplateScalarAttribute</a></li><li><a href="global.html#TemplateScalarAttributeLazy">TemplateScalarAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute">TemplateVectorsAttribute</a></li><li><a href="global.html#TemplateVectorsAttributeInfinite">TemplateVectorsAttributeInfinite</a></li><li><a href="global.html#TemplateVectorsAttributeLazy">TemplateVectorsAttributeLazy</a></li><li><a href="global.html#TemplateVectorsAttribute_old">TemplateVectorsAttribute_old</a></li><li><a href="global.html#UpdateBody">UpdateBody</a></li><li><a href="global.html#UpdateButton">UpdateButton</a></li><li><a href="global.html#UpdateDialog">UpdateDialog</a></li><li><a href="global.html#UpdateItemURI">UpdateItemURI</a></li><li><a href="global.html#UpdateLink">UpdateLink</a></li><li><a href="global.html#UpdateURI">UpdateURI</a></li><li><a href="global.html#VectorItemsURI">VectorItemsURI</a></li><li><a href="global.html#VectorsVisualiser">VectorsVisualiser</a></li><li><a href="global.html#followUpTemplateVectorItemDelete">followUpTemplateVectorItemDelete</a></li><li><a href="global.html#followUpTemplateVectorItemInsert">followUpTemplateVectorItemInsert</a></li><li><a href="global.html#followUpTemplateVectorItemUpdate">followUpTemplateVectorItemUpdate</a></li><li><a href="global.html#idParam">idParam</a></li><li><a href="global.html#modelURI">modelURI</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Tue Jul 21 2026 22:52:03 GMT+0200 (stredoeurópsky letný čas)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Jul 22 2026 17:09:29 GMT+0200 (stredoeurópsky letný čas)
 </footer>
 
 <script> prettyPrint(); </script>
